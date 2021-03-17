@@ -20,10 +20,10 @@ class PositionDetailAdmin(admin.ModelAdmin):
     list_display = ('id',
                     'position',
                     'source_count',
-                    'genre',
+                    'usage',
                     'created_date',
                     'modified_date')
-    list_filter = ['position', 'genre', 'created_date', 'modified_date']
+    list_filter = ['position', 'usage', 'created_date', 'modified_date']
 
     def source_count(self, obj):
         return obj.sources.count()
@@ -42,10 +42,10 @@ class CategoryDetailAdmin(admin.ModelAdmin):
     list_display = ('id',
                     'category',
                     'source_count',
-                    'genre',
+                    'usage',
                     'created_date',
                     'modified_date')
-    list_filter = ['category', 'genre', 'created_date', 'modified_date']
+    list_filter = ['category', 'usage', 'created_date', 'modified_date']
 
     def source_count(self, obj):
         return obj.sources.count()

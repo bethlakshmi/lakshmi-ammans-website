@@ -9,6 +9,7 @@ from django.db.models import (
     OneToOneField,
     SET_NULL,
     TextField,
+    URLField,
 )
 from filer.fields.image import FilerImageField
 from filer.models.filemodels import File
@@ -30,6 +31,7 @@ class Shastra(Model):
 
     class Meta:
         app_label = "shastra_compedium"
+        ordering = ['title']
 
 
 class Source(Model):
@@ -41,9 +43,11 @@ class Source(Model):
     translator = CharField(max_length=128)
     isbn = CharField(max_length=128)
     bibliography = TextField(blank=True)
+    url = URLField(blank=True)
 
     class Meta:
         app_label = "shastra_compedium"
+        ordering = ['shastra__title', 'title']
 
 
 class Category(Model):
@@ -63,19 +67,24 @@ class Position(Model):
                           blank=True,
                           null=True)
     name = CharField(max_length=128, unique=True)
+    order = IntegerField()
 
     class Meta:
         app_label = "shastra_compedium"
+        unique_together = [('category', 'order'), ('name', 'order')]
+        ordering = ['category', 'order']
+
 
 
 class Detail(Model):
     sources = ManyToManyField(Source)
-    genre = CharField(max_length=128)
+    usage = CharField(max_length=128)
     contents = TextField()
     created_date = DateTimeField(auto_now_add=True)
     modified_date = DateTimeField(auto_now=True)
-    chapter = IntegerField()
-    verse = IntegerField()
+    chapter = IntegerField(blank=True, null=True)
+    verse_start = IntegerField(blank=True, null=True)
+    verse_end = IntegerField(blank=True, null=True)
 
     class Meta:
         app_label = "shastra_compedium"
@@ -87,6 +96,7 @@ class PositionDetail(Detail):
                           related_name='details')
     class Meta:
         app_label = "shastra_compedium"
+        ordering = ['position', 'chapter', 'verse_start', 'verse_end']
 
 
 class CategoryDetail(Detail):
@@ -95,6 +105,7 @@ class CategoryDetail(Detail):
                           related_name='details')
     class Meta:
         app_label = "shastra_compedium"
+        ordering = ['category', 'chapter', 'verse_start', 'verse_end']
 
 
 class Video(File):

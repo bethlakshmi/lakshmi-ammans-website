@@ -1,0 +1,10 @@
+  {{ instructions | safe }}
+  <p>
+    <font class="lakshmi-form-required">*</font> indicates a required field
+  </p>
+    {% for form in forms %}
+      {%if showheader%}
+        <h4>{{form.prefix}}</h4>
+      {%endif%}
+    {% include "form_table.tmpl" %}
+    {% endfor %}
