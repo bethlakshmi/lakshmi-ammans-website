@@ -113,7 +113,6 @@ body.with-margin {
 }
 .lakshmi-title { 
     color: rgba(0,0,0,1);
-    text-shadow: 5px 5px 5px rgba(10,255,255,1);
 }
 span.dropt:hover span:hover { 
     background: rgba(255,255,255,1);

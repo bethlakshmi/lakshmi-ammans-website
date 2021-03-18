@@ -22,6 +22,7 @@
   </head>
   <body>
     {% cms_toolbar %}
+  {% if not view.is_popup %}
     {% static_placeholder 'banner' %}
     <nav class="navbar navbar-expand-lg navbar-light bg-primary">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,8 +37,16 @@
             </ul>
         </div>
     </nav>
-
+  {% endif %}
     <div class="container py-3">
+        {% if messages %}
+    {% for message in messages %}
+    {% if message.tags == "error" %}<div class="alert lakshmi-alert-danger">{% else %}<div class="alert lakshmi-alert-{{message.tags}}">{% endif %}
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          <strong>{{message.tags|capfirst}}:</strong> {{message|safe}}
+    </div>
+    {% endfor %}
+        {% endif %}
         {% block content %}
             <p>Hello world! This is the Bootstrap 4 Boilerplate.</p>
         {% endblock %}

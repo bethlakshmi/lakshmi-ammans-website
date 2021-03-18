@@ -53,7 +53,9 @@ class Source(Model):
 class Category(Model):
     name = CharField(max_length=128, unique=True)
     description = TextField(blank=True)
-    sources = ManyToManyField(Source)
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         app_label = "shastra_compedium"
@@ -186,3 +188,13 @@ class ExampleVideo(Example):
     class Meta:
         app_label = "shastra_compedium"
 
+
+class UserMessage(Model):
+    summary = CharField(max_length=128)
+    description = TextField(max_length=3000)
+    view = CharField(max_length=128)
+    code = CharField(max_length=128)
+
+    class Meta:
+        app_label = "shastra_compedium"
+        unique_together = (('view', 'code'),)

@@ -96,6 +96,16 @@ class PerformerAdmin(admin.ModelAdmin):
             styles = "%s, %s" % (styles, style)
         return styles
 
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ('view',
+                    'code',
+                    'summary',
+                    'description')
+    list_editable = ('summary', 'description')
+    readonly_fields = ('view', 'code')
+    list_filter = ['view', 'code']
+
+
 admin.site.register(Position, PositionAdmin)
 admin.site.register(PositionDetail, PositionDetailAdmin)
 admin.site.register(CategoryDetail, CategoryDetailAdmin)
@@ -106,3 +116,4 @@ admin.site.register(ExampleImage)
 admin.site.register(ExampleVideo)
 admin.site.register(DanceStyle)
 admin.site.register(Performer, PerformerAdmin)
+admin.site.register(UserMessage, MessageAdmin)

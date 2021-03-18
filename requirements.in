@@ -23,3 +23,5 @@ mock
 pytest
 pytest-django
 packaging==20.4           # via pytest
+django-autocomplete-light
+django-addanother
