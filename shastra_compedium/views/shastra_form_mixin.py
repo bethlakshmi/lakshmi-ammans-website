@@ -15,6 +15,7 @@ class ShastraFormMixin(ModelFormMixin):
         context['page_title'] = self.page_title
         context['view_title'] = self.view_title
         context['intro_text'] = msg[0].description
+        context['form'].required_css_class = 'required'
         return context
 
     def form_valid(self, form):

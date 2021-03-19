@@ -13,8 +13,10 @@
     {{ form.media.css }}
 {% endblock %}
 {% block content %}
-<h2 class="lakshmi-title">{{title}}</h2>
+<h2 class="lakshmi-title">{{view_title}}</h2>
 <h3 class="lakshmi-subtitle">{{subtitle}}</h3>
+  {% if intro_text != "&nbsp;" %}<p>{{intro_text | safe}}</p>{% endif %}
+   <p><font class="lakshmi-form-error">*</font> indicates a required field</p>
   {% if errors %}
     {% for error in errors %}
     <p class="lakshmi-form-error">{{error}}</p>

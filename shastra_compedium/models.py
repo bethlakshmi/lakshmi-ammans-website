@@ -108,6 +108,9 @@ class CategoryDetail(Detail):
     category = ForeignKey(Category,
                           on_delete=CASCADE,
                           related_name='details')
+    def __str__(self):
+        return "Category %s - Chapter %d" % (self.category.name, self.chapter)
+
     class Meta:
         app_label = "shastra_compedium"
         ordering = ['category', 'chapter', 'verse_start', 'verse_end']

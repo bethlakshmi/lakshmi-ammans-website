@@ -8,9 +8,11 @@ from django.urls import reverse_lazy
 from shastra_compedium.site_text import make_source_messages
 from shastra_compedium.views import ShastraFormMixin
 from shastra_compedium.forms import SourceForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class SourceCreate(CreatePopupMixin,
+class SourceCreate(LoginRequiredMixin,
+                   CreatePopupMixin,
                    ShastraFormMixin,
                    CreateView):
     model = Source
@@ -26,7 +28,8 @@ class SourceCreate(CreatePopupMixin,
         return self.request.GET.get('next', self.success_url)
 
 
-class SourceUpdate(UpdatePopupMixin,
+class SourceUpdate(LoginRequiredMixin,
+                   UpdatePopupMixin,
                    ShastraFormMixin,
                    UpdateView):
     model = Source

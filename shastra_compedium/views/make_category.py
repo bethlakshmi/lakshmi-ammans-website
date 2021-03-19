@@ -7,9 +7,11 @@ from shastra_compedium.models import Category
 from django.urls import reverse_lazy
 from shastra_compedium.site_text import make_category_messages
 from shastra_compedium.views import ShastraFormMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class CategoryCreate(CreatePopupMixin,
+class CategoryCreate(LoginRequiredMixin,
+                     CreatePopupMixin,
                      ShastraFormMixin,
                      CreateView):
     model = Category
@@ -25,7 +27,8 @@ class CategoryCreate(CreatePopupMixin,
         return self.request.GET.get('next', self.success_url)
 
 
-class CategoryUpdate(UpdatePopupMixin,
+class CategoryUpdate(LoginRequiredMixin,
+                     UpdatePopupMixin,
                      ShastraFormMixin,
                      UpdateView):
     model = Category

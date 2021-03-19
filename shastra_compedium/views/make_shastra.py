@@ -7,9 +7,11 @@ from shastra_compedium.models import Shastra
 from django.urls import reverse_lazy
 from shastra_compedium.site_text import make_shastra_messages
 from shastra_compedium.views import ShastraFormMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class ShastraCreate(CreatePopupMixin,
+class ShastraCreate(LoginRequiredMixin,
+                    CreatePopupMixin,
                     ShastraFormMixin,
                     CreateView):
     model = Shastra
@@ -32,7 +34,8 @@ class ShastraCreate(CreatePopupMixin,
         return self.request.GET.get('next', self.success_url)
 
 
-class ShastraUpdate(UpdatePopupMixin,
+class ShastraUpdate(LoginRequiredMixin,
+                    UpdatePopupMixin,
                     ShastraFormMixin,
                     UpdateView):
     model = Shastra
