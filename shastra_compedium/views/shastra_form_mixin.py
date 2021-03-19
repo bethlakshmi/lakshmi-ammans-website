@@ -14,7 +14,6 @@ class ShastraFormMixin(ModelFormMixin):
         context = super().get_context_data(**kwargs)
         context['page_title'] = self.page_title
         context['view_title'] = self.view_title
-        context['mode'] = self.mode
         context['intro_text'] = msg[0].description
         return context
 

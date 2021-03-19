@@ -45,6 +45,9 @@ class Source(Model):
     bibliography = TextField(blank=True)
     url = URLField(blank=True)
 
+    def __str__(self):
+        return self.title
+
     class Meta:
         app_label = "shastra_compedium"
         ordering = ['shastra__title', 'title']

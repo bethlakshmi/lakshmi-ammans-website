@@ -2,6 +2,7 @@ from django.forms import (
     CharField,
     ModelForm,
     Select,
+    SelectMultiple,
 )
 from shastra_compedium.models import CategoryDetail
 from django_addanother.widgets import AddAnotherEditSelectedWidgetWrapper
@@ -23,11 +24,20 @@ class ChapterForm(ModelForm):
                   'verse_end',
                   'contents',
                   ]
+        help_texts = {
+            'sources': 'To edit a source, pick a single item before ' +
+            'clicking the pencil.'}
         widgets = {
             'category': AddAnotherEditSelectedWidgetWrapper(
                 Select,
                 reverse_lazy('category-add', urlconf='shastra_compedium.urls'),
                 reverse_lazy('category-update',
+                             urlconf='shastra_compedium.urls',
+                             args=['__fk__'])),
+            'sources': AddAnotherEditSelectedWidgetWrapper(
+                SelectMultiple,
+                reverse_lazy('source-add', urlconf='shastra_compedium.urls'),
+                reverse_lazy('source-update',
                              urlconf='shastra_compedium.urls',
                              args=['__fk__'])),
             }

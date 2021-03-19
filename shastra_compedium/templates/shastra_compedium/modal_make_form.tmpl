@@ -4,15 +4,12 @@
    {{page_title}}
 {% endblock %}
 {% block head %}
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css">
     {{ form.media.css }}
     <script type="text/javascript" src="/static/tinymce/tinymce.min.js"></script>
     <script>{% include "tiny-mce-user-settings.tmpl" %}</script>
 {% endblock %}
 {% block content %}
- <ul class="nav nav-tabs" id="inner">
-  <li role="presentation"><a href="{{create_url}}{% if view.is_popup %}?_popup=1{% endif %}" class="{% if mode == 'create' %}lakshmi-tab-active{% else %}lakshmi-tab{% endif %}">Create New</a></li>
-  {% if mode == 'update' %}<li role="presentation"><a href="{% if view.is_popup %}?_popup=1{% endif %}" class="lakshmi-tab-active">Update</a></li>{% endif %}
- </ul>
 <div class="lakshmi-tab-area">
   <h3 class="lakshmi-title">{{view_title}}</h3>
   {% if intro_text != "&nbsp;" %}<p>{{intro_text | safe}}</p>{% endif %}

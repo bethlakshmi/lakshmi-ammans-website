@@ -17,7 +17,6 @@ class CategoryCreate(CreatePopupMixin,
     success_url = reverse_lazy('chapter-add', urlconf="shastra_compedium.urls")
     page_title = 'Category'
     view_title = 'Create Category'
-    mode = "create"
     valid_message = make_category_messages['create_success']
     intro_message = make_category_messages['create_intro']
     fields = ['name', 'description']
@@ -34,7 +33,6 @@ class CategoryUpdate(UpdatePopupMixin,
     success_url = reverse_lazy('chapter-add', urlconf="shastra_compedium.urls")
     page_title = 'Category'
     view_title = 'Update Category'
-    mode = "update"
     valid_message = make_category_messages['edit_success']
     intro_message = make_category_messages['edit_intro']
     fields = ['name', 'description']
