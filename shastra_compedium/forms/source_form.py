@@ -23,10 +23,10 @@ class SourceForm(ModelForm):
         labels = {'url': 'URL'}
         help_texts = {'url': 'Place to buy or read book.'}
         widgets = {
-            'category': AddAnotherEditSelectedWidgetWrapper(
+            'shastra': AddAnotherEditSelectedWidgetWrapper(
                 Select,
-                reverse_lazy('category-add', urlconf='shastra_compedium.urls'),
-                reverse_lazy('category-update',
+                reverse_lazy('shastra-add', urlconf='shastra_compedium.urls'),
+                reverse_lazy('shastra-update',
                              urlconf='shastra_compedium.urls',
                              args=['__fk__'])),
             }
