@@ -3,6 +3,7 @@ from django.forms import (
     ModelForm,
     Select,
     SelectMultiple,
+    Textarea,
 )
 from shastra_compedium.models import CategoryDetail
 from django_addanother.widgets import AddAnotherEditSelectedWidgetWrapper
@@ -12,7 +13,9 @@ from django.urls import reverse_lazy
 class ChapterForm(ModelForm):
     required_css_class = 'required'
     error_css_class = 'error'
-    position_text = CharField(required=True, label="Contents of Chapter")
+    position_text = CharField(widget=Textarea,
+                              required=True,
+                              label="Contents of Chapter")
 
     class Meta:
         model = CategoryDetail
@@ -24,7 +27,9 @@ class ChapterForm(ModelForm):
                   'verse_end',
                   'contents',
                   ]
+        labels = {'contents': 'Chapter Intro'}
         help_texts = {
+            'contents': 'Source text for this chapter.',
             'sources': 'To edit a source, pick a single item before ' +
             'clicking the pencil.'}
         widgets = {
@@ -40,4 +45,5 @@ class ChapterForm(ModelForm):
                 reverse_lazy('source-update',
                              urlconf='shastra_compedium.urls',
                              args=['__fk__'])),
+            'contents': Textarea(attrs={'class': 'admin-tiny-mce'}),
             }
