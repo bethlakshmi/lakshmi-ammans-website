@@ -8,7 +8,6 @@
 
     {# Include Bootstrap 4 and jQuery #}
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="/static/tinymce/tinymce.min.js"></script>
     <script>{% include "tiny-mce-admin-settings.tmpl" %}</script>
     {{ form.media.css }}
 {% endblock %}
@@ -17,11 +16,6 @@
 <h3 class="lakshmi-subtitle">{{subtitle}}</h3>
   {% if intro_text != "&nbsp;" %}<p>{{intro_text | safe}}</p>{% endif %}
    <p><font class="lakshmi-form-error">*</font> indicates a required field</p>
-  {% if errors %}
-    {% for error in errors %}
-    <p class="lakshmi-form-error">{{error}}</p>
-    {% endfor %}
-  {% endif %}
 <form action="" method="post" enctype="multipart/form-data">
 <div class="row">
   <div class="col-12">
@@ -31,15 +25,20 @@
     <div class="col-sm-12 col-md-6 col-lg-7 text-right"><i>Cancel will only affect the current screen.</i></div>
 
   <div class="col-sm-12 col-md-6 col-lg-5">
+  <!--
     {% if not first %}<input type="submit" name="back" value="<< Back" class="btn btn-lakshmi-secondary" >{% endif %}
     {% if not last %}<input type="submit" name="next" value="Save & Continue >>" class="btn lakshmi-btn-primary" >{% endif %}
     {% if add %}<input type="submit" name="add" value="Add & Keep Working" class="btn lakshmi-btn-primary" >{% endif %}
     <input type="submit" name="finish" value="Finish" class="btn lakshmi-btn-primary" >
     <input type="submit" name="cancel" value="Cancel" class="btn lakshmi-btn-light" >
+  -->
+    <input type="submit" name="cancel" value="Cancel" class="btn lakshmi-btn-light" onclick="window.open('','_self').close();">
+    <input type="submit" name="submit" value="Save" class="btn lakshmi-btn-primary" >
   </div>
 </div>
 </form>
 {% addtoblock "js" %}
+<script type="text/javascript" src="/static/tinymce/tinymce.min.js"></script>
 <script src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
 {{ form.media }}
 

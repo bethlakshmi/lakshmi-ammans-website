@@ -10,7 +10,7 @@ class UploadChapter(LoginRequiredMixin, ShastraFormMixin, CreateView):
     model = CategoryDetail
     template_name = 'shastra_compedium/generic_wizard.tmpl'
     form_class = ChapterForm
-    success_url = '/set_verses/'
+    success_url = '/'
     page_title = 'Upload Chapter'
     view_title = 'Upload Chapter'
     valid_message = make_chapter_messages['upload_success']
