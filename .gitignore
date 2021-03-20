@@ -27,3 +27,5 @@ local.sqlite
 *.gz
 .divio/config.json
 data.tar.gz
+.coverage
+htmlcov/*
