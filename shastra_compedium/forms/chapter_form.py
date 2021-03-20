@@ -16,6 +16,11 @@ class ChapterForm(ModelForm):
     position_text = CharField(widget=Textarea,
                               required=True,
                               label="Contents of Chapter")
+    contents = CharField(widget=Textarea(attrs={'class': 'admin-tiny-mce'}),
+                         required=True,
+                         label="Chapter Intro",
+                         help_text='Source text for this chapter.',
+                         initial=" ")
 
     class Meta:
         model = CategoryDetail
@@ -29,7 +34,6 @@ class ChapterForm(ModelForm):
                   ]
         labels = {'contents': 'Chapter Intro'}
         help_texts = {
-            'contents': 'Source text for this chapter.',
             'sources': 'To edit a source, pick a single item before ' +
             'clicking the pencil.'}
         widgets = {
@@ -45,5 +49,4 @@ class ChapterForm(ModelForm):
                 reverse_lazy('source-update',
                              urlconf='shastra_compedium.urls',
                              args=['__fk__'])),
-            'contents': Textarea(attrs={'class': 'admin-tiny-mce'}),
             }
