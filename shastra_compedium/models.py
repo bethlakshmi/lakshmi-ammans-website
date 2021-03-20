@@ -74,6 +74,9 @@ class Position(Model):
     name = CharField(max_length=128, unique=True)
     order = IntegerField()
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         app_label = "shastra_compedium"
         unique_together = [('category', 'order'), ('name', 'order')]
@@ -149,7 +152,7 @@ class DanceStyle(Model):
     description = TextField()
 
     def __str__(self):
-        return self.title
+        return self.name
 
     class Meta:
         app_label = "shastra_compedium"
@@ -161,9 +164,7 @@ class Performer(Model):
     dance_styles = ManyToManyField(DanceStyle)
     bio = TextField()
     contact = OneToOneField(User, on_delete=SET_NULL, blank=True, null=True)
-    image = FilerImageField(
-        on_delete=CASCADE,
-        null=True)
+    image = FilerImageField(on_delete=CASCADE, null=True)
 
     class Meta:
         app_label = "shastra_compedium"

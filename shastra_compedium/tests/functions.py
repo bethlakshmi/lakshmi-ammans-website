@@ -11,7 +11,7 @@ def login_as(user, testcase):
                           email=user.email,
                           password='foo')
 
-
+'''
 def set_image(itemimage=None, folder_name=None):
     folder = None
     if User.objects.filter(username='superuser_for_test').exists():
@@ -45,3 +45,4 @@ def assert_option_state(response, value, text, selected=False):
         '<option value="%s"%s>%s</option>' % (
                     value, selected_state, text))
     assert bytes(option_state, 'utf-8') in response.content
+'''

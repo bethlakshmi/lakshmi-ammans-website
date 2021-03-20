@@ -1,24 +1,21 @@
 from django.contrib.auth.models import User
+import factory
 from factory import (
     Sequence,
     SubFactory,
-    RelatedFactory,
     LazyAttribute,
-    SelfAttribute
 )
 from factory.django import (
     DjangoModelFactory,
     ImageField,
 )
-from datetime import (
-    date,
-    time,
-    timedelta,
-)
-from pytz import utc
 from shastra_compedium.models import (
     Category,
     CategoryDetail,
+    DanceStyle,
+    Performer,
+    Position,
+    PositionDetail,
     Shastra,
     Source,
 )
@@ -40,28 +37,71 @@ class CategoryFactory(DjangoModelFactory):
     description = Sequence(lambda n: 'Description %d' % n)
 
 
+class PositionFactory(DjangoModelFactory):
+    class Meta:
+        model = Position
+    name = Sequence(lambda n: 'Position %d' % n)
+    category = SubFactory(CategoryFactory)
+    order = Sequence(lambda n: n)
+
+
 class ShastraFactory(DjangoModelFactory):
     class Meta:
         model = Shastra
-    title = Sequence(lambda n: 'Category %d' % n)
+    title = Sequence(lambda n: 'Shastra %d' % n)
     min_age = -10
     max_age = 10
     description = Sequence(lambda n: 'Description %d' % n)
 
 
+class DanceStyleFactory(DjangoModelFactory):
+    class Meta:
+        model = DanceStyle
+    name = Sequence(lambda n: 'Dance Style %d' % n)
+    description = Sequence(lambda n: 'Description %d' % n)
+
+
+class PerformerFactory(DjangoModelFactory):
+    class Meta:
+        model = Performer
+    name = Sequence(lambda n: 'Perfromer %d' % n)
+    linneage = Sequence(lambda n: 'Linneage %d' % n)
+    bio = Sequence(lambda n: 'bio %d' % n)
+
+    @factory.post_generation
+    def dance_styles(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            # A list of groups were passed in, use them
+            for dance_style in extracted:
+                self.dance_styles.add(dance_style)
+        else:
+            self.dance_styles.add(DanceStyleFactory())
+
+
 class SourceFactory(DjangoModelFactory):
     class Meta:
         model = Source
-    title = Sequence(lambda n: 'SubItem_%d' % n)
+    title = Sequence(lambda n: 'Source %d' % n)
     shastra = SubFactory(ShastraFactory)
-    translation_language = Sequence(lambda n: 'Description %d' % n)
-    translator = Sequence(lambda n: 'Description %d' % n)
-    isbn = Sequence(lambda n: 'Description %d' % n)
+    translation_language = Sequence(lambda n: 'Language %d' % n)
+    translator = Sequence(lambda n: 'Translator %d' % n)
+    isbn = Sequence(lambda n: 'isbn %d' % n)
 
 
 class CategoryDetailFactory(DjangoModelFactory):
     class Meta:
         model = CategoryDetail
     category = SubFactory(CategoryFactory)
-    usage = Sequence(lambda n: 'Description %d' % n)
-    contents = Sequence(lambda n: 'Description %d' % n)
+    usage = Sequence(lambda n: 'Usage %d' % n)
+    contents = Sequence(lambda n: 'Contents %d' % n)
+
+
+class PositionDetailFactory(DjangoModelFactory):
+    class Meta:
+        model = PositionDetail
+    position = SubFactory(PositionFactory)
+    usage = Sequence(lambda n: 'Usage %d' % n)
+    contents = Sequence(lambda n: 'Contents %d' % n)

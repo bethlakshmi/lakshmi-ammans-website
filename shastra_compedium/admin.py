@@ -6,14 +6,18 @@ class PositionAdmin(admin.ModelAdmin):
     list_display = ('name',
                     'category',
                     'detail_count',
-                    'example_count')
+                    'example_image_count',
+                    'example_video_count')
     list_filter = ['category']
 
     def detail_count(self, obj):
         return obj.details.count()
 
-    def example_count(self, obj):
-        return obj.example_set.count()
+    def example_image_count(self, obj):
+        return obj.exampleimage_set.count()
+
+    def example_video_count(self, obj):
+        return obj.examplevideo_set.count()
 
 
 class PositionDetailAdmin(admin.ModelAdmin):
@@ -31,12 +35,7 @@ class PositionDetailAdmin(admin.ModelAdmin):
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name',
-                    'description',
-                    'source_count',)
-
-    def source_count(self, obj):
-        return obj.sources.count()
-
+                    'description')
 
 class CategoryDetailAdmin(admin.ModelAdmin):
     list_display = ('id',
@@ -92,8 +91,8 @@ class PerformerAdmin(admin.ModelAdmin):
 
     def dance_styles_display(self, obj):
         styles = ""
-        for style in obj.dance_styles:
-            styles = "%s, %s" % (styles, style)
+        for style in obj.dance_styles.all():
+            styles = "%s, %s" % (style, styles)
         return styles
 
 

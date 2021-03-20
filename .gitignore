@@ -29,3 +29,4 @@ local.sqlite
 data.tar.gz
 .coverage
 htmlcov/*
+data/media/*
