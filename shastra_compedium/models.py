@@ -80,7 +80,6 @@ class Position(Model):
         ordering = ['category', 'order']
 
 
-
 class Detail(Model):
     sources = ManyToManyField(Source)
     usage = CharField(max_length=128)
@@ -99,6 +98,7 @@ class PositionDetail(Detail):
     position = ForeignKey(Position,
                           on_delete=CASCADE,
                           related_name='details')
+
     class Meta:
         app_label = "shastra_compedium"
         ordering = ['position', 'chapter', 'verse_start', 'verse_end']
@@ -108,6 +108,7 @@ class CategoryDetail(Detail):
     category = ForeignKey(Category,
                           on_delete=CASCADE,
                           related_name='details')
+
     def __str__(self):
         return "Category %s - Chapter %d" % (self.category.name, self.chapter)
 
@@ -122,7 +123,7 @@ class Video(File):
     @classmethod
     def matches_file_type(cls, iname, ifile, request):
         # the extensions we'll recognise for this file type
-        filename_extensions = ['.dv', '.mov', '.mp4', '.avi', '.wmv',]
+        filename_extensions = ['.dv', '.mov', '.mp4', '.avi', '.wmv']
         ext = os.path.splitext(iname)[1].lower()
         return ext in filename_extensions
 
@@ -173,6 +174,7 @@ class Example(Model):
 
     created_date = DateTimeField(auto_now_add=True)
     modified_date = DateTimeField(auto_now=True)
+
     class Meta:
         abstract = True
         app_label = "shastra_compedium"
@@ -191,6 +193,7 @@ class ExampleVideo(Example):
     video = FilerVideoField(
         on_delete=CASCADE,
         null=True)
+
     class Meta:
         app_label = "shastra_compedium"
 

@@ -19,7 +19,7 @@ make_shastra_messages = {
 make_chapter_messages = {
     'upload_success':  "A new chapter has been created.  Name: %s",
     'upload_intro':  '''Use this form to upload text for a chapter.  Each
-    detail should be separated by a '|||'.  Verse numbers, if present, 
+    detail should be separated by a '|||'.  Verse numbers, if present,
     should be at the start of a detail, and should be in Arabic numerals as
     either # or #-#.  For text pertaining to the chapter - paste it in the
     'contents' field below.''',

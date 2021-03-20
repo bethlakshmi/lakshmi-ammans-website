@@ -1,7 +1,7 @@
 from django.contrib import admin
 from shastra_compedium.models import *
 
-# Register your models here.
+
 class PositionAdmin(admin.ModelAdmin):
     list_display = ('name',
                     'category',
@@ -95,6 +95,7 @@ class PerformerAdmin(admin.ModelAdmin):
         for style in obj.dance_styles:
             styles = "%s, %s" % (styles, style)
         return styles
+
 
 class MessageAdmin(admin.ModelAdmin):
     list_display = ('view',

@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from shastra_compedium.views import (
-	CategoryCreate,
-	CategoryUpdate,
+    CategoryCreate,
+    CategoryUpdate,
     ShastraCreate,
     ShastraUpdate,
     SourceCreate,
