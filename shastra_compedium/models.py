@@ -92,6 +92,7 @@ class Detail(Model):
 
     class Meta:
         app_label = "shastra_compedium"
+        abstract = True
 
 
 class PositionDetail(Detail):
@@ -165,7 +166,7 @@ class Performer(Model):
 
 class Example(Model):
     position = ForeignKey(Position, on_delete=CASCADE)
-    details = ManyToManyField(Detail)
+    details = ManyToManyField(PositionDetail)
     dance_style = ForeignKey(DanceStyle, on_delete=CASCADE)
     performer = ForeignKey(Performer,
                            on_delete=SET_NULL,
