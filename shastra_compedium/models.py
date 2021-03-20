@@ -111,7 +111,12 @@ class CategoryDetail(Detail):
                           related_name='details')
 
     def __str__(self):
-        return "Category %s - Chapter %d" % (self.category.name, self.chapter)
+        sources = ""
+        for source in self.sources.all():
+            sources = "%s, %s" % (str(source), sources)
+        return "Detail for Category %s, from Source(s): %s" % (
+            self.category.name,
+            sources)
 
     class Meta:
         app_label = "shastra_compedium"
