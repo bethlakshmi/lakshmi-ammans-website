@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static sekizai_tags %}
+{% block title %}
+   {{page_title}}
+{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css">
+
+    {{ form.media.css }}
+    <script type="text/javascript" src="/static/tinymce/tinymce.min.js"></script>
+    <script>{% include "tiny-mce-admin-settings.tmpl" %}</script>
+{% endblock %}
+{% block content %}
+<h2 class="lakshmi-title">{{view_title}}</h2>
+<h3 class="lakshmi-subtitle">{{subtitle}}</h3>
+  {% if intro_text != "&nbsp;" %}<p>{{intro_text | safe}}</p>{% endif %}
+   <p><font class="lakshmi-form-error">*</font> indicates a required field</p>
+<form action="" method="post" enctype="multipart/form-data">
+<div class="row">
+  <div class="col-12">
+    {% include 'shastra_compedium/form_table.tmpl' %}
+  </div></div>
+<div class="row">
+    <div class="col-sm-12 col-md-6 col-lg-7 text-right"><i>Cancel will only affect the current screen.</i></div>
+
+  <div class="col-sm-12 col-md-6 col-lg-5">
+  <!--
+    {% if not first %}<input type="submit" name="back" value="<< Back" class="btn btn-lakshmi-secondary" >{% endif %}
+    {% if not last %}<input type="submit" name="next" value="Save & Continue >>" class="btn lakshmi-btn-primary" >{% endif %}
+    {% if add %}<input type="submit" name="add" value="Add & Keep Working" class="btn lakshmi-btn-primary" >{% endif %}
+    <input type="submit" name="finish" value="Finish" class="btn lakshmi-btn-primary" >
+    <input type="submit" name="cancel" value="Cancel" class="btn lakshmi-btn-light" >
+  -->
+    <input type="submit" name="cancel" value="Cancel" class="btn lakshmi-btn-light" onclick="window.open('','_self').close();">
+    <input type="submit" name="submit" value="Save" class="btn lakshmi-btn-primary" >
+  </div>
+</div>
+</form>
+{% addtoblock "js" %}
+<script src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+{{ form.media.js }}
+{% endaddtoblock %}
+{% endblock %}

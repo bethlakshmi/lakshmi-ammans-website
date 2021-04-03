@@ -1,0 +1,6 @@
+[run]
+omit = 
+    addons/*
+    wsgi.py
+    manage.py
+    settings.py

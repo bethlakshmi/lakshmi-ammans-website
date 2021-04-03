@@ -13,11 +13,16 @@
 
     {% render_block "css" %}
     {{ ALDRYN_SNAKE.render_head }}
-    <link href="{% static 'custom/custom-css-bootstrap-magic-2019-12-28.css' %}" rel="stylesheet">
 
+    <link href="{% static 'custom/custom-css-bootstrap-magic-2019-12-28.css' %}" rel="stylesheet">
+    <link href="{% static 'custom/styles.css' %}" rel="stylesheet">
+
+    {% block head %}
+    {% endblock head %}
   </head>
   <body>
     {% cms_toolbar %}
+  {% if not view.is_popup %}
     {% static_placeholder 'banner' %}
     <nav class="navbar navbar-expand-lg navbar-light bg-primary">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,15 +37,23 @@
             </ul>
         </div>
     </nav>
-
+  {% endif %}
     <div class="container py-3">
+        {% if messages %}
+    {% for message in messages %}
+    {% if message.tags == "error" %}<div class="alert lakshmi-alert-danger">{% else %}<div class="alert lakshmi-alert-{{message.tags}}">{% endif %}
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          <strong>{{message.tags|capfirst}}:</strong> {{message|safe}}
+    </div>
+    {% endfor %}
+        {% endif %}
         {% block content %}
             <p>Hello world! This is the Bootstrap 4 Boilerplate.</p>
         {% endblock %}
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
 

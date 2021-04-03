@@ -1,0 +1,122 @@
+body.full-page { 
+    background-color: rgba(255,255,255,1);
+    color: rgba(0,0,0,1);
+}
+body.with-margin { 
+    background-color: rgba(255,255,255,1);
+    color: rgba(0,0,0,1);
+}
+.bootstrap-table.fullscreen { 
+    background-color: rgba(255,255,255,1);
+}
+.btn-lakshmi-secondary { 
+    background-color: rgba(108,117,125,1);
+    border-color: rgba(108,117,125,1);
+    color: rgba(255,255,255,1);
+}
+.btn-lakshmi-secondary:hover { 
+    background-color: rgba(90,98,104,1);
+    border-color: rgba(90,98,104,1);
+    color: rgba(255,255,255,1);
+}
+.detail-icon { 
+    color: rgba(0,123,255,1);
+}
+.detail-icon:hover { 
+    color: rgba(0,86,179,1);
+}
+.dropdown-menu { 
+    background-color: rgba(255,255,255,1);
+}
+.lakshmi-alert-danger { 
+    background-color: rgba(248,215,218,1);
+    border-color: rgba(245,198,203,1);
+    color: rgba(114,28,36,1);
+}
+.lakshmi-alert-info { 
+    background-color: rgba(209,236,241,1);
+    border-color: rgba(190,229,235,1);
+    color: rgba(12,84,96,1);
+}
+.lakshmi-alert-success { 
+    background-color: rgba(212,237,218,1);
+    border-color: rgba(195,230,203,1);
+    color: rgba(21,87,36,1);
+}
+.lakshmi-alert-warning { 
+    background-color: rgba(255,243,205,1);
+    border-color: rgba(255,238,186,1);
+    color: rgba(133,100,4,1);
+}
+.lakshmi-btn-light { 
+    background-color: rgba(248,249,250,1);
+    border-color: rgba(248,249,250,1);
+    color: rgba(33,37,41,1);
+}
+.lakshmi-btn-light:hover { 
+    background-color: rgba(226,230,234,1);
+    border-color: rgba(226,230,234,1);
+    color: rgba(33,37,41,1);
+}
+.lakshmi-btn-primary { 
+    background-color: rgba(0,123,255,1);
+    border-color: rgba(0,123,255,1);
+    color: rgba(255,255,255,1);
+}
+.lakshmi-btn-primary:hover { 
+    background-color: rgba(0,105,217,1);
+    border-color: rgba(0,98,204,1);
+    color: rgba(255,255,255,1);
+}
+.lakshmi-detail { 
+    color: rgba(0,123,255,1);
+}
+.lakshmi-detail:hover { 
+    color: rgba(0,86,179,1);
+}
+.lakshmi-form-error { 
+    color: rgb(255,0,0,1);
+}
+.lakshmi-form-required { 
+    color: rgb(255,0,0,1);
+}
+#lakshmi-navbar-brand { 
+    color: rgba(0,0,0,1);
+}
+.lakshmi-nav-link { 
+    color: rgba(0,0,0,.5);
+}
+.lakshmi-nav-link:hover { 
+    color: rgba(0,0,0,.7);
+}
+.lakshmi-subtitle { 
+    color: rgb(128,128,128,1);
+}
+.lakshmi-table-header { 
+    background-color: rgba(245,245,245,1);
+    color: rgba(0,0,0,1);
+}
+.lakshmi-table-success { 
+    background-color: rgba(195,230,203,1);
+}
+.lakshmi-table > tbody > tr > td { 
+    border-color: rgb(128,128,128,1);
+}
+.lakshmi-table > thead > tr > th { 
+    border-color: rgb(128,128,128,1);
+}
+.lakshmi-text-muted { 
+    color: rgba(108,117,125,1);
+}
+.lakshmi-text-success { 
+    color: rgba(35,145,60,1);
+}
+.lakshmi-title { 
+    color: rgba(0,0,0,1);
+}
+span.dropt:hover span:hover { 
+    background: rgba(255,255,255,1);
+}
+span.dropt span:hover { 
+    border-color: rgba(0,0,0,1);
+}
