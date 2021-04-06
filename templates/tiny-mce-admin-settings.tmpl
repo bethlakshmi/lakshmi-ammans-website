@@ -8,10 +8,6 @@ tinymce.init({
     '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
     '//www.tiny.cloud/css/codepen.min.css'
   ],
-  link_list: [
-    { title: 'GBE Main', value: 'http://burlesque-expo.com' },
-    { title: 'GBE Account Home', value: 'http://burlesque-expo.com/gbe' }
-  ],
   importcss_append: true,
   height: 400,
   template_cdate_format: '[Date Created (CDATE): %m/%d/%Y : %H:%M:%S]',
@@ -22,4 +18,5 @@ tinymce.init({
   noneditable_noneditable_class: "mceNonEditable",
   toolbar_drawer: 'sliding',
   contextmenu: "link table",
+  {% if tiny_mce_width %}width: {{tiny_mce_width}},{% endif %}
  });

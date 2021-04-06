@@ -16,11 +16,19 @@ make_shastra_messages = {
     'create_intro':  "Use this form to create a new shastra.",
     'edit_intro':  "Use this form to update this shastra.",
 }
-make_chapter_messages = {
-    'upload_success':  "A new chapter has been created.  Name: %s",
-    'upload_intro':  '''Use this form to upload text for a chapter.  Each
-    detail should be separated by a '|||'.  Verse numbers, if present,
+user_messages = {
+    'upload_success': {
+        'summary': 'Chapter has been created.',
+        'description': "A new chapter has been created.  Name: %s"},
+    'CHAPTER_BASICS_INTRO': {
+        'summary': 'Introduction on first page of upload',
+        'description': '''Use this form to upload text for a chapter.
+    Each detail should be separated by a '|||'.  Verse numbers, if present,
     should be at the start of a detail, and should be in Arabic numerals as
     either # or #-#.  For text pertaining to the chapter - paste it in the
-    'contents' field below.''',
+    'contents' field below.'''},
+    'CHAPTER_DETAIL_INTRO': {
+        'summary': 'Introduction on second page of upload',
+        'description': '''Review each row to be sure the details have
+    been parsed accurately.  Enter a position name for each row.'''},
 }

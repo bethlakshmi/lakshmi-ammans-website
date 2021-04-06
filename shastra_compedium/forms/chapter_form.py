@@ -1,5 +1,7 @@
 from django.forms import (
     CharField,
+    HiddenInput,
+    IntegerField,
     ModelForm,
     Select,
     SelectMultiple,
@@ -13,14 +15,17 @@ from django.urls import reverse_lazy
 class ChapterForm(ModelForm):
     required_css_class = 'required'
     error_css_class = 'error'
-    position_text = CharField(widget=Textarea,
+    position_text = CharField(widget=Textarea(attrs={'cols': 86,}),
                               required=True,
                               label="Contents of Chapter")
-    contents = CharField(widget=Textarea(attrs={'class': 'admin-tiny-mce'}),
-                         required=True,
-                         label="Chapter Intro",
-                         help_text='Source text for this chapter.',
-                         initial=" ")
+    contents = CharField(
+        widget=Textarea(attrs={'class': 'admin-tiny-mce'}),
+        required=True,
+        label="Chapter Intro",
+        help_text='Source text for this chapter.',
+        initial=" ")
+    step = IntegerField(widget=HiddenInput(), initial=0)
+    chapter = IntegerField(required=True)
 
     class Meta:
         model = CategoryDetail
