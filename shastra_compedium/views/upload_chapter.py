@@ -7,6 +7,7 @@ from shastra_compedium.models import CategoryDetail
 from shastra_compedium.views import GenericWizard
 import re
 from django.urls import reverse
+from django.contrib import messages
 
 
 class UploadChapter(GenericWizard):
@@ -60,12 +61,25 @@ class UploadChapter(GenericWizard):
                 chapter_pos['chapter'] = self.chapter.chapter
                 chapter_pos['usage'] = "Meaning"
                 self.chapter_positions += [chapter_pos]
+        else:
+            self.num_created = 0
+            for form in self.forms[1:]:
+                position_detail = form.save(commit=False)
+                if len(form.cleaned_data['contents'].strip()) > 0:
+                    position_detail.save()
+                    self.num_created = self.num_created + 1
+                if len(form.cleaned_data['posture']) > 0:
+                    position_detail.pk = None
+                    position_detail.contents = form.cleaned_data['posture']
+                    position_detail.usage = "Posture Description"
+                    position_detail.save()
+                    self.num_created = self.num_created + 1
 
     def finish(self, request):
         messages.success(
             request,
-            "Uploaded %s items." % (
-                self.num_rows))
+            "Uploaded %s position details." % (
+                self.num_created))
         return self.return_url
 
     def make_context(self, request):

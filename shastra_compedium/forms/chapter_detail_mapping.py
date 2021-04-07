@@ -13,5 +13,3 @@ class ChapterDetailMapping(Form):
     error_css_class = 'error'
     step = IntegerField(widget=HiddenInput(), initial=1)
     num_rows = IntegerField(widget=HiddenInput(), required=True)
-    category = ModelChoiceField(widget=HiddenInput(),
-                                queryset=Category.objects.all())

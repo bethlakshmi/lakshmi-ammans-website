@@ -3,7 +3,8 @@
 <p>{{ instructions | safe }}</p>
  <font class="lakshmi-form-error">
   {% if forms.0.errors %}
-    <p class="lakshmi-form-error"> There is an error on the form.</p>
+    There is an error on the form.
+    {{ forms.0.errors }}
   {% endif %}
   {{ forms.0.non_field_errors }}</font>
     {% csrf_token %}
@@ -21,7 +22,7 @@
     </thead>
     <tbody>
       {% for item_form in forms|slice:"1:" %}
-      <tr {% if form.errors %}class="lakshmi-table-error"{% endif %}>
+      <tr {% if item_form.errors %}class="lakshmi-table-error"{% endif %}>
         <td>{{item_form.position}}<br>{{item_form.chapter}}:{{item_form.verse_start}}-{{item_form.verse_end}}
           {% if item_form.position.errors %}<br>
           <font class="lakshmi-form-error">{{ item_form.position.errors }}</font>
@@ -32,7 +33,8 @@
             <font class="lakshmi-form-error">{{ item_form.verse_start.errors }}</font>
           {% endif %}{% if item_form.verse_end.errors %}<br>
             <font class="lakshmi-form-error">{{ item_form.verse_end.errors }}</font>
-          {% endif %}</td>
+          {% endif %}
+          <font class="lakshmi-form-error">{{ item_form.non_field_errors }}<br>{{ item_form.errors }}</font></td>
           <td>{{item_form.posture}}
           {% if item_form.posture.errors %}<br>
             <font class="lakshmi-form-error">{{ item_form.posture.errors }}</font>

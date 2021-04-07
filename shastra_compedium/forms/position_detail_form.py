@@ -16,7 +16,11 @@ class PositionDetailForm(ModelForm):
     error_css_class = 'error'
     posture = CharField(
         widget=Textarea(attrs={'class': 'admin-tiny-mce'}),
-        required=True,
+        required=False,
+        initial=" ")
+    contents = CharField(
+        widget=Textarea(attrs={'class': 'admin-tiny-mce'}),
+        required=False,
         initial=" ")
 
     class Meta:
@@ -36,7 +40,6 @@ class PositionDetailForm(ModelForm):
                 reverse_lazy('position-update',
                              urlconf='shastra_compedium.urls',
                              args=['__fk__'])),
-            'contents': Textarea(attrs={'class': 'admin-tiny-mce'}),
             'chapter': NumberInput(attrs={'style': 'width: 50px'}),
             'verse_start': NumberInput(attrs={'style': 'width: 50px'}),
             'verse_end': NumberInput(attrs={'style': 'width: 50px'}),
