@@ -38,9 +38,9 @@
 </form>
 {% addtoblock "js" %}
 <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
-
-{{ forms.0.media }}
-
+{% for form in forms %}
+{{ form.media }}
+{% endfor %}
 <script>
 (function($) {
     $('#add-form').click(function() {

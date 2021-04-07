@@ -2,10 +2,16 @@
 from django.conf.urls import url, include
 from aldryn_django.utils import i18n_patterns
 import aldryn_addons.urls
+from shastra_compedium.views import PositionAutocomplete
 
 
 urlpatterns = [
     # add your own patterns here
+    url(
+        r'^position-autocomplete/$',
+        PositionAutocomplete.as_view(),
+        name='position-autocomplete',
+    ),
     url(r'^', include('shastra_compedium.urls')),
 ] + aldryn_addons.urls.patterns() + i18n_patterns(
     # add your own i18n patterns here

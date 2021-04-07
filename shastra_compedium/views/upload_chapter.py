@@ -6,6 +6,7 @@ from shastra_compedium.forms import (
 from shastra_compedium.models import CategoryDetail
 from shastra_compedium.views import GenericWizard
 import re
+from django.urls import reverse
 
 
 class UploadChapter(GenericWizard):
@@ -100,7 +101,11 @@ class UploadChapter(GenericWizard):
                     'num_rows': len(self.chapter_positions)})]
                 i = 0
                 for position in self.chapter_positions:
-                    forms += [PositionDetailForm(prefix=str(i),
-                                                 initial=position)]
+                    form = PositionDetailForm(prefix=str(i), initial=position)
+                    form.fields['position'].widget.add_related_url = reverse(
+                        'position-add',
+                        urlconf='shastra_compedium.urls',
+                        args=[i*5, self.chapter.category.pk])
+                    forms += [form]
                     i = i + 1
                 return forms

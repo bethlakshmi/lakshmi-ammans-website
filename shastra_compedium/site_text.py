@@ -16,6 +16,12 @@ make_shastra_messages = {
     'create_intro':  "Use this form to create a new shastra.",
     'edit_intro':  "Use this form to update this shastra.",
 }
+make_position_messages = {
+    'create_success':  "A new position has been created.  Name: %s",
+    'edit_success':  "The %s position has been updated.",
+    'create_intro':  "Use this form to create a new position.",
+    'edit_intro':  "Use this form to update this position.",
+}
 user_messages = {
     'upload_success': {
         'summary': 'Chapter has been created.',
