@@ -93,8 +93,8 @@ body.with-margin {
     color: rgb(128,128,128,1);
 }
 .lakshmi-table-header { 
-    background-color: rgba(245,245,245,1);
-    color: rgba(0,0,0,1);
+    background-color: rgba(280, 170, 60, 1);
+    color: rgba(0, 0, 0, 0.5);
 }
 .lakshmi-table-success { 
     background-color: rgba(195,230,203,1);
