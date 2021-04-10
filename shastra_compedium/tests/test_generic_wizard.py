@@ -38,7 +38,6 @@ class TestGenericWizard(TestCase):
                 'step': 0,
                 'next': True}
 
-
     def test_no_step(self):
         data = self.chapter_data()
         del data['step']
@@ -64,6 +63,6 @@ class TestGenericWizard(TestCase):
         response = self.client.post(self.create_url, data=data, follow=True)
         self.assertRedirects(response, reverse(
             "position_list",
-             urlconf='shastra_compedium.urls'))
+            urlconf='shastra_compedium.urls'))
         # part of the success message - no positions are posted
         self.assertNotContains(response, "position details.")
