@@ -23,7 +23,7 @@
         'order': '{{ position.order }}',
     {% for source,verses in details.items %}
       {% for usage,detail in verses.items %}
-        '{{source}}_{{usage}}': '{{ detail.contents|safe }}',
+        '{{source}}_{{usage}}': '{{ detail.contents|escapejs|safe }}',
       {% endfor %}
     {% endfor %}
         'action': '<a class="lakshmi-detail" href="" title="Edit"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;<a class="lakshmi-detail" href="" title="Manage Images"><i class="far fa-images"></i></a>',
