@@ -32,7 +32,8 @@ class GenericWizard(View):
 
     def groundwork(self, request, args, kwargs):
         self.step = int(request.POST.get("step", -1))
-        self.return_url = "/"
+        self.return_url = reverse('position_list',
+                                  urlconf='shastra_compedium.urls')
 
     def make_context(self, request):
         context = {

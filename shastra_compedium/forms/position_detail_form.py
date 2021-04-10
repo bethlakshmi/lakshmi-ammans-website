@@ -2,6 +2,7 @@ from django.forms import (
     CharField,
     HiddenInput,
     ModelForm,
+    MultipleHiddenInput,
     NumberInput,
     Textarea,
 )
@@ -27,6 +28,7 @@ class PositionDetailForm(ModelForm):
         model = PositionDetail
         fields = [
             'position',
+            'sources',
             'chapter',
             'verse_start',
             'verse_end',
@@ -44,4 +46,5 @@ class PositionDetailForm(ModelForm):
             'verse_start': NumberInput(attrs={'style': 'width: 50px'}),
             'verse_end': NumberInput(attrs={'style': 'width: 50px'}),
             'usage': HiddenInput(),
+            'sources': MultipleHiddenInput(),
             }

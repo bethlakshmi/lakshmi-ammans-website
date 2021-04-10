@@ -7,9 +7,9 @@ class PositionAutocomplete(autocomplete.Select2QuerySetView):
         if not self.request.user.is_authenticated:
             return Position.objects.none()
 
-        qs = Position.objects.all()
+        qs = Position.objects.all().order_by('name')
 
         if self.q:
-            qs = qs.filter(name__istartswith=self.q)
+            qs = qs.filter(name__istartswith=self.q).order_by('name')
 
         return qs

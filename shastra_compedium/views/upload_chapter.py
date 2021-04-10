@@ -12,7 +12,6 @@ from django.contrib import messages
 
 class UploadChapter(GenericWizard):
     template = 'shastra_compedium/bulk_position_edit.tmpl'
-    success_url = '/'
     page_title = 'Upload Chapter'
     first_title = 'Upload Chapter - Setup Chapter'
     second_title = 'Upload Chapter - Edit Detail Entries'
@@ -59,6 +58,7 @@ class UploadChapter(GenericWizard):
                 else:
                     chapter_pos['contents'] = chapter_pos['text'].strip()
                 chapter_pos['chapter'] = self.chapter.chapter
+                chapter_pos['sources'] = self.chapter.sources.all().values_list('pk', flat=True)
                 chapter_pos['usage'] = "Meaning"
                 self.chapter_positions += [chapter_pos]
         else:
@@ -66,13 +66,14 @@ class UploadChapter(GenericWizard):
             for form in self.forms[1:]:
                 position_detail = form.save(commit=False)
                 if len(form.cleaned_data['contents'].strip()) > 0:
-                    position_detail.save()
+                    position_detail = form.save()
                     self.num_created = self.num_created + 1
                 if len(form.cleaned_data['posture']) > 0:
                     position_detail.pk = None
                     position_detail.contents = form.cleaned_data['posture']
                     position_detail.usage = "Posture Description"
                     position_detail.save()
+                    position_detail = form.save_m2m()
                     self.num_created = self.num_created + 1
 
     def finish(self, request):
