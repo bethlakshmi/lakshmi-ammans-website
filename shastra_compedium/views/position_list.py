@@ -29,8 +29,8 @@ class PositionList(View):
             'changed_id': self.changed_id,
             'error_id': self.error_id,
             'sources': Source.objects.all(),
-            #'path_list': [
-            #    ("Item List", reverse('items_list', urlconf='inventory.urls')),
+            # 'path_list': [
+            #   ("Item List", reverse('items_list', urlconf='inventory.urls')),
             #    ("SubItem List",
             #     reverse('subitems_list', urlconf='inventory.urls'))]
             }
@@ -41,7 +41,7 @@ class PositionList(View):
             if detail.position not in details:
                 details[detail.position] = {}
             for source in detail.sources.all():
-                if not source in details[detail.position]:
+                if source not in details[detail.position]:
                     details[detail.position][source] = {detail.usage: detail}
                 else:
                     details[detail.position][source][detail.usage] = detail

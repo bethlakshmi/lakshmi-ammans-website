@@ -34,6 +34,7 @@ class PositionCreate(LoginRequiredMixin,
             initial['category'] = int(self.kwargs['category'])
         return initial
 
+
 class PositionUpdate(LoginRequiredMixin,
                      UpdatePopupMixin,
                      ShastraFormMixin,

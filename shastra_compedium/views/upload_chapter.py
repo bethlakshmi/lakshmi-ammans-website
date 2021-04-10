@@ -58,7 +58,8 @@ class UploadChapter(GenericWizard):
                 else:
                     chapter_pos['contents'] = chapter_pos['text'].strip()
                 chapter_pos['chapter'] = self.chapter.chapter
-                chapter_pos['sources'] = self.chapter.sources.all().values_list('pk', flat=True)
+                chapter_pos['sources'] = self.chapter.sources.all(
+                    ).values_list('pk', flat=True)
                 chapter_pos['usage'] = "Meaning"
                 self.chapter_positions += [chapter_pos]
         else:
@@ -77,10 +78,14 @@ class UploadChapter(GenericWizard):
                     self.num_created = self.num_created + 1
 
     def finish(self, request):
-        messages.success(
-            request,
-            "Uploaded %s position details." % (
-                self.num_created))
+        if self.forms[0].__class__.__name__ == "ChapterForm":
+            messages.success(
+                request,
+                "Uploaded chapter details - %s" % (self.chapter))
+        else:
+            messages.success(
+                request,
+                "Uploaded %s position details." % (self.num_created))
         return self.return_url
 
     def make_context(self, request):
@@ -88,8 +93,6 @@ class UploadChapter(GenericWizard):
         if str(self.forms[0].__class__.__name__) == "ChapterDetailMapping":
             context['special_handling'] = True
             context['tiny_mce_width'] = 400
-        elif str(self.forms[0].__class__.__name__) == "ChapterForm":
-            context['show_finish'] = False
         return context
 
     def setup_forms(self, form, request=None):

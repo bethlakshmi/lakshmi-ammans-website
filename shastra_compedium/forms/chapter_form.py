@@ -15,7 +15,7 @@ from django.urls import reverse_lazy
 class ChapterForm(ModelForm):
     required_css_class = 'required'
     error_css_class = 'error'
-    position_text = CharField(widget=Textarea(attrs={'cols': 86,}),
+    position_text = CharField(widget=Textarea(attrs={'cols': 86}),
                               required=True,
                               label="Contents of Chapter")
     contents = CharField(
