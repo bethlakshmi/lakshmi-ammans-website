@@ -23,9 +23,6 @@ make_position_messages = {
     'edit_intro':  "Use this form to update this position.",
 }
 user_messages = {
-    'upload_success': {
-        'summary': 'Chapter has been created.',
-        'description': "A new chapter has been created.  Name: %s"},
     'CHAPTER_BASICS_INTRO': {
         'summary': 'Introduction on first page of upload',
         'description': '''Use this form to upload text for a chapter.
@@ -36,7 +33,8 @@ user_messages = {
     'CHAPTER_DETAIL_INTRO': {
         'summary': 'Introduction on second page of upload',
         'description': '''Review each row to be sure the details have
-    been parsed accurately.  Enter a position name for each row.'''},
+    been parsed accurately.  Enter a position name for each row.  Leaving a 
+    position empty means the row will not be uploaded.'''},
     "BUTTON_CLICK_UNKNOWN": {
         'summary':  "Can't tell what button the user pressed to submit",
         'description': '''Something has gone wrong.  If this persists, please

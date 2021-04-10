@@ -65,17 +65,18 @@ class UploadChapter(GenericWizard):
         else:
             self.num_created = 0
             for form in self.forms[1:]:
-                position_detail = form.save(commit=False)
-                if len(form.cleaned_data['contents'].strip()) > 0:
-                    position_detail = form.save()
-                    self.num_created = self.num_created + 1
-                if len(form.cleaned_data['posture']) > 0:
-                    position_detail.pk = None
-                    position_detail.contents = form.cleaned_data['posture']
-                    position_detail.usage = "Posture Description"
-                    position_detail.save()
-                    position_detail = form.save_m2m()
-                    self.num_created = self.num_created + 1
+                if form.cleaned_data['position']:
+                    position_detail = form.save(commit=False)
+                    if len(form.cleaned_data['contents'].strip()) > 0:
+                        position_detail = form.save()
+                        self.num_created = self.num_created + 1
+                    if len(form.cleaned_data['posture']) > 0:
+                        position_detail.pk = None
+                        position_detail.contents = form.cleaned_data['posture']
+                        position_detail.usage = "Posture Description"
+                        position_detail.save()
+                        position_detail = form.save_m2m()
+                        self.num_created = self.num_created + 1
 
     def finish(self, request):
         if self.forms[0].__class__.__name__ == "ChapterForm":

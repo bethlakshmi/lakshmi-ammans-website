@@ -182,3 +182,20 @@ class TestUploadChapter(TestCase):
         self.assertContains(
             response,
             user_messages['NO_FORM_ERROR']['description'])
+
+    def test_create_post_positions_success_without_upload(self):
+        data = self.position_data()
+        del data['0-position']
+        data['1-sources'] = [self.source.pk]
+        data['1-usage'] = "Meaning",
+        data['1-position'] = self.position.pk,
+        data['1-chapter'] = 1
+        data['1-verse_start'] = 10
+        data['1-verse_end'] = 20
+        response = self.client.post(self.create_url,
+                                    data=data,
+                                    follow=True)
+        self.assertRedirects(response, reverse(
+            "position_list",
+            urlconf='shastra_compedium.urls'))
+        self.assertContains(response, "Uploaded 0 position details.")
