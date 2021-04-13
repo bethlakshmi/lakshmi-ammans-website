@@ -33,7 +33,7 @@ user_messages = {
     'CHAPTER_DETAIL_INTRO': {
         'summary': 'Introduction on second page of upload',
         'description': '''Review each row to be sure the details have
-    been parsed accurately.  Enter a position name for each row.  Leaving a 
+    been parsed accurately.  Enter a position name for each row.  Leaving a
     position empty means the row will not be uploaded.'''},
     "BUTTON_CLICK_UNKNOWN": {
         'summary':  "Can't tell what button the user pressed to submit",
