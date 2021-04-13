@@ -16,7 +16,8 @@ class PositionCreate(LoginRequiredMixin,
                      CreateView):
     model = Position
     template_name = 'shastra_compedium/modal_make_form.tmpl'
-    success_url = reverse_lazy('chapter-add', urlconf="shastra_compedium.urls")
+    success_url = reverse_lazy('position_list',
+                               urlconf="shastra_compedium.urls")
     page_title = 'Position'
     view_title = 'Create Position'
     valid_message = make_position_messages['create_success']
@@ -41,7 +42,8 @@ class PositionUpdate(LoginRequiredMixin,
                      UpdateView):
     model = Position
     template_name = 'shastra_compedium/modal_make_form.tmpl'
-    success_url = reverse_lazy('chapter-add', urlconf="shastra_compedium.urls")
+    success_url = reverse_lazy('position_list',
+                               urlconf="shastra_compedium.urls")
     page_title = 'Position'
     view_title = 'Update Position'
     valid_message = make_position_messages['edit_success']

@@ -70,36 +70,6 @@
 
   function detailFormatter(index, row) {
     {% block details %}
-    var html = []
-    html.push('<div class="row">')
-    html.push('<div class="col-6"><b>Description:</b><br>' + row.description + '<br><br>')
-    if (row.note.length > 0) {
-        html.push('<b>Notes:</b><br>' + row.note + '<br><br>')
-    }
-    if (row.texts.length > 0) {
-        html.push('<b>Texts:</b><br>' + row.texts + '<br>')
-    }
-    if (row.tags.length > 0) {
-        html.push('<b>Tags:</b> ' + row.tags + '<br>')
-    }
-    html.push('</div><div class="col-6">')
-    html.push('<b>Date Acquired:</b>  ' + row.date_acquired + '<br>')
-    if (row.date_deaccession.length > 0) {
-        html.push('<b>Date Decaccessioned:</b>  ' + row.date_deaccession + '<br>')
-    }
-    html.push('<b>Created:</b>  ' + row.created + '<br>')
-    html.push('<b>Last Update:</b>  ' + row.updated + '<br>')
-    if (row.price.length > 0) {
-        html.push('<br><b>Price:</b> ' + row.price + '<br>')
-    }    if (row.connections.length > 0) {
-        html.push('<b>Connections:</b> ' + row.connections + '<br>')
-    }
-    html.push('</div>')
-    if (row.images.length) {
-      html.push('<div class="col-12"><b>Images:<br></b>' + row.images +'</div>')
-    }
-    html.push('</div>')
-    return html.join('')
     {% endblock %}
   }
 </script>

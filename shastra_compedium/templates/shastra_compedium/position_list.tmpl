@@ -26,7 +26,7 @@
         '{{source}}_{{usage}}': '{{ detail.contents|escapejs|safe }}',
       {% endfor %}
     {% endfor %}
-        'action': '<a class="lakshmi-detail" href="" title="Edit"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;<a class="lakshmi-detail" href="" title="Manage Images"><i class="far fa-images"></i></a>',
+        'action': '<a class="lakshmi-detail" href="{% url 'shastra_compedium:position-update' position.pk %}" title="Edit"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;',
       },
   {% endfor %}
 {% endblock %}
