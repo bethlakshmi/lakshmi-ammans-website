@@ -14,7 +14,18 @@
           <th data-field="action">Action</th>
       </tr>
 {% endblock %}
-
+{% block buttons %}
+      btnAdd: {
+        text: 'Add new row',
+        icon: 'fa-plus',
+        event: function () {
+          window.location.href = "{% url 'shastra_compedium:position-add' %}";
+        },
+        attributes: {
+          title: 'Add a new item to the inventory',
+        }
+      }
+{% endblock %}
 {% block item_data %}
   {% for position,details in items.items %}
       {
