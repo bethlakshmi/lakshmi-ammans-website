@@ -8,6 +8,7 @@ from django.urls import reverse_lazy
 from shastra_compedium.site_text import make_position_messages
 from shastra_compedium.views import ShastraFormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
+from shastra_compedium.forms import PositionForm
 
 
 class PositionCreate(LoginRequiredMixin,
@@ -22,7 +23,7 @@ class PositionCreate(LoginRequiredMixin,
     view_title = 'Create Position'
     valid_message = make_position_messages['create_success']
     intro_message = make_position_messages['create_intro']
-    fields = ['name', 'category', 'order']
+    form_class = PositionForm
 
     def get_success_url(self):
         return self.request.GET.get('next', self.success_url)
@@ -48,4 +49,4 @@ class PositionUpdate(LoginRequiredMixin,
     view_title = 'Update Position'
     valid_message = make_position_messages['edit_success']
     intro_message = make_position_messages['edit_intro']
-    fields = ['name', 'category', 'order']
+    form_class = PositionForm
