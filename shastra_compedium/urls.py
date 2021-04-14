@@ -8,6 +8,7 @@ from shastra_compedium.views import (
     ShastraCreate,
     ShastraUpdate,
     SourceCreate,
+    SourceList,
     SourceUpdate,
     UploadChapter,
 )
@@ -45,4 +46,5 @@ urlpatterns = [
     url(r'^source/update/(?P<pk>.*)/$',
         SourceUpdate.as_view(),
         name='source-update'),
+    url(r'^source/list/?', SourceList.as_view(), name='source_list'),
 ]

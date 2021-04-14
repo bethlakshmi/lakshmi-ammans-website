@@ -29,10 +29,11 @@ class PositionList(View):
             'changed_id': self.changed_id,
             'error_id': self.error_id,
             'sources': Source.objects.all(),
-            # 'path_list': [
-            #   ("Item List", reverse('items_list', urlconf='inventory.urls')),
-            #    ("SubItem List",
-            #     reverse('subitems_list', urlconf='inventory.urls'))]
+            'path_list': [
+                ("Postiion List",
+                 reverse('position_list', urlconf='shastra_compedium.urls')),
+                ("Source List",
+                 reverse('source_list', urlconf='shastra_compedium.urls'))]
             }
 
     def get_list(self):
