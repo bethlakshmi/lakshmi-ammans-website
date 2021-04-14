@@ -25,9 +25,6 @@ class PositionCreate(LoginRequiredMixin,
     intro_message = make_position_messages['create_intro']
     form_class = PositionForm
 
-    def get_success_url(self):
-        return self.request.GET.get('next', self.success_url)
-
     def get_initial(self):
         initial = super().get_initial()
         if 'order' in self.kwargs:
