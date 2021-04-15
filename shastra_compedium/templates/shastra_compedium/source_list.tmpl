@@ -1,9 +1,70 @@
 {% extends 'shastra_compedium/generic_list.tmpl' %}
-<h1>Sources</h1>
-<ul>
-{% for source in object_list %}
-    <li>{{ source.title }}}</li>
-{% empty %}
-    <li>No sources yet.</li>
-{% endfor %}
-</ul>
+{% block control_buttons %}
+ <a href="{% url 'shastra_compedium:chapter-add' %}" role="button" class="btn lakshmi-btn-primary">Add a Source & Chapter</a>&nbsp;
+{% endblock %}
+{% block table_header %}
+    <tr>
+          <th data-field="title" data-sortable="true">Dance Treatise</th>
+          <th data-field="author" data-sortable="true">Author</th>
+          <th data-field="language" data-sortable="true">Original<br>Language</th>
+          <th data-field="min_year" data-sortable="false">Earliest<br>Year</th>
+          <th data-field="max_year" data-sortable="false">Latest<br>Year</th>
+          <th data-field="publication" data-sortable="true">Publication<br>Title</th>
+          <th data-field="translator" data-sortable="true">Publication<br>Author/Translator</th>
+          <th data-field="translation_language" data-sortable="true">Publication<br>Language</th>
+          <th data-field="isbn" data-sortable="false">ISBN</th>
+          <th data-field="biblio" data-sortable="false">Bibliography</th>
+          <th data-field="action">Action</th>
+      </tr>
+{% endblock %}
+{% block buttons %}
+      btnAdd: {
+        text: 'Add new row',
+        icon: 'fa-plus',
+        event: function () {
+          window.location.href = "{% url 'shastra_compedium:chapter-add' %}";
+        },
+        attributes: {
+          title: 'Add a new chapter, source and/or shastra',
+        }
+      }
+{% endblock %}
+{% block details %}
+    var html = []
+    html.push('<div class="row">')
+    html.push('<div class="col-6"><b>Description:</b><br>' + row.description + '</div>')
+    html.push('</div>'){% endblock %}
+{% block item_data %}
+  {% for source in items %}
+      {
+        'title': '{{ source.shastra.title }}',
+        'author': '{{ source.shastra.author }}',
+        'language': '{{ source.shastra.language }}',
+        'min_year': '{{ source.shastra.min_year }}',
+        'max_year': '{{ source.shastra.max_year }}',
+        'description': '{{ source.shastra.description }}',
+        'publication': '{{ source.title }}',
+        'translator': '{{ source.translator }}',
+        'translation_language': '{{ source.translation_language }}',
+        'isbn': '{{ source.isbn }}',
+        'biblio': '{{ source.bibliography }}',
+        'action': '<a class="lakshmi-detail" href="" title="Edit"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;',
+      },
+  {% endfor %}
+  {% for shastra in shastras %}
+      {
+        'title': '{{ shastra.title }}',
+        'author': '{{ shastra.author }}',
+        'language': '{{ shastra.language }}',
+        'min_year': '{{ shastra.min_year }}',
+        'max_year': '{{ shastra.max_year }}',
+        'description': '{{ shastra.description }}',
+        'publication': 'No Source Available',
+        'translator': 'No Source Available',
+        'translation_language': 'N/A',
+        'isbn': 'N/A',
+        'biblio': '---',
+        'action': '<a class="lakshmi-detail" href="" title="Edit"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;',
+      },
+  {% endfor %}
+{% endblock %}

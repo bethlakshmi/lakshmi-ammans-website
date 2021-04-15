@@ -1,5 +1,6 @@
 from .position_autocomplete import PositionAutocomplete
 from .generic_wizard import GenericWizard
+from .generic_list import GenericList
 from .shastra_form_mixin import ShastraFormMixin
 from .upload_chapter import UploadChapter
 from .make_category import (CategoryCreate, CategoryUpdate)
