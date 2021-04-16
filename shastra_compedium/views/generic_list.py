@@ -32,7 +32,7 @@ class GenericList(View):
             'changed_id': self.changed_id,
             'error_id': self.error_id,
             'path_list': [
-                ("Postiion List",
+                ("Position List",
                  reverse('position_list', urlconf='shastra_compedium.urls')),
                 ("Source List",
                  reverse('source_list', urlconf='shastra_compedium.urls'))]
