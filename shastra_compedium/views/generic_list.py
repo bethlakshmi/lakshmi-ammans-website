@@ -6,8 +6,10 @@ from django.shortcuts import render
 from shastra_compedium.models import (
 	Shastra,
     Source,
+    UserMessage,
 )
 from django.urls import reverse
+from shastra_compedium.site_text import user_messages
 
 
 class GenericList(View):
@@ -25,7 +27,7 @@ class GenericList(View):
         return super(GenericList, self).dispatch(*args, **kwargs)
 
     def get_context_dict(self):
-        return {
+        context = {
             'title': self.title,
             'page_title': self.title,
             'items': self.get_list(),
@@ -37,6 +39,17 @@ class GenericList(View):
                 ("Source List",
                  reverse('source_list', urlconf='shastra_compedium.urls'))]
             }
+        if self.__class__.__name__ in user_messages:
+            context['instructions'] = UserMessage.objects.get_or_create(
+                view=self.__class__.__name__,
+                code="%s_INSTRUCTIONS" % self.__class__.__name__.upper(),
+                defaults={
+                    'summary': user_messages[self.__class__.__name__][
+                        'summary'],
+                    'description': user_messages[self.__class__.__name__][
+                        'description']}
+                )[0].description
+        return context
 
     def get_list(self):
         pass

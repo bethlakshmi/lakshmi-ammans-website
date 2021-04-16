@@ -50,4 +50,12 @@ user_messages = {
         'description': '''Something has gone wrong.  If this persists, please
         contact support.  Issue - No Form Available.'''
     },
+    "SourceList": {
+        'summary':  "Instructions for source list view",
+        'description': '''This list shows the original historic treatise
+        (left), the currentday publication used as source material (right),
+        and the details thathave been uploaded thus far (expand via the "+"
+        button).  Use the edit icon next to an item or at the end of a row
+        to update these various elements.'''
+    }
 }
