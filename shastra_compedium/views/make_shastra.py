@@ -16,7 +16,7 @@ class ShastraCreate(LoginRequiredMixin,
                     CreateView):
     model = Shastra
     template_name = 'shastra_compedium/modal_make_form.tmpl'
-    success_url = reverse_lazy('shastra-add', urlconf="shastra_compedium.urls")
+    success_url = reverse_lazy('source_list', urlconf="shastra_compedium.urls")
     page_title = 'Shastra'
     view_title = 'Create Shastra'
     valid_message = make_shastra_messages['create_success']
@@ -40,7 +40,7 @@ class ShastraUpdate(LoginRequiredMixin,
                     UpdateView):
     model = Shastra
     template_name = 'shastra_compedium/modal_make_form.tmpl'
-    success_url = reverse_lazy('shastra-add', urlconf="shastra_compedium.urls")
+    success_url = reverse_lazy('source_list', urlconf="shastra_compedium.urls")
     page_title = 'Shastra'
     view_title = 'Update Shastra'
     valid_message = make_shastra_messages['edit_success']

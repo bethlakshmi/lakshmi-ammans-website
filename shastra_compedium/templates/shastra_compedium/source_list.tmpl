@@ -4,14 +4,18 @@
 {% endblock %}
 {% block table_header %}
     <tr>
-          <th data-field="title" data-sortable="true">Dance Treatise</th>
+          <th colspan="5">Original Dance Treatise</th>
+          <th colspan="6">Referenced Publication</th>
+    </tr>
+    <tr>
+          <th data-field="title" data-sortable="true">Title</th>
           <th data-field="author" data-sortable="true">Author</th>
           <th data-field="language" data-sortable="true">Original<br>Language</th>
           <th data-field="min_year" data-sortable="false">Earliest<br>Year</th>
           <th data-field="max_year" data-sortable="false">Latest<br>Year</th>
-          <th data-field="publication" data-sortable="true">Publication<br>Title</th>
-          <th data-field="translator" data-sortable="true">Publication<br>Author/Translator</th>
-          <th data-field="translation_language" data-sortable="true">Publication<br>Language</th>
+          <th data-field="publication" data-sortable="true">Title</th>
+          <th data-field="translator" data-sortable="true">Author/Translator</th>
+          <th data-field="translation_language" data-sortable="true">Language</th>
           <th data-field="isbn" data-sortable="false">ISBN</th>
           <th data-field="biblio" data-sortable="false">Bibliography</th>
           <th data-field="action">Action</th>
@@ -22,7 +26,7 @@
         text: 'Add new row',
         icon: 'fa-plus',
         event: function () {
-          window.location.href = "{% url 'shastra_compedium:chapter-add' %}";
+          window.location.href = "{% url 'shastra_compedium:source-add' %}";
         },
         attributes: {
           title: 'Add a new chapter, source and/or shastra',
@@ -42,7 +46,7 @@
 {% block item_data %}
   {% for source, details  in items.items %}
       {
-        'title': '{{ source.shastra.title }}',
+        'title': '{{ source.shastra.title }}&nbsp;&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:shastra-update' source.pk %}" title="Edit"><i class="fas fa-edit"></i></a>',
         'author': '{{ source.shastra.author }}',
         'language': '{{ source.shastra.language }}',
         'min_year': '{{ source.shastra.min_year }}',
@@ -54,7 +58,7 @@
         'isbn': '{{ source.isbn }}',
         'biblio': '{{ source.bibliography }}',
         'chapters': '{% for category, items in details.items %}<tr><td class="align-top" rowspan="{{items.details|length}}">{{ category.name }}</td>{% for chapter in items.details %}{% if not forloop.first %}<tr>{% endif %}<td>{% if chapter.chapter or chapter.verse_start%}{{ chapter.chapter|default_if_none:"" }}:{{chapter.verse_start|default_if_none:""}}{% endif %}{% if chapter.verse_end%}-{{chapter.verse_end}}{% endif %}</td><td>{{ chapter.usage }}</td><td>{{ chapter.contents|safe }}</td>{% if not forloop.first %}</tr>{% else %}<td class="align-top" rowspan="{{items.details|length}}">{{items.count}}</td>{% endif %}{% endfor %}</tr>{% endfor %}',
-        'action': '<a class="lakshmi-detail" href="" title="Edit"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;',
+        'action': '<a class="lakshmi-detail" href="{% url 'shastra_compedium:source-update' source.pk %}" title="Edit"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;',
       },
   {% endfor %}
   {% for shastra in shastras %}

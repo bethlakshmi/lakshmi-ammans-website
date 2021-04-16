@@ -17,7 +17,7 @@ class SourceCreate(LoginRequiredMixin,
                    CreateView):
     model = Source
     template_name = 'shastra_compedium/modal_make_form.tmpl'
-    success_url = reverse_lazy('source-add', urlconf="shastra_compedium.urls")
+    success_url = reverse_lazy('source_list', urlconf="shastra_compedium.urls")
     page_title = 'Source'
     view_title = 'Create Source'
     valid_message = make_source_messages['create_success']
@@ -34,7 +34,7 @@ class SourceUpdate(LoginRequiredMixin,
                    UpdateView):
     model = Source
     template_name = 'shastra_compedium/modal_make_form.tmpl'
-    success_url = reverse_lazy('source-add', urlconf="shastra_compedium.urls")
+    success_url = reverse_lazy('source_list', urlconf="shastra_compedium.urls")
     page_title = 'Source'
     view_title = 'Update Source'
     valid_message = make_source_messages['edit_success']
