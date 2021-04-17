@@ -24,10 +24,6 @@ class SourceCreate(LoginRequiredMixin,
     intro_message = make_source_messages['create_intro']
     form_class = SourceForm
 
-    def get_success_url(self):
-        return self.request.GET.get('next', self.success_url)
-
-
 class SourceUpdate(LoginRequiredMixin,
                    UpdatePopupMixin,
                    ShastraFormMixin,

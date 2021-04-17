@@ -24,9 +24,6 @@ class CategoryCreate(LoginRequiredMixin,
     intro_message = make_category_messages['create_intro']
     fields = ['name', 'description']
 
-    def get_success_url(self):
-        return self.request.GET.get('next', self.success_url)
-
 
 class CategoryUpdate(LoginRequiredMixin,
                      UpdatePopupMixin,

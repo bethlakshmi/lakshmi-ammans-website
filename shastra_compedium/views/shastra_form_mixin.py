@@ -28,3 +28,9 @@ class ShastraFormMixin(ModelFormMixin):
                 'description': self.valid_message})
         messages.success(self.request, msg[0].description % str(self.object))
         return response
+
+    def get_success_url(self):
+        return "%s?changed%s_id=%d" % (
+            self.request.GET.get('next', self.success_url),
+            self.object.__class__.__name__.lower(),
+            self.object.pk)

@@ -30,9 +30,6 @@ class ShastraCreate(LoginRequiredMixin,
               'max_age',
               'description']
 
-    def get_success_url(self):
-        return self.request.GET.get('next', self.success_url)
-
 
 class ShastraUpdate(LoginRequiredMixin,
                     UpdatePopupMixin,
