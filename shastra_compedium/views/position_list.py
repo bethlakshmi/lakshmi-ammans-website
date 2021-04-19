@@ -18,6 +18,9 @@ class PositionList(GenericList):
     def get_context_dict(self):
         context = super(PositionList, self).get_context_dict()
         context['sources'] = Source.objects.all()
+        if self.changed_obj == "Category":
+            context['category_ids'] = context['changed_ids']
+            context['changed_ids'] = []
         return context
 
     def get_list(self):

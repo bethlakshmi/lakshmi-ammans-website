@@ -29,8 +29,9 @@
 {% block item_data %}
   {% for position,details in items.items %}
       {
+        'id': {{ position.pk}},
         'position': '{{ position.name }}',
-        'category': '{% if position.category %}{{ position.category }}{% endif %}',
+        'category': '{% if position.category %}{{ position.category }}&nbsp;&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:category-update' position.category.pk %}?next={{request.path}}" title="Edit"><i class="fas fa-edit"></i></a>{% endif %}',
         'order': '{{ position.order }}',
     {% for source,verses in details.items %}
       {% for usage,detail in verses.items %}
