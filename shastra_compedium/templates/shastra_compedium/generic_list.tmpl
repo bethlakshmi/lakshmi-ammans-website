@@ -87,18 +87,17 @@
 </script>
 <script>
   function rowStyle(row, index) {
-    if (row.id == {{changed_id}}) {
+    if ({{changed_ids|default_if_none:"[]"}}.includes(row.id)) {
       return {
         classes: "lakshmi-table-success"
       }
     }
-    {% if error_id %}
     else if (row.id == {{error_id}}) {
       return {
         classes: "lakshmi-table-error"
       }
     }
-    {% endif %}
+    {% block row_style %}{% endblock %}
     return {}
   }
 </script>

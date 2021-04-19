@@ -20,7 +20,19 @@ class SourceList(GenericList):
 
     def get_context_dict(self):
         context = super(SourceList, self).get_context_dict()
+        context['shastra_ids'] = []
         context['shastras'] = Shastra.objects.filter(sources=None)
+        if self.changed_obj == "Shastra":
+            context['shastra_ids'] = context['changed_ids']
+            context['changed_ids'] = []
+        if self.changed_obj == "CategoryDetail":
+            context['categorydetail_ids'] = context['changed_ids']
+            context['changed_ids'] = list(CategoryDetail.objects.filter(
+                pk__in=context['categorydetail_ids']).values_list(
+                'sources__pk',
+                flat=True))
+        if self.changed_obj == "Category":
+            context['changed_ids'] = []
         return context
 
     def get_list(self):

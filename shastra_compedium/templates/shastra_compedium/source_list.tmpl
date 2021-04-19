@@ -46,6 +46,8 @@
 {% block item_data %}
   {% for source, details  in items.items %}
       {
+        'id': {{source.pk}},
+        'shastra_id': {{source.shastra.pk}},
         'title': '{{ source.shastra.title }}&nbsp;&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:shastra-update' source.pk %}" title="Edit"><i class="fas fa-edit"></i></a>',
         'author': '{{ source.shastra.author }}',
         'language': '{{ source.shastra.language }}',
@@ -57,12 +59,14 @@
         'translation_language': '{{ source.translation_language }}',
         'isbn': '{{ source.isbn }}',
         'biblio': '{{ source.bibliography }}',
-        'chapters': '{% for category, items in details.items %}<tr><td class="align-top" rowspan="{{items.details|length}}">{{ category.name }}&nbsp;&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:category-update' category.pk %}" title="Edit"><i class="fas fa-edit"></i></a></td>{% for chapter in items.details %}{% if not forloop.first %}<tr>{% endif %}<td>{% if chapter.chapter or chapter.verse_start%}{{ chapter.chapter|default_if_none:"" }}:{{chapter.verse_start|default_if_none:""}}{% endif %}{% if chapter.verse_end%}-{{chapter.verse_end}}{% endif %}<a class="lakshmi-detail" href="{% url 'shastra_compedium:categorydetail-update' chapter.pk %}" title="Edit Chapter"><i class="fas fa-edit"></i></a></td><td>{{ chapter.usage }}</td><td>{{ chapter.contents|safe }}</td>{% if not forloop.first %}</tr>{% else %}<td class="align-top" rowspan="{{items.details|length}}">{{items.count}}</td>{% endif %}{% endfor %}</tr>{% endfor %}',
+        'chapters': '{% for category, items in details.items %}<tr><td class="align-top" rowspan="{{items.details|length}}">{{ category.name }}&nbsp;&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:category-update' category.pk %}?next={{request.path}}" title="Edit"><i class="fas fa-edit"></i></a></td>{% for chapter in items.details %}{% if not forloop.first %}<tr>{% endif %}<td {% if chapter.pk in categorydetail_ids %}class="lakshmi-table-success"{% endif %}>{% if chapter.chapter or chapter.verse_start%}{{ chapter.chapter|default_if_none:"" }}:{{chapter.verse_start|default_if_none:""}}{% endif %}{% if chapter.verse_end%}-{{chapter.verse_end}}{% endif %}<a class="lakshmi-detail" href="{% url 'shastra_compedium:categorydetail-update' chapter.pk %}" title="Edit Chapter"><i class="fas fa-edit"></i></a></td><td {% if chapter.pk in categorydetail_ids %}class="lakshmi-table-success"{% endif %}>{{ chapter.usage }}</td><td {% if chapter.pk in categorydetail_ids %}class="lakshmi-table-success"{% endif %}>{{ chapter.contents|safe }}</td>{% if not forloop.first %}</tr>{% else %}<td class="align-top" rowspan="{{items.details|length}}">{{items.count}}</td>{% endif %}{% endfor %}</tr>{% endfor %}',
         'action': '<a class="lakshmi-detail" href="{% url 'shastra_compedium:source-update' source.pk %}" title="Edit"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;',
       },
   {% endfor %}
   {% for shastra in shastras %}
       {
+        'id': 'none',
+        'shastra_id': {{shastra.pk}},
         'title': '{{ shastra.title }}',
         'author': '{{ shastra.author }}',
         'language': '{{ shastra.language }}',
@@ -78,3 +82,8 @@
       },
   {% endfor %}
 {% endblock %}
+    {% block row_style %}else if ({{shastra_ids|default_if_none:"[]"}}.includes(row.shastra_id)) {
+      return {
+        classes: "lakshmi-table-success"
+      }
+    }{% endblock %}
