@@ -192,20 +192,20 @@ class TestSourceList(TestCase):
                             "'shastra_id': %d" % self.source.shastra.pk)
         self.assertContains(
             response,
-            ("'title': '%s&nbsp;&nbsp;<a class=\"lakshmi-detail\" href=\"%s\"" +
-             " title=\"Edit\"><i class=\"fas fa-edit\"></i></a>'") % (
-                another_shastra.title,
-                reverse("shastra-update",
-                        urlconf="shastra_compedium.urls",
-                        args=[another_shastra.pk])))
+            ("'title': '%s&nbsp;&nbsp;<a class=\"lakshmi-detail\" " +
+             "href=\"%s\" title=\"Edit\"><i class=\"fas fa-edit\"></i></a>'"
+             ) % (another_shastra.title, reverse(
+                "shastra-update",
+                urlconf="shastra_compedium.urls",
+                args=[another_shastra.pk])))
         self.assertContains(
             response,
-            ("'title': '%s&nbsp;&nbsp;<a class=\"lakshmi-detail\" href=\"%s\"" +
-             " title=\"Edit\"><i class=\"fas fa-edit\"></i></a>'") % (
-                self.source.shastra.title,
-                reverse("shastra-update",
-                        urlconf="shastra_compedium.urls",
-                        args=[self.source.shastra.pk])))
+            ("'title': '%s&nbsp;&nbsp;<a class=\"lakshmi-detail\" " +
+             "href=\"%s\" title=\"Edit\"><i class=\"fas fa-edit\"></i></a>'"
+             ) % (self.source.shastra.title, reverse(
+                "shastra-update",
+                urlconf="shastra_compedium.urls",
+                args=[self.source.shastra.pk])))
 
         self.assertContains(response,
                             "'publication': '%s'" % self.source.title)

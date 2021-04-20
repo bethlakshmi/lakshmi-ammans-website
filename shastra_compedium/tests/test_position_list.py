@@ -50,14 +50,17 @@ class TestPositionList(TestCase):
         self.assertContains(response, "'id': %d" % self.detail.position.pk)
         self.assertContains(response,
                             "'position': '%s'" % self.detail.position.name)
-        self.assertContains(response,
+        self.assertContains(
+            response,
             ('<th data-field="%s_Posture Description" data-sortable="false">' +
              '%s Description</th>') % (self.source.title, self.source.title))
-        self.assertContains(response,
+        self.assertContains(
+            response,
             ('<th data-field="%s_Meaning" data-sortable="false">' +
              '%s Meaning</th>') % (self.source.title,
-                                       self.source.title))
-        self.assertContains(response,
+                                   self.source.title))
+        self.assertContains(
+            response,
             ('<th data-field="%s_Posture Description" data-sortable="false">' +
              '%s Description</th>') % (another_source.title,
                                        another_source.title))
