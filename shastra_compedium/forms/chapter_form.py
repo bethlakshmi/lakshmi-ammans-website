@@ -52,6 +52,7 @@ class ChapterFormBasics(ModelForm):
                              args=['__fk__'])),
             }
 
+
 class ChapterForm(ChapterFormBasics):
     step = IntegerField(widget=HiddenInput(), initial=0)
     position_text = CharField(widget=Textarea(attrs={'cols': 86}),

@@ -4,7 +4,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from shastra_compedium.models import (
-	Shastra,
+    Shastra,
     Source,
     UserMessage,
 )
@@ -13,14 +13,14 @@ from shastra_compedium.site_text import user_messages
 
 
 class GenericList(View):
-	# 
-	# this is an abstract class, to instantiate it, implement:
-	# - implement get_list - the list to get, returns a list or queryset
-	# - set template - best if it extends generic_list.tmpl
-	# - set title
-	# if you override get_context_dict, call this version first so that
-	# path list is set centrally
-	#
+    #
+    # this is an abstract class, to instantiate it, implement:
+    # - implement get_list - the list to get, returns a list or queryset
+    # - set template - best if it extends generic_list.tmpl
+    # - set title
+    # if you override get_context_dict, call this version first so that
+    # path list is set centrally
+    #
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):

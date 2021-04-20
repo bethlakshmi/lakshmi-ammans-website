@@ -24,6 +24,7 @@ class SourceCreate(LoginRequiredMixin,
     intro_message = make_source_messages['create_intro']
     form_class = SourceForm
 
+
 class SourceUpdate(LoginRequiredMixin,
                    UpdatePopupMixin,
                    ShastraFormMixin,

@@ -8,8 +8,8 @@ from shastra_compedium.forms import ChapterFormBasics
 
 
 class CategoryDetailUpdate(LoginRequiredMixin,
-                     ShastraFormMixin,
-                     UpdateView):
+                           ShastraFormMixin,
+                           UpdateView):
     model = CategoryDetail
     template_name = 'shastra_compedium/modal_make_form.tmpl'
     success_url = reverse_lazy('source_list',
