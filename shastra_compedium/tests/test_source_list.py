@@ -59,6 +59,122 @@ class TestSourceList(TestCase):
                 self.url),
             html=True)
 
+    def test_list_categories_changed_ids(self):
+        another_detail = PositionDetailFactory(
+            usage="Posture Description")
+        another_detail.sources.add(self.source)
+
+        chapter = CategoryDetailFactory(category=self.detail.position.category)
+        chapter.sources.add(self.source)
+        another_shastra = ShastraFactory()
+
+        login_as(self.user, self)
+        response = self.client.get("%s?changed_ids=%s&obj_type=Source" % (
+            self.url,
+            str([self.source.pk])))
+        self.assertContains(response, "[%d].includes(row.id)" % self.source.pk)
+
+    def test_list_categories_changed_shastra_ids(self):
+        another_detail = PositionDetailFactory(
+            usage="Posture Description")
+        another_detail.sources.add(self.source)
+
+        chapter = CategoryDetailFactory(category=self.detail.position.category)
+        chapter.sources.add(self.source)
+        another_shastra = ShastraFactory()
+
+        login_as(self.user, self)
+        response = self.client.get("%s?changed_ids=%s&obj_type=Shastra" % (
+            self.url,
+            str([self.source.shastra.pk])))
+        self.assertContains(
+            response,
+            "[%d].includes(row.shastra_id)" % self.source.shastra.pk)
+
+    def test_list_categories_changed_category_ids(self):
+        another_detail = PositionDetailFactory(
+            usage="Posture Description")
+        another_detail.sources.add(self.source)
+
+        chapter = CategoryDetailFactory(category=self.detail.position.category)
+        chapter.sources.add(self.source)
+        another_shastra = ShastraFactory()
+
+        login_as(self.user, self)
+        response = self.client.get("%s?changed_ids=%s&obj_type=Category" % (
+            self.url,
+            str([self.detail.position.category.pk])))
+        self.assertContains(
+            response,
+            "[].includes(row.id)")
+
+    def test_list_categories_changed_categorydetail(self):
+        another_detail = PositionDetailFactory(
+            usage="Posture Description")
+        another_detail.sources.add(self.source)
+
+        chapter = CategoryDetailFactory(
+            category=self.detail.position.category,
+            chapter=10,
+            verse_start=1,
+            verse_end=100)
+        chapter.sources.add(self.source)
+        another_shastra = ShastraFactory()
+
+        login_as(self.user, self)
+        response = self.client.get(
+            "%s?changed_ids=%s&obj_type=CategoryDetail" % (
+                self.url,
+                str([chapter.pk])))
+        self.assertContains(
+            response,
+            ('<td class="lakshmi-table-success">10:1-100<a class="lakshmi-' +
+             'detail" href="%s" title="Edit Chapter"><i class="fas fa-edit">' +
+             '</i></a></td>') % reverse(
+             "categorydetail-update",
+             urlconf="shastra_compedium.urls",
+             args=[chapter.pk]))
+
+    def test_list_category_detail_variations(self):
+        chapter = CategoryDetailFactory(
+            category=self.detail.position.category,
+            chapter=10,
+            verse_start=1,
+            verse_end=100)
+        chapter.sources.add(self.source)
+        chapter2 = CategoryDetailFactory(verse_end=50)
+        chapter2.sources.add(self.source)
+        chapter_more = CategoryDetailFactory(
+            category=self.detail.position.category,
+            chapter=10,
+            verse_start=101,
+            verse_end=200)
+        chapter_more.sources.add(self.source)
+
+        login_as(self.user, self)
+        response = self.client.get(self.url)
+        self.assertContains(
+            response,
+            ('<a class="lakshmi-detail" href="%s" title="Edit Chapter"><i ' +
+             'class="fas fa-edit"></i></a>') % reverse(
+             "categorydetail-update",
+             urlconf="shastra_compedium.urls",
+             args=[chapter.pk]))
+        self.assertContains(
+            response,
+            ('<a class="lakshmi-detail" href="%s" title="Edit Chapter"><i ' +
+             'class="fas fa-edit"></i></a>') % reverse(
+             "categorydetail-update",
+             urlconf="shastra_compedium.urls",
+             args=[chapter2.pk]))
+        self.assertContains(
+            response,
+            ('<a class="lakshmi-detail" href="%s" title="Edit Chapter"><i ' +
+             'class="fas fa-edit"></i></a>') % reverse(
+             "categorydetail-update",
+             urlconf="shastra_compedium.urls",
+             args=[chapter_more.pk]))
+
     def test_list_categories_all_the_things(self):
         another_detail = PositionDetailFactory(
             usage="Posture Description")
@@ -101,7 +217,6 @@ class TestSourceList(TestCase):
              reverse("source-update",
                      urlconf="shastra_compedium.urls",
                      args=[self.source.pk])))
-        print(response.content)
         self.assertContains(
             response,
             ('%s&nbsp;&nbsp;<a class="lakshmi-detail" href="%s?next=%s" ' +

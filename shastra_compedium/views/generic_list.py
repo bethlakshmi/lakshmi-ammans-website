@@ -51,9 +51,6 @@ class GenericList(View):
                 )[0].description
         return context
 
-    def get_list(self):
-        pass
-
     @never_cache
     def get(self, request, *args, **kwargs):
         self.changed_ids = eval(request.GET.get('changed_ids', default="[]"))
