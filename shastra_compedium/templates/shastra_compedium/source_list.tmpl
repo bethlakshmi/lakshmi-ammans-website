@@ -48,7 +48,7 @@
       {
         'id': {{source.pk}},
         'shastra_id': {{source.shastra.pk}},
-        'title': '{{ source.shastra.title }}&nbsp;&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:shastra-update' source.pk %}" title="Edit"><i class="fas fa-edit"></i></a>',
+        'title': '{{ source.shastra.title }}&nbsp;&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:shastra-update' source.shastra.pk %}" title="Edit"><i class="fas fa-edit"></i></a>',
         'author': '{{ source.shastra.author }}',
         'language': '{{ source.shastra.language }}',
         'min_year': '{{ source.shastra.min_year }}',
@@ -59,15 +59,15 @@
         'translation_language': '{{ source.translation_language }}',
         'isbn': '{{ source.isbn }}',
         'biblio': '{{ source.bibliography }}',
-        'chapters': '{% for category, items in details.items %}<tr><td class="align-top" rowspan="{{items.details|length}}">{{ category.name }}&nbsp;&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:category-update' category.pk %}?next={{request.path}}" title="Edit"><i class="fas fa-edit"></i></a></td>{% for chapter in items.details %}{% if not forloop.first %}<tr>{% endif %}<td {% if chapter.pk in categorydetail_ids %}class="lakshmi-table-success"{% endif %}>{% if chapter.chapter or chapter.verse_start%}{{ chapter.chapter|default_if_none:"" }}:{{chapter.verse_start|default_if_none:""}}{% endif %}{% if chapter.verse_end%}-{{chapter.verse_end}}{% endif %}<a class="lakshmi-detail" href="{% url 'shastra_compedium:categorydetail-update' chapter.pk %}" title="Edit Chapter"><i class="fas fa-edit"></i></a></td><td {% if chapter.pk in categorydetail_ids %}class="lakshmi-table-success"{% endif %}>{{ chapter.usage }}</td><td {% if chapter.pk in categorydetail_ids %}class="lakshmi-table-success"{% endif %}>{{ chapter.contents|safe }}</td>{% if not forloop.first %}</tr>{% else %}<td class="align-top" rowspan="{{items.details|length}}">{{items.count}}</td>{% endif %}{% endfor %}</tr>{% endfor %}',
-        'action': '<a class="lakshmi-detail" href="{% url 'shastra_compedium:source-update' source.pk %}" title="Edit"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;',
+        'chapters': '{% for category, items in details.items %}<tr><td class="align-top" {% if items.details|length %}rowspan="{{items.details|length}}"{% endif %}>{{ category.name }}&nbsp;&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:category-update' category.pk %}?next={{request.path}}" title="Edit"><i class="fas fa-edit"></i></a></td>{% for chapter in items.details %}{% if not forloop.first %}<tr>{% endif %}<td {% if chapter.pk in categorydetail_ids %}class="lakshmi-table-success"{% endif %}>{% if chapter.chapter or chapter.verse_start%}{{ chapter.chapter|default_if_none:"" }}:{{chapter.verse_start|default_if_none:""}}{% endif %}{% if chapter.verse_end%}-{{chapter.verse_end}}{% endif %}<a class="lakshmi-detail" href="{% url 'shastra_compedium:categorydetail-update' chapter.pk %}" title="Edit Chapter"><i class="fas fa-edit"></i></a></td><td {% if chapter.pk in categorydetail_ids %}class="lakshmi-table-success"{% endif %}>{{ chapter.usage }}</td><td {% if chapter.pk in categorydetail_ids %}class="lakshmi-table-success"{% endif %}>{{ chapter.contents|safe }}</td>{% if not forloop.first %}</tr>{% endif %}{% if forloop.last %}<td class="align-top" rowspan="{{items.details|length}}">{{items.count}}</td>{% endif %}{% empty %}<td colspan="3">No Category Details</td><td class="align-top">{{items.count}}</td>{% endfor %}</tr>{% endfor %}',
+        'action': '<a class="lakshmi-detail" href="{% url 'shastra_compedium:source-update' source.pk %}" title="Edit"><i class="fas fa-edit"></i></a>',
       },
   {% endfor %}
   {% for shastra in shastras %}
       {
         'id': 'none',
         'shastra_id': {{shastra.pk}},
-        'title': '{{ shastra.title }}',
+        'title': '{{ shastra.title }}&nbsp;&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:shastra-update' shastra.pk %}" title="Edit"><i class="fas fa-edit"></i></a>',
         'author': '{{ shastra.author }}',
         'language': '{{ shastra.language }}',
         'min_year': '{{ shastra.min_year }}',

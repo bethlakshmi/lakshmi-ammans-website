@@ -57,8 +57,13 @@ class SourceList(GenericList):
             source_dict[source] = {'chapters': []}
         for pos in PositionDetail.objects.all():
             for source in pos.sources.all():
-                source_dict[source][pos.position.category][
-                    'count'] = source_dict[source][pos.position.category][
-                    'count'] + 1
+                if pos.position.category in source_dict[source]:
+                    source_dict[source][pos.position.category][
+                        'count'] = source_dict[source][pos.position.category][
+                        'count'] + 1
+                else:
+                    source_dict[source][pos.position.category] = {
+                        'count': 1,
+                        'details': []}
 
         return source_dict

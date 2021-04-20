@@ -164,9 +164,11 @@ class TestUploadChapter(TestCase):
         response = self.client.post(self.create_url,
                                     data=self.position_data(),
                                     follow=True)
-        self.assertRedirects(response, reverse(
-            "position_list",
-            urlconf='shastra_compedium.urls'))
+        self.assertRedirects(
+            response,
+            "%s?changed_ids=%s&obj_type=Position" % (
+                reverse("position_list", urlconf='shastra_compedium.urls'),
+                str([self.position.pk, self.position.pk])))
         self.assertContains(response, "Uploaded 2 position details.")
         self.assertEqual(start + 2, PositionDetail.objects.all().count())
 
