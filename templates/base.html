@@ -37,11 +37,9 @@
             </ul>
         </div>
     </nav>
-  {% endif %}
-  {% block layout %}
-    <div class="container py-3">{% endblock %}
+  {% endif %}{% block layout %}
+    <div class="container py-3">{%endblock%}
         {% if messages %}
-    }
     {% for message in messages %}
     {% if message.tags == "error" %}<div class="alert lakshmi-alert-danger">{% else %}<div class="alert lakshmi-alert-{{message.tags}}">{% endif %}
           <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
