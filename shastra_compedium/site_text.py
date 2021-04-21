@@ -16,11 +16,38 @@ make_shastra_messages = {
     'create_intro':  "Use this form to create a new shastra.",
     'edit_intro':  "Use this form to update this shastra.",
 }
-make_chapter_messages = {
-    'upload_success':  "A new chapter has been created.  Name: %s",
-    'upload_intro':  '''Use this form to upload text for a chapter.  Each
-    detail should be separated by a '|||'.  Verse numbers, if present,
+make_position_messages = {
+    'create_success':  "A new position has been created.  Name: %s",
+    'edit_success':  "The %s position has been updated.",
+    'create_intro':  "Use this form to create a new position.",
+    'edit_intro':  "Use this form to update this position.",
+}
+user_messages = {
+    'CHAPTER_BASICS_INTRO': {
+        'summary': 'Introduction on first page of upload',
+        'description': '''Use this form to upload text for a chapter.
+    Each detail should be separated by a '|||'.  Verse numbers, if present,
     should be at the start of a detail, and should be in Arabic numerals as
     either # or #-#.  For text pertaining to the chapter - paste it in the
-    'contents' field below.''',
+    'contents' field below.'''},
+    'CHAPTER_DETAIL_INTRO': {
+        'summary': 'Introduction on second page of upload',
+        'description': '''Review each row to be sure the details have
+    been parsed accurately.  Enter a position name for each row.  Leaving a
+    position empty means the row will not be uploaded.'''},
+    "BUTTON_CLICK_UNKNOWN": {
+        'summary':  "Can't tell what button the user pressed to submit",
+        'description': '''Something has gone wrong.  If this persists, please
+        contact support.  Issue - Button Click Not Recognized'''
+    },
+    "STEP_ERROR": {
+        'summary':  "Step in wizard not submitted.",
+        'description': '''Something has gone wrong.  If this persists, please
+        contact support.  Issue - Next Step unknown'''
+    },
+    "NO_FORM_ERROR": {
+        'summary':  "Form Bulding Logic Failed",
+        'description': '''Something has gone wrong.  If this persists, please
+        contact support.  Issue - No Form Available.'''
+    },
 }

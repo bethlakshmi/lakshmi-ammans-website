@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load static sekizai_tags thumbnail %}
+{% block title %}
+   {{page_title}}
+{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.css">
+{% endblock %}
+{% block layout %}
+<br><div>{%endblock%}
+{% block content %}
+<div class="row">
+  <div class="col-4">
+  <h2 class="lakshmi-title">{{title}}</h2>
+  </div>
+  <div class="col-8 text-right">
+{% block control_buttons %}
+{% endblock %}
+  </div>
+</div>
+{% if path_list %}
+ <ul class="nav nav-tabs" id="inner">
+ {% for text, path in path_list %}
+  <li role="presentation" class="nav-item"><a href="{{ path }}" class="nav-link {% if request.path == path %}active{% endif %}">{{text}}</a></li>
+ {% endfor %}
+ </ul>
+ {% endif %}
+<table id="table" data-search="true" data-show-columns="true" data-show-toggle="true" data-show-fullscreen="true" data-show-columns-toggle-all="true" data-buttons="buttons" {% if not details_off %}data-detail-formatter="detailFormatter" data-detail-view="true" {% endif %}data-row-style="rowStyle" class="lakshmi-table" data-buttons-class="lakshmi-secondary" data-sort-name="modified" data-sort-order="desc">
+  <thead class='lakshmi-table-header'>
+    {% block table_header %}
+    {% endblock %}
+  </thead>
+</table>
+
+{% addtoblock "js" %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.js"></script>
+<script>
+  function buttons () {
+    return {
+      {% block buttons %}
+      {% endblock %}
+    }
+  }
+</script>
+<script>
+  var $table = $('#table')
+  var $button = $('#button')
+
+  $(function() {
+    $button.click(function () {
+      $table.bootstrapTable('toggleView')
+    })
+  })
+</script>
+<script>
+  var $table = $('#table')
+  var $button = $('#button')
+  var $button2 = $('#button2')
+
+  $(function() {
+    $button.click(function () {
+      $table.bootstrapTable('expandRow', 1)
+    })
+    $button2.click(function () {
+      $table.bootstrapTable('collapseRow', 1)
+    })
+  })
+
+  function detailFormatter(index, row) {
+    {% block details %}
+    {% endblock %}
+  }
+</script>
+<script>
+  var $table = $('#table')
+
+  $(function() {
+    var data = [
+  {% block item_data %}
+  {% endblock %}
+    ]
+    $table.bootstrapTable({data: data})
+  })
+</script>
+<script>
+  function rowStyle(row, index) {
+    if (row.id == {{changed_id}}) {
+      return {
+        classes: "lakshmi-table-success"
+      }
+    }
+    {% if error_id %}
+    else if (row.id == {{error_id}}) {
+      return {
+        classes: "lakshmi-table-error"
+      }
+    }
+    {% endif %}
+    return {}
+  }
+</script>
+{% endaddtoblock %}
+{% endblock %}

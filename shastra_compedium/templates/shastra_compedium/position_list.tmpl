@@ -1,0 +1,43 @@
+{% extends 'shastra_compedium/generic_list.tmpl' %}
+{% block control_buttons %}
+ <a href="{% url 'shastra_compedium:chapter-add' %}" role="button" class="btn lakshmi-btn-primary">Add a Chapter</a>&nbsp;
+{% endblock %}
+{% block table_header %}
+    <tr>
+          <th data-field="position" data-sortable="true">Position</th>
+          <th data-field="category" data-sortable="true">Category</th>
+          <th data-field="order" data-sortable="true">Order</th>
+    {% for source in sources %}
+          <th data-field="{{source}}_Posture Description" data-sortable="false">{{source}} Description</th>
+          <th data-field="{{source}}_Meaning" data-sortable="false">{{source}} Meaning</th>
+    {% endfor %}
+          <th data-field="action">Action</th>
+      </tr>
+{% endblock %}
+{% block buttons %}
+      btnAdd: {
+        text: 'Add new row',
+        icon: 'fa-plus',
+        event: function () {
+          window.location.href = "{% url 'shastra_compedium:position-add' %}";
+        },
+        attributes: {
+          title: 'Add a new item to the inventory',
+        }
+      }
+{% endblock %}
+{% block item_data %}
+  {% for position,details in items.items %}
+      {
+        'position': '{{ position.name }}',
+        'category': '{% if position.category %}{{ position.category }}{% endif %}',
+        'order': '{{ position.order }}',
+    {% for source,verses in details.items %}
+      {% for usage,detail in verses.items %}
+        '{{source}}_{{usage}}': '{{ detail.contents|escapejs|safe }}',
+      {% endfor %}
+    {% endfor %}
+        'action': '<a class="lakshmi-detail" href="{% url 'shastra_compedium:position-update' position.pk %}" title="Edit"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;',
+      },
+  {% endfor %}
+{% endblock %}

@@ -37,8 +37,8 @@
             </ul>
         </div>
     </nav>
-  {% endif %}
-    <div class="container py-3">
+  {% endif %}{% block layout %}
+    <div class="container py-3">{%endblock%}
         {% if messages %}
     {% for message in messages %}
     {% if message.tags == "error" %}<div class="alert lakshmi-alert-danger">{% else %}<div class="alert lakshmi-alert-{{message.tags}}">{% endif %}

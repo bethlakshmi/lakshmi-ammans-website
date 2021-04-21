@@ -16,7 +16,7 @@
   <form action="" method="post" enctype="multipart/form-data">
    <p><font class="lakshmi-form-error">*</font> indicates a required field</p>
     {% include "shastra_compedium/form_table.tmpl" %}
-  <input type="submit" name="cancel" value="Cancel" class="btn lakshmi-btn-light" onclick="window.open('','_self').close();">
+  {% if view.is_popup %}<input type="submit" name="cancel" value="Cancel" class="btn lakshmi-btn-light" onclick="window.open('','_self').close();">{% else %}<a href="{{return_url}}" class="btn lakshmi-btn-light">Cancel</a>{% endif %}
   <input type="submit" name="submit" value="Save" class="btn lakshmi-btn-primary" >
   </form>
 </div>

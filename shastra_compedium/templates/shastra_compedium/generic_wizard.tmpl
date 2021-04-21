@@ -6,38 +6,60 @@
 {% block head %}
     <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css">
 
-    {{ form.media.css }}
+    {# Include Bootstrap 4 and jQuery #}
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script type="text/javascript" src="/static/tinymce/tinymce.min.js"></script>
     <script>{% include "tiny-mce-admin-settings.tmpl" %}</script>
 {% endblock %}
 {% block content %}
-<h2 class="lakshmi-title">{{view_title}}</h2>
+<h2 class="lakshmi-title">{{title}}</h2>
 <h3 class="lakshmi-subtitle">{{subtitle}}</h3>
-  {% if intro_text != "&nbsp;" %}<p>{{intro_text | safe}}</p>{% endif %}
-   <p><font class="lakshmi-form-error">*</font> indicates a required field</p>
 <form action="" method="post" enctype="multipart/form-data">
 <div class="row">
   <div class="col-12">
-    {% include 'shastra_compedium/form_table.tmpl' %}
+    {% if not special_handling %}{% include "shastra_compedium/form_table_wrapper.tmpl" %}
+    {% else %}
+       {% block special_handling_form %}
+       {% endblock %}
+    {% endif %}
   </div></div>
 <div class="row">
-    <div class="col-sm-12 col-md-6 col-lg-7 text-right"><i>Cancel will only affect the current screen.</i></div>
+    <div class="col-sm-12 {% if add %}col-md-3 col-lg-5{% else %}col-md-6 col-lg-7{% endif %} text-right"><i>Cancel will only affect the current screen.</i></div>
 
-  <div class="col-sm-12 col-md-6 col-lg-5">
-  <!--
+  <div class="col-sm-12 col-md-6 {% if add %}col-md-9 col-lg-7{% else %}col-md-6 col-lg-5{% endif %}">
     {% if not first %}<input type="submit" name="back" value="<< Back" class="btn btn-lakshmi-secondary" >{% endif %}
     {% if not last %}<input type="submit" name="next" value="Save & Continue >>" class="btn lakshmi-btn-primary" >{% endif %}
-    {% if add %}<input type="submit" name="add" value="Add & Keep Working" class="btn lakshmi-btn-primary" >{% endif %}
-    <input type="submit" name="finish" value="Finish" class="btn lakshmi-btn-primary" >
-    <input type="submit" name="cancel" value="Cancel" class="btn lakshmi-btn-light" >
-  -->
-    <input type="submit" name="cancel" value="Cancel" class="btn lakshmi-btn-light" onclick="window.open('','_self').close();">
-    <input type="submit" name="submit" value="Save" class="btn lakshmi-btn-primary" >
+    {% if add %}<input type="submit" name="add" value="Add Text" class="btn lakshmi-btn-primary" > <input type="submit" name="redirect" value="Proceed to Images >>" class="btn lakshmi-btn-primary" >{% endif %}
+    {% if show_finish %}
+    <input type="submit" name="finish" value="Finish" class="btn lakshmi-btn-primary" >{% endif %}
+    <input type="submit" name="cancel" value="Cancel" class="btn lakshmi-btn-light" formnovalidate>
   </div>
 </div>
 </form>
 {% addtoblock "js" %}
-<script src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
-{{ form.media.js }}
+<script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+{% for form in forms %}
+{{ form.media }}
+{% endfor %}
+<script>
+(function($) {
+    $('#add-form').click(function() {
+        var index = $('#id_inline_test_models-TOTAL_FORMS').val()
+        var newTable = $('#id_inline_test_models-__prefix__-DELETE').parents('table').clone()
+        newTable.find(':input').each(function() {
+            for (attr of ['name', 'id'])
+                $(this).attr(
+                    attr,
+                    $(this).attr(attr).replace('__prefix__', index)
+                )
+        })
+        newTable.insertBefore($(this))
+        $('#id_inline_test_models-TOTAL_FORMS').val(
+            parseInt($('#id_inline_test_models-TOTAL_FORMS').val()) + 1
+        )
+        newTable.slideDown()
+    })
+})($)
+</script>
 {% endaddtoblock %}
 {% endblock %}

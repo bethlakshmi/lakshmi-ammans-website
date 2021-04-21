@@ -82,6 +82,10 @@ class Position(Model):
         unique_together = [('category', 'order'), ('name', 'order')]
         ordering = ['category', 'order']
 
+    def save(self, *args, **kwargs):
+        self.name = self.name.title()
+        super(Position, self).save(*args, **kwargs)
+
 
 class Detail(Model):
     sources = ManyToManyField(Source)
