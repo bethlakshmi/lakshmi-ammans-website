@@ -1,4 +1,4 @@
-{% extends 'full_page.html' %}
+{% extends 'base.html' %}
 {% load static sekizai_tags thumbnail %}
 {% block title %}
    {{page_title}}
@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.css">
 {% endblock %}
+{% block layout %}
+<br><div>{% endblock %}
 {% block content %}
 <div class="row">
   <div class="col-4">
