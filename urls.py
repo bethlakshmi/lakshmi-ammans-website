@@ -2,11 +2,19 @@
 from django.conf.urls import url, include
 from aldryn_django.utils import i18n_patterns
 import aldryn_addons.urls
-from shastra_compedium.views import PositionAutocomplete
+from shastra_compedium.views import (
+	CategoryAutocomplete,
+	PositionAutocomplete,
+)
 
 
 urlpatterns = [
     # add your own patterns here
+    url(
+        r'^category-autocomplete/$',
+        CategoryAutocomplete.as_view(),
+        name='category-autocomplete',
+    ),
     url(
         r'^position-autocomplete/$',
         PositionAutocomplete.as_view(),

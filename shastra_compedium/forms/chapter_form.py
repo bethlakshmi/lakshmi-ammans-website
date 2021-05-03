@@ -9,6 +9,7 @@ from django.forms import (
 )
 from shastra_compedium.models import CategoryDetail
 from django_addanother.widgets import AddAnotherEditSelectedWidgetWrapper
+from dal import autocomplete
 from django.urls import reverse_lazy
 
 
@@ -39,7 +40,8 @@ class ChapterFormBasics(ModelForm):
             'clicking the pencil.'}
         widgets = {
             'category': AddAnotherEditSelectedWidgetWrapper(
-                Select,
+                autocomplete.ModelSelect2(
+                    url='category-autocomplete'),
                 reverse_lazy('category-add', urlconf='shastra_compedium.urls'),
                 reverse_lazy('category-update',
                              urlconf='shastra_compedium.urls',

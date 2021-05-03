@@ -1,3 +1,4 @@
+from .category_autocomplete import CategoryAutocomplete
 from .position_autocomplete import PositionAutocomplete
 from .generic_wizard import GenericWizard
 from .generic_list import GenericList
