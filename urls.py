@@ -3,8 +3,8 @@ from django.conf.urls import url, include
 from aldryn_django.utils import i18n_patterns
 import aldryn_addons.urls
 from shastra_compedium.views import (
-	CategoryAutocomplete,
-	PositionAutocomplete,
+    CategoryAutocomplete,
+    PositionAutocomplete,
 )
 
 

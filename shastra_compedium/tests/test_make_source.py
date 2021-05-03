@@ -50,7 +50,8 @@ class TestMakeSource(TestCase):
                                     follow=True)
         self.assertContains(
             response,
-            make_source_messages['create_success'] % "New Title")
+            make_source_messages['create_success'] % (
+                "New Title - Ted Translator"))
         self.assertEqual(start + 1, Source.objects.all().count())
 
     def test_create_error(self):
@@ -59,7 +60,8 @@ class TestMakeSource(TestCase):
         response = self.client.post(self.create_url, data=data, follow=True)
         self.assertNotContains(
             response,
-            make_source_messages['create_success'] % "New Title")
+            make_source_messages['create_success'] % (
+                "New Title - Ted Translator"))
         self.assertContains(response, "Enter a valid URL.")
         self.assertContains(response, make_source_messages['create_intro'])
 
@@ -76,7 +78,8 @@ class TestMakeSource(TestCase):
                                     follow=True)
         self.assertContains(
             response,
-            make_source_messages['edit_success'] % "New Title")
+            make_source_messages['edit_success'] % (
+                "New Title - Ted Translator"))
         self.assertEqual(start, Source.objects.all().count())
 
     def test_edit_bad_data(self):
@@ -85,6 +88,7 @@ class TestMakeSource(TestCase):
         response = self.client.post(self.edit_url, data=data, follow=True)
         self.assertNotContains(
             response,
-            make_source_messages['edit_success'] % "New Title")
+            make_source_messages['edit_success'] % (
+                "New Title - Ted Translator"))
         self.assertContains(response, "Enter a valid URL.")
         self.assertContains(response, make_source_messages['edit_intro'])

@@ -52,18 +52,25 @@ class TestPositionList(TestCase):
                             "'position': '%s'" % self.detail.position.name)
         self.assertContains(
             response,
-            ('<th data-field="%s_Posture Description" data-sortable="false">' +
-             '%s Description</th>') % (self.source.title, self.source.title))
+            ('<th data-field="%d_Posture Description" data-sortable="false">' +
+             '%s<br>%s<br>Description</th>') % (
+             self.source.pk,
+             self.source.title,
+             self.source.translator))
         self.assertContains(
             response,
-            ('<th data-field="%s_Meaning" data-sortable="false">' +
-             '%s Meaning</th>') % (self.source.title,
-                                   self.source.title))
+            ('<th data-field="%d_Meaning" data-sortable="false">' +
+             '%s<br>%s<br>Meaning</th>') % (
+             self.source.pk,
+             self.source.title,
+             self.source.translator))
         self.assertContains(
             response,
-            ('<th data-field="%s_Posture Description" data-sortable="false">' +
-             '%s Description</th>') % (another_source.title,
-                                       another_source.title))
+            ('<th data-field="%d_Posture Description" data-sortable="false">' +
+             '%s<br>%s<br>Description</th>') % (
+             another_source.pk,
+             another_source.title,
+             another_source.translator))
         self.assertContains(
             response,
             ('%s&nbsp;&nbsp;<a class="lakshmi-detail" href="%s?next=%s" ' +
@@ -83,19 +90,19 @@ class TestPositionList(TestCase):
         self.assertContains(
             response,
             "'%s_%s': '%s'" % (
-                self.source,
+                self.source.pk,
                 self.detail.usage,
                 self.detail.contents))
         self.assertContains(
             response,
             "'%s_%s': '%s'" % (
-                self.source,
+                self.source.pk,
                 another_detail.usage,
                 another_detail.contents))
         self.assertContains(
             response,
             "'%s_%s': '%s'" % (
-                another_source,
+                another_source.pk,
                 another_source_detail.usage,
                 another_source_detail.contents))
 
