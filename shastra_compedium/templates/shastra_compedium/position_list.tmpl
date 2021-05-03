@@ -8,8 +8,8 @@
           <th data-field="category" data-sortable="true">Category</th>
           <th data-field="order" data-sortable="true">Order</th>
     {% for source in sources %}
-          <th data-field="{{source}}_Posture Description" data-sortable="false">{{source}} Description</th>
-          <th data-field="{{source}}_Meaning" data-sortable="false">{{source}} Meaning</th>
+          <th data-field="{{source.pk}}_Posture Description" data-sortable="false">{{source.title}}<br>{{source.translator}}<br>Description</th>
+          <th data-field="{{source.pk}}_Meaning" data-sortable="false">{{source.title}}<br>{{source.translator}}<br>Meaning</th>
     {% endfor %}
           <th data-field="action">Action</th>
       </tr>
@@ -35,7 +35,7 @@
         'order': '{{ position.order }}',
     {% for source,verses in details.items %}
       {% for usage,detail in verses.items %}
-        '{{source}}_{{usage}}': '{{ detail.contents|escapejs|safe }}',
+        '{{source.pk}}_{{usage}}': '{{ detail.contents|escapejs|safe }}',
       {% endfor %}
     {% endfor %}
         'action': '<a class="lakshmi-detail" href="{% url 'shastra_compedium:position-update' position.pk %}" title="Edit"><i class="fas fa-edit"></i></a>',
