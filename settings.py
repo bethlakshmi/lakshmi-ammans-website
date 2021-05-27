@@ -57,6 +57,7 @@ aldryn_addons.settings.load(locals())
 INSTALLED_APPS.extend([
     # Extend the INSTALLED_APPS setting by listing additional applications here
     'shastra_compedium',
+    'reference_manager',
     'dal',
     'dal_select2',
     'django_addanother',
