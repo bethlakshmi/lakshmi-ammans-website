@@ -42,9 +42,24 @@ class SourceAdmin(admin.ModelAdmin):
     list_filter = ['tags']
 
 
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('pk',
+    	            'display_name',
+                    'user_object',
+                    'city',
+                    'state',
+                    'barony',
+                    'kingdom',
+                    'phone',
+                    'sources_submitted')
+
+    def sources_submitted(self, obj):
+        return obj.urlsource_set.count() + obj.filesource_set.count()
+
+
 # Register your models here.
 admin.site.register(Category, CategoryAdmin)
-admin.site.register(Profile)
+admin.site.register(Profile, ProfileAdmin)
 admin.site.register(FileSource, SourceAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(URLSource, SourceAdmin)
