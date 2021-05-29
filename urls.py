@@ -12,6 +12,7 @@ urlpatterns = [
         PositionAutocomplete.as_view(),
         name='position-autocomplete',
     ),
+    url(r'^', include('reference_manager.urls')),
     url(r'^', include('shastra_compedium.urls')),
 ] + aldryn_addons.urls.patterns() + i18n_patterns(
     # add your own i18n patterns here
