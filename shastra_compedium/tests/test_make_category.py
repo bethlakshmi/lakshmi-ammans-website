@@ -73,6 +73,23 @@ class TestMakeCategory(TestCase):
             make_category_messages['edit_success'] % "New Name")
         self.assertEqual(start, Category.objects.all().count())
 
+    def test_edit_post_redirect(self):
+        start = Category.objects.all().count()
+        redirect_url = reverse("source_list", urlconf='shastra_compedium.urls')
+        response = self.client.post(
+            "%s?next=%s" % (self.edit_url, redirect_url),
+            data=self.category_data(),
+            follow=True)
+        self.assertContains(
+            response,
+            make_category_messages['edit_success'] % "New Name")
+        self.assertEqual(start, Category.objects.all().count())
+        self.assertContains(
+            response,
+            '<a href="%s" class="nav-link active">Source List</a>' % (
+                redirect_url),
+            html=True)
+
     def test_edit_bad_data(self):
         data = self.category_data()
         data['name'] = ""

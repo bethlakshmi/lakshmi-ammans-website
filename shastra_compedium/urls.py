@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from shastra_compedium.views import (
     CategoryCreate,
+    CategoryDetailUpdate,
     CategoryUpdate,
     PositionCreate,
     PositionList,
@@ -8,6 +9,7 @@ from shastra_compedium.views import (
     ShastraCreate,
     ShastraUpdate,
     SourceCreate,
+    SourceList,
     SourceUpdate,
     UploadChapter,
 )
@@ -23,6 +25,9 @@ urlpatterns = [
     url(r'^category/update/(?P<pk>.*)/$',
         CategoryUpdate.as_view(),
         name='category-update'),
+    url(r'^categorydetail/update/(?P<pk>.*)/$',
+        CategoryDetailUpdate.as_view(),
+        name='categorydetail-update'),
     url(r'^position/add/(?P<order>\d+)/(?P<category>\d+)/$',
         PositionCreate.as_view(),
         name='position-add'),
@@ -45,4 +50,5 @@ urlpatterns = [
     url(r'^source/update/(?P<pk>.*)/$',
         SourceUpdate.as_view(),
         name='source-update'),
+    url(r'^source/list/?', SourceList.as_view(), name='source_list'),
 ]

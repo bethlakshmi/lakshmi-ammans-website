@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.css">
 {% endblock %}
 {% block layout %}
-<br><div>{%endblock%}
+<br><div>{% endblock %}
 {% block content %}
 <div class="row">
   <div class="col-4">
@@ -25,7 +25,8 @@
   <li role="presentation" class="nav-item"><a href="{{ path }}" class="nav-link {% if request.path == path %}active{% endif %}">{{text}}</a></li>
  {% endfor %}
  </ul>
- {% endif %}
+ {% endif %}{% if instructions %}<br>
+ <p>{{ instructions | safe }}</p>{% endif %}
 <table id="table" data-search="true" data-show-columns="true" data-show-toggle="true" data-show-fullscreen="true" data-show-columns-toggle-all="true" data-buttons="buttons" {% if not details_off %}data-detail-formatter="detailFormatter" data-detail-view="true" {% endif %}data-row-style="rowStyle" class="lakshmi-table" data-buttons-class="lakshmi-secondary" data-sort-name="modified" data-sort-order="desc">
   <thead class='lakshmi-table-header'>
     {% block table_header %}
@@ -88,18 +89,17 @@
 </script>
 <script>
   function rowStyle(row, index) {
-    if (row.id == {{changed_id}}) {
+    if ({{changed_ids|default_if_none:"[]"}}.includes(row.id)) {
       return {
         classes: "lakshmi-table-success"
       }
     }
-    {% if error_id %}
     else if (row.id == {{error_id}}) {
       return {
         classes: "lakshmi-table-error"
       }
     }
-    {% endif %}
+    {% block row_style %}{% endblock %}
     return {}
   }
 </script>

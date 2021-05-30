@@ -4,6 +4,10 @@ make_category_messages = {
     'create_intro':  "Use this form to create a new category.",
     'edit_intro':  "Use this form to update this category.",
 }
+make_category_detail_messages = {
+    'edit_success':  "The %s chapter has been updated.",
+    'edit_intro':  "Use this form to update this chapter.",
+}
 make_source_messages = {
     'create_success':  "A new source has been created.  Name: %s",
     'edit_success':  "The %s source has been updated.",
@@ -50,4 +54,12 @@ user_messages = {
         'description': '''Something has gone wrong.  If this persists, please
         contact support.  Issue - No Form Available.'''
     },
+    "SourceList": {
+        'summary':  "Instructions for source list view",
+        'description': '''This list shows the original historic treatise
+        (left), the currentday publication used as source material (right),
+        and the details thathave been uploaded thus far (expand via the "+"
+        button).  Use the edit icon next to an item or at the end of a row
+        to update these various elements.'''
+    }
 }

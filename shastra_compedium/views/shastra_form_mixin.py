@@ -31,4 +31,7 @@ class ShastraFormMixin(ModelFormMixin):
         return response
 
     def get_success_url(self):
-        return self.request.GET.get('next', self.success_url)
+        return "%s?changed_ids=%s&obj_type=%s" % (
+            self.request.GET.get('next', self.success_url),
+            str([self.object.pk]),
+            self.object.__class__.__name__)

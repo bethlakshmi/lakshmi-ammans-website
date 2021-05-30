@@ -32,8 +32,10 @@ class UploadChapter(GenericWizard):
             'next_title': None},
     }
     header = None
+    changed_ids = []
 
     def finish_valid_form(self, request):
+        self.changed_ids = []
         if self.forms[0].__class__.__name__ == "ChapterForm":
             self.chapter = self.forms[0].save()
             self.chapter_positions = []
@@ -70,15 +72,18 @@ class UploadChapter(GenericWizard):
                     if len(form.cleaned_data['contents'].strip()) > 0:
                         position_detail = form.save()
                         self.num_created = self.num_created + 1
+                        self.changed_ids += [position_detail.position.pk]
                     if len(form.cleaned_data['posture']) > 0:
                         position_detail.pk = None
                         position_detail.contents = form.cleaned_data['posture']
                         position_detail.usage = "Posture Description"
                         position_detail.save()
-                        position_detail = form.save_m2m()
+                        form.save_m2m()
                         self.num_created = self.num_created + 1
+                        self.changed_ids += [position_detail.position.pk]
 
     def finish(self, request):
+        return_url = self.return_url
         if self.forms[0].__class__.__name__ == "ChapterForm":
             messages.success(
                 request,
@@ -87,7 +92,11 @@ class UploadChapter(GenericWizard):
             messages.success(
                 request,
                 "Uploaded %s position details." % (self.num_created))
-        return self.return_url
+        if len(self.changed_ids) > 0:
+            return_url = "%s?changed_ids=%s&obj_type=Position" % (
+                self.return_url,
+                str(self.changed_ids))
+        return return_url
 
     def make_context(self, request):
         context = super(UploadChapter, self).make_context(request)
