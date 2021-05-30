@@ -35,7 +35,8 @@ class URLSourceForm(ModelForm):
                                  args=[category.pk])),
                 queryset=category.tag_set,
                 label=category.name,
-                help_text=category.instructions)
+                help_text=category.instructions,
+                required=False)
 
 
 '''
