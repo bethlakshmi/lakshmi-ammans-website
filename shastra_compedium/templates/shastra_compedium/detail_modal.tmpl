@@ -1,0 +1,19 @@
+<!-- Detail Modal Start -->
+      <div class="modal" id="Modal{{source.pk}}_{{ position.pk }}" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content lakshmi-modal-content">
+            <div class="modal-header lakshmi-modal-header">
+                <h4 class="modal-title">{{source.title}} - {{ position.name }}</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body text-left">
+              <b>Posture Description:</b><br>
+              {{verses.PostureDescription.contents|safe}}<br>
+              <b>Meaning:</b><br>
+              {{verses.Meaning.contents|safe}}<br>
+            </div>
+            <div class="modal-footer lakshmi-modal-footer">
+                <button type="button" class="btn btn-lakshmi-secondary" data-dismiss="modal">Close</button>
+            </div>
+      </div></div></div>
+<!-- Detail Modal End -->

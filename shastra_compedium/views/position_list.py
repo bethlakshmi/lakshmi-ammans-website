@@ -30,7 +30,9 @@ class PositionList(GenericList):
                 details[detail.position] = {}
             for source in detail.sources.all():
                 if source not in details[detail.position]:
-                    details[detail.position][source] = {detail.usage: detail}
+                    details[detail.position][source] = {
+                        detail.usage.replace(" ", ""): detail}
                 else:
-                    details[detail.position][source][detail.usage] = detail
+                    details[detail.position][source][
+                        detail.usage.replace(" ", "")] = detail
         return details
