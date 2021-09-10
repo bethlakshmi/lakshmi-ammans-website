@@ -38,6 +38,7 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name',
                     'description')
 
+
 class CategoryDetailAdmin(admin.ModelAdmin):
     list_display = ('id',
                     'category',
