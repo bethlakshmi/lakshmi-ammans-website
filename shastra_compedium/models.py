@@ -25,6 +25,7 @@ class Shastra(Model):
     min_age = IntegerField()
     max_age = IntegerField()
     description = TextField()
+    initials = CharField(max_length=128, blank=True)
 
     def __str__(self):
         return self.title
@@ -36,6 +37,7 @@ class Shastra(Model):
 
 class Source(Model):
     title = CharField(max_length=128, unique=True)
+    short_form = CharField(max_length=128, blank=True)
     shastra = ForeignKey(Shastra,
                          on_delete=CASCADE,
                          related_name='sources')

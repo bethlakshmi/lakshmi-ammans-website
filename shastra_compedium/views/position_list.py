@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from shastra_compedium.models import (
     PositionDetail,
+    Shastra,
     Source,
 )
 from django.urls import reverse
@@ -18,6 +19,7 @@ class PositionList(GenericList):
     def get_context_dict(self):
         context = super(PositionList, self).get_context_dict()
         context['sources'] = Source.objects.all()
+        context['shastras'] = Shastra.objects.all()
         if self.changed_obj == "Category":
             context['category_ids'] = context['changed_ids']
             context['changed_ids'] = []
