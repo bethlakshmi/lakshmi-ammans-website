@@ -99,6 +99,18 @@ class Detail(Model):
     verse_start = IntegerField(blank=True, null=True)
     verse_end = IntegerField(blank=True, null=True)
 
+    def verses(self):
+        return_val = ""
+        if self.chapter is not None:
+            return_val = str(self.chapter)
+        if self.verse_start is not None:
+            return_val = "%s:%d" % (return_val, self.verse_start)
+        if self.verse_end is not None:
+            return_val = "%s-%d" % (return_val, self.verse_end)
+        if len(return_val) == 0:
+            return_val = "No verse annotation"
+        return return_val
+
     class Meta:
         app_label = "shastra_compedium"
         abstract = True

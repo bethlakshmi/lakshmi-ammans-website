@@ -24,6 +24,7 @@ class PositionDetailAdmin(admin.ModelAdmin):
     list_display = ('id',
                     'position',
                     'source_count',
+                    'verses',
                     'usage',
                     'created_date',
                     'modified_date')
