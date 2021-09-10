@@ -39,10 +39,17 @@ class TestPositionList(TestCase):
         another_detail = PositionDetailFactory(
             position=self.detail.position,
             usage="Posture Description")
+        another_meaning = PositionDetailFactory(
+            position=self.detail.position,
+            usage="Meaning",
+            chapter=1,
+            verse_start=2,
+            verse_end=3)
         another_source_detail = PositionDetailFactory(
             position=self.detail.position,
             usage="Posture Description")
         another_detail.sources.add(self.source)
+        another_meaning.sources.add(self.source)
         another_source = SourceFactory()
         another_source_detail.sources.add(another_source)
         login_as(self.user, self)
@@ -107,6 +114,7 @@ class TestPositionList(TestCase):
                 another_source.pk,
                 another_source.pk,
                 another_source_detail.position.pk))
+        self.assertContains(response, "1:2-3")
 
     def test_list_empty(self):
         ex_url = reverse(
