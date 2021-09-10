@@ -50,27 +50,25 @@ class TestPositionList(TestCase):
         self.assertContains(response, "'id': %d" % self.detail.position.pk)
         self.assertContains(response,
                             "'position': '%s'" % self.detail.position.name)
+        header = ('<th data-field="%d" data-sortable="false"><span title=' +
+                  '"%s - %s">%s<br>%s</span></th>')
         self.assertContains(
             response,
-            ('<th data-field="%d_Posture Description" data-sortable="false">' +
-             '%s<br>%s<br>Description</th>') % (
-             self.source.pk,
-             self.source.title,
-             self.source.translator))
+            header % (self.source.pk,
+                      self.source.title,
+                      self.source.translator,
+                      self.source.shastra.initials,
+                      self.source.short_form
+                      ),
+            html=True)
         self.assertContains(
             response,
-            ('<th data-field="%d_Meaning" data-sortable="false">' +
-             '%s<br>%s<br>Meaning</th>') % (
-             self.source.pk,
-             self.source.title,
-             self.source.translator))
-        self.assertContains(
-            response,
-            ('<th data-field="%d_Posture Description" data-sortable="false">' +
-             '%s<br>%s<br>Description</th>') % (
-             another_source.pk,
-             another_source.title,
-             another_source.translator))
+            header % (another_source.pk,
+                      another_source.title,
+                      another_source.translator,
+                      another_source.shastra.initials,
+                      another_source.short_form),
+            html=True)
         self.assertContains(
             response,
             ('%s&nbsp;&nbsp;<a class="lakshmi-detail" href="%s?next=%s" ' +
@@ -87,24 +85,28 @@ class TestPositionList(TestCase):
              reverse("position-update",
                      urlconf="shastra_compedium.urls",
                      args=[self.detail.position.pk])))
+        source_cell = (
+            '\'%s\': \'<a class="lakshmi-text-success" href="#" data-toggle=' +
+            '"modal" data-target="#Modal%s_%s" data-backdrop="true" ><i ' +
+            'class="far fa-check-square fa-4x"></i></a>\'')
         self.assertContains(
             response,
-            "'%s_%s': '%s'" % (
+            source_cell % (
                 self.source.pk,
-                self.detail.usage,
-                self.detail.contents))
-        self.assertContains(
-            response,
-            "'%s_%s': '%s'" % (
                 self.source.pk,
-                another_detail.usage,
-                another_detail.contents))
+                self.detail.position.pk))
         self.assertContains(
             response,
-            "'%s_%s': '%s'" % (
+            source_cell % (
+                self.source.pk,
+                self.source.pk,
+                another_detail.position.pk))
+        self.assertContains(
+            response,
+            source_cell % (
                 another_source.pk,
-                another_source_detail.usage,
-                another_source_detail.contents))
+                another_source.pk,
+                another_source_detail.position.pk))
 
     def test_list_empty(self):
         ex_url = reverse(
