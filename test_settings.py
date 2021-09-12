@@ -31,7 +31,7 @@ except:
     STATIC_ROOT = os.path.join(BASE_DIR, 'static_collected')
     STATIC_URL = '/static/'
     LOGIN_REDIRECT_URL = '/'
-    LOGIN_URL = 'aldryn_sso_login'
+    LOGIN_URL = '/login/'
 
 INSTALLED_APPS = [
     'aldryn_addons',
@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'captcha',
     'django_select2',
     'filer.contrib.django_cms',
+    'djangocms_icon',
     'djangocms_link',
     'djangocms_picture',
     'djangocms_file',
