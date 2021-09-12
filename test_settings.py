@@ -31,7 +31,7 @@ except:
     STATIC_ROOT = os.path.join(BASE_DIR, 'static_collected')
     STATIC_URL = '/static/'
     LOGIN_REDIRECT_URL = '/'
-    LOGIN_URL = '/login/'
+    LOGIN_URL = 'aldryn_sso_login'
 
 INSTALLED_APPS = [
     'aldryn_addons',
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
+    'aldryn_sso',
     'djangocms_admin_style',
     'django.contrib.admin',
     'django.contrib.staticfiles',
@@ -141,6 +142,7 @@ except:
     ADDON_URLS_I18N = ['aldryn_django.i18n_urls',
                        'aldryn_django_cms.urls_i18n']
     ADDON_URLS_I18N_LAST = 'cms.urls'
+    ALDRYN_BOILERPLATE_NAME = 'bootstrap4'
     ALDRYN_DJANGO_ENABLE_GIS = False
     ALDRYN_SITES_DOMAINS = {}
     ALDRYN_SITES_REDIRECT_PERMANENT = False

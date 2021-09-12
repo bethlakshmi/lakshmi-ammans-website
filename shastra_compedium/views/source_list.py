@@ -11,7 +11,6 @@ from shastra_compedium.models import (
 )
 from django.urls import reverse
 from shastra_compedium.views import GenericList
-from django.db.models import Count
 
 
 class SourceList(GenericList):
@@ -46,11 +45,11 @@ class SourceList(GenericList):
                             'details'] += [cat_detail]
                     else:
                         source_dict[source][cat_detail.category] = {
-                            'count': 0,
+                            'pos_count': 0,
                             'details': [cat_detail]}
                 else:
                     source_dict[source] = {
-                            cat_detail.category: {'count': 0,
+                            cat_detail.category: {'pos_count': 0,
                                                   'details': [cat_detail]},
                     }
         for source in Source.objects.filter(categorydetail=None):
@@ -59,11 +58,11 @@ class SourceList(GenericList):
             for source in pos.sources.all():
                 if pos.position.category in source_dict[source]:
                     source_dict[source][pos.position.category][
-                        'count'] = source_dict[source][pos.position.category][
-                        'count'] + 1
+                        'pos_count'] = source_dict[source][pos.position.category][
+                        'pos_count'] + 1
                 else:
                     source_dict[source][pos.position.category] = {
-                        'count': 1,
+                        'pos_count': 1,
                         'details': []}
 
         return source_dict
