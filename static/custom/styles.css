@@ -6,6 +6,10 @@ body.with-margin {
     background-color: rgba(255,255,255,1);
     color: rgba(0,0,0,1);
 }
+.modal-body {
+    background-color: rgb(255, 233, 199);
+}
+}
 .bootstrap-table.fullscreen { 
     background-color: rgba(255,255,255,1);
 }
@@ -92,7 +96,7 @@ body.with-margin {
 .lakshmi-subtitle { 
     color: rgb(128,128,128,1);
 }
-.lakshmi-table-header { 
+.lakshmi-table-header, .lakshmi-modal-header, .lakshmi-modal-footer { 
     background-color: rgba(280, 170, 60, 1);
     color: rgba(0, 0, 0, 0.5);
 }
@@ -110,6 +114,9 @@ body.with-margin {
 }
 .lakshmi-text-success { 
     color: rgba(35,145,60,1);
+}
+.lakshmi-text-success:hover { 
+    color: rgba(30,107,47,1);
 }
 .lakshmi-title { 
     color: rgba(0,0,0,1);

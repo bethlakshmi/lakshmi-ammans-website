@@ -25,6 +25,7 @@ class Shastra(Model):
     min_age = IntegerField()
     max_age = IntegerField()
     description = TextField()
+    initials = CharField(max_length=128, blank=True)
 
     def __str__(self):
         return self.title
@@ -36,6 +37,7 @@ class Shastra(Model):
 
 class Source(Model):
     title = CharField(max_length=128, unique=True)
+    short_form = CharField(max_length=128, blank=True)
     shastra = ForeignKey(Shastra,
                          on_delete=CASCADE,
                          related_name='sources')
@@ -96,6 +98,18 @@ class Detail(Model):
     chapter = IntegerField(blank=True, null=True)
     verse_start = IntegerField(blank=True, null=True)
     verse_end = IntegerField(blank=True, null=True)
+
+    def verses(self):
+        return_val = ""
+        if self.chapter is not None:
+            return_val = str(self.chapter)
+        if self.verse_start is not None:
+            return_val = "%s:%d" % (return_val, self.verse_start)
+        if self.verse_end is not None:
+            return_val = "%s-%d" % (return_val, self.verse_end)
+        if len(return_val) == 0:
+            return_val = "No verse annotation"
+        return return_val
 
     class Meta:
         app_label = "shastra_compedium"
