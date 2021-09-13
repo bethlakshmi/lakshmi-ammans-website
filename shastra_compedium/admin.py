@@ -24,6 +24,7 @@ class PositionDetailAdmin(admin.ModelAdmin):
     list_display = ('id',
                     'position',
                     'source_count',
+                    'verses',
                     'usage',
                     'created_date',
                     'modified_date')
@@ -36,6 +37,7 @@ class PositionDetailAdmin(admin.ModelAdmin):
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name',
                     'description')
+
 
 class CategoryDetailAdmin(admin.ModelAdmin):
     list_display = ('id',
@@ -53,6 +55,7 @@ class CategoryDetailAdmin(admin.ModelAdmin):
 class SourceAdmin(admin.ModelAdmin):
     list_display = ('shastra_title',
                     'shastra_author',
+                    'short_form',
                     'shastra_min_age',
                     'shastra_max_age',
                     'translation_language',
@@ -75,6 +78,7 @@ class SourceAdmin(admin.ModelAdmin):
 
 class ShastraAdmin(admin.ModelAdmin):
     list_display = ('title',
+                    'initials',
                     'author',
                     'min_age',
                     'max_age',

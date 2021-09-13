@@ -45,11 +45,11 @@ class SourceList(GenericList):
                             'details'] += [cat_detail]
                     else:
                         source_dict[source][cat_detail.category] = {
-                            'pos_count': 0,
+                            'positions': [],
                             'details': [cat_detail]}
                 else:
                     source_dict[source] = {
-                            cat_detail.category: {'pos_count': 0,
+                            cat_detail.category: {'positions': [],
                                                   'details': [cat_detail]},
                     }
         for source in Source.objects.filter(categorydetail=None):
@@ -57,12 +57,13 @@ class SourceList(GenericList):
         for pos in PositionDetail.objects.all():
             for source in pos.sources.all():
                 if pos.position.category in source_dict[source]:
-                    source_dict[source][pos.position.category][
-                        'pos_count'] = source_dict[source][pos.position.category][
-                        'pos_count'] + 1
+                    if pos.position not in source_dict[source][
+                            pos.position.category]['positions']:
+                        source_dict[source][pos.position.category][
+                            'positions'] += [pos.position]
                 else:
                     source_dict[source][pos.position.category] = {
-                        'pos_count': 1,
+                        'positions': [pos.position],
                         'details': []}
 
         return source_dict

@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from shastra_compedium.models import (
     PositionDetail,
+    Shastra,
     Source,
 )
 from django.urls import reverse
@@ -18,6 +19,7 @@ class PositionList(GenericList):
     def get_context_dict(self):
         context = super(PositionList, self).get_context_dict()
         context['sources'] = Source.objects.all()
+        context['shastras'] = Shastra.objects.all()
         if self.changed_obj == "Category":
             context['category_ids'] = context['changed_ids']
             context['changed_ids'] = []
@@ -29,8 +31,11 @@ class PositionList(GenericList):
             if detail.position not in details:
                 details[detail.position] = {}
             for source in detail.sources.all():
+                usage = detail.usage.replace(" ", "")
                 if source not in details[detail.position]:
-                    details[detail.position][source] = {detail.usage: detail}
+                    details[detail.position][source] = {usage: [detail]}
+                elif usage not in details[detail.position][source]:
+                    details[detail.position][source][usage] = [detail]
                 else:
-                    details[detail.position][source][detail.usage] = detail
+                    details[detail.position][source][usage] += [detail]
         return details
