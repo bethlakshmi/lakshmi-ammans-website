@@ -1,17 +1,9 @@
-body.full-page { 
-    background-color: rgba(255,255,255,1);
-    color: rgba(0,0,0,1);
-}
-body.with-margin { 
-    background-color: rgba(255,255,255,1);
-    color: rgba(0,0,0,1);
+div.bootstrap-table.fullscreen { 
+    background-color: rgb(255, 233, 199);
+    color: rgb(33, 37, 41);
 }
 .modal-body {
     background-color: rgb(255, 233, 199);
-}
-}
-.bootstrap-table.fullscreen { 
-    background-color: rgba(255,255,255,1);
 }
 .btn-lakshmi-secondary { 
     background-color: rgba(108,117,125,1);

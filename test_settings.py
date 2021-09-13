@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
+    'aldryn_sso',
     'djangocms_admin_style',
     'django.contrib.admin',
     'django.contrib.staticfiles',
@@ -57,6 +58,7 @@ INSTALLED_APPS = [
     'captcha',
     'django_select2',
     'filer.contrib.django_cms',
+    'djangocms_icon',
     'djangocms_link',
     'djangocms_picture',
     'djangocms_file',
@@ -141,6 +143,7 @@ except:
     ADDON_URLS_I18N = ['aldryn_django.i18n_urls',
                        'aldryn_django_cms.urls_i18n']
     ADDON_URLS_I18N_LAST = 'cms.urls'
+    ALDRYN_BOILERPLATE_NAME = 'bootstrap4'
     ALDRYN_DJANGO_ENABLE_GIS = False
     ALDRYN_SITES_DOMAINS = {}
     ALDRYN_SITES_REDIRECT_PERMANENT = False

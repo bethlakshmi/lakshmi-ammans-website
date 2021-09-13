@@ -11,7 +11,6 @@ from shastra_compedium.models import (
 )
 from django.urls import reverse
 from shastra_compedium.views import GenericList
-from django.db.models import Count
 
 
 class SourceList(GenericList):
