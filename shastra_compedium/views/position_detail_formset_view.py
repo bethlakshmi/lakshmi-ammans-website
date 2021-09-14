@@ -27,8 +27,19 @@ class PositionDetailFormSetView(ModelFormSetView):
                 'description': self.intro_message})
         context = super().get_context_data(**kwargs)
         context['page_title'] = self.page_title
-        context['view_title'] = self.view_title
+        context['title'] = self.view_title
         context['instructions'] = msg[0].description
         context['special_handling'] = True
         context['tiny_mce_width'] = 400
         return context
+
+    def get_queryset(self):
+        query = super(PositionDetailFormSetView, self).get_queryset()
+        if 'position_id' in self.kwargs:
+            query = query.filter(position__id=self.kwargs['position_id'])
+        elif 'source_id' in self.kwargs and 'category_id' in self.kwargs:
+            query = query.filter(
+                position__category__id=self.kwargs['category_id'],
+                sources__id=self.kwargs['source_id'])
+        return query
+            
