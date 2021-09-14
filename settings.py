@@ -60,6 +60,7 @@ INSTALLED_APPS.extend([
     'dal',
     'dal_select2',
     'django_addanother',
+    'extra_views',
 ])
 
 # To see the settings that have been applied, use the Django diffsettings

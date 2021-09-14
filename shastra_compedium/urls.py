@@ -4,6 +4,7 @@ from shastra_compedium.views import (
     CategoryDetailUpdate,
     CategoryUpdate,
     PositionCreate,
+    PositionDetailFormSetView,
     PositionList,
     PositionUpdate,
     ShastraCreate,
@@ -19,6 +20,9 @@ app_name = "shastra_compedium"
 
 urlpatterns = [
     url(r'^chapter/add/$', UploadChapter.as_view(), name='chapter-add'),
+    url(r'^positiondetail/edit/$',
+        PositionDetailFormSetView.as_view(),
+        name='position-detail-update'),
     url(r'^category/add/$',
         CategoryCreate.as_view(),
         name='category-add'),

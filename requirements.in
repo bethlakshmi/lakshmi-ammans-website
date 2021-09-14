@@ -26,3 +26,4 @@ pytest-django
 packaging==20.4           # via pytest
 django-autocomplete-light==3.9.0rc1
 django-addanother
+django-extra-views
