@@ -1,5 +1,6 @@
 from django.forms import (
     CharField,
+    ChoiceField,
     ModelChoiceField,
     ModelForm,
     MultipleHiddenInput,
@@ -32,6 +33,9 @@ class PositionDetailEditForm(ModelForm):
                          args=['__fk__'])),
         required=False,
         queryset=Position.objects.all())
+    usage = ChoiceField(choices=(("Meaning", "Meaning"),
+                                 ("Posture Description", "Posture Description")
+                                 ),required=False)
 
     class Meta:
         model = PositionDetail
@@ -48,5 +52,4 @@ class PositionDetailEditForm(ModelForm):
             'chapter': NumberInput(attrs={'style': 'width: 40px'}),
             'verse_start': NumberInput(attrs={'style': 'width: 55px'}),
             'verse_end': NumberInput(attrs={'style': 'width: 55px'}),
-            'sources': SelectMultiple(attrs={'style':'width: 500px'})
-            }
+            'sources': SelectMultiple(attrs={'style':'width: 500px'})}
