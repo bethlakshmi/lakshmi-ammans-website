@@ -41,12 +41,11 @@ class PositionDetailFormSetView(FormSetSuccessMessageMixin, ModelFormSetView):
             query = query.filter(sources__id=self.kwargs['source_id'])
             cat_id = self.kwargs['category_id']
             if len(cat_id) > 0:
-                query = query.filter(
-                   position__category__id=cat_id)                   
+                query = query.filter(position__category__id=cat_id)
             else:
                 query = query.filter(position__category__isnull=True)
         return query
-            
+
     def get_success_message(self, formset):
         return '{} position details were updated.'.format(len(formset.forms))
 
