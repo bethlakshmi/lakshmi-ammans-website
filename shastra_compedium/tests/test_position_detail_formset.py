@@ -103,7 +103,7 @@ class TestPositionDetailFormset(TestCase):
             response,
             reverse('source_list', urlconf='shastra_compedium.urls'))
 
-    def test_post_by_position(self):
+    def test_post_w_next(self):
         detail = PositionDetailFactory()
         source = SourceFactory()
         pos_list = reverse('position_list', urlconf='shastra_compedium.urls')
