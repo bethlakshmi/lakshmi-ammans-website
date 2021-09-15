@@ -51,7 +51,7 @@ Original Source Abbreviations:
 {% block item_data %}
   {% for position,details in items.items %}
       {
-        'edit_url': '{% url 'shastra_compedium:position-detail-update' position.id %}',
+        'edit_url': '{% url 'shastra_compedium:position-detail-update' position.id %}?next={{request.path}}',
         'id': {{ position.pk}},
         'position': '{{ position.name }}',
         'category': '{% if position.category %}{{ position.category }}&nbsp;&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:category-update' position.category.pk %}?next={{request.path}}" title="Edit"><i class="fas fa-edit"></i></a>{% endif %}',

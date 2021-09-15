@@ -49,3 +49,6 @@ class PositionDetailFormSetView(FormSetSuccessMessageMixin, ModelFormSetView):
             
     def get_success_message(self, formset):
         return '{} position details were updated.'.format(len(formset.forms))
+
+    def get_success_url(self):
+        return self.request.GET.get('next', self.success_url)

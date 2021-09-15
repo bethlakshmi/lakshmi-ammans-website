@@ -99,3 +99,32 @@ class TestPositionDetailFormset(TestCase):
             follow=True)
         self.assertContains(response, "List of Sources")
         self.assertContains(response, "2 position details were updated.")
+        self.assertRedirects(
+            response,
+            reverse('source_list', urlconf='shastra_compedium.urls'))
+
+    def test_post_by_position(self):
+        detail = PositionDetailFactory()
+        source = SourceFactory()
+        pos_list = reverse('position_list', urlconf='shastra_compedium.urls')
+        response = self.client.post(
+            "%s?next=%s" % (reverse(self.view_name,
+                                    urlconf='shastra_compedium.urls',
+                                    args=[detail.position.id]), pos_list),
+            data={'form-0-sources': [source.pk],
+                   'form-0-usage': "Meaning",
+                   'form-0-position': detail.position.pk,
+                   'form-0-chapter': 1,
+                   'form-0-verse_start': 10,
+                   'form-0-verse_end': 20,
+                   'form-0-contents': "Meaning text",
+                   'form-0-id': detail.id,
+                   'form-TOTAL_FORMS': 1,
+                   'form-INITIAL_FORMS': 1,
+                   'form-MIN_NUM_FORMS': 0,
+                   'form-MAX_NUM_FORMS': 1000,
+                   'submit': True},
+            follow=True)
+        self.assertRedirects(response, pos_list)
+        self.assertContains(response, "List of Positions")
+        self.assertContains(response, "1 position details were updated.")
