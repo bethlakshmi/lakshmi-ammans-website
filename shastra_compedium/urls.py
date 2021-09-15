@@ -20,7 +20,7 @@ app_name = "shastra_compedium"
 
 urlpatterns = [
     url(r'^chapter/add/$', UploadChapter.as_view(), name='chapter-add'),
-    url(r'^positiondetail/edit/(?P<source_id>\d+)/(?P<category_id>\d+)/?$',
+    url(r'^positiondetail/edit/(?P<source_id>\d+)/(?P<category_id>\d*)/?$',
         PositionDetailFormSetView.as_view(),
         name='position-detail-update'),
     url(r'^positiondetail/edit/(?P<position_id>\d+)/?$',

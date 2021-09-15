@@ -38,8 +38,12 @@ class PositionDetailFormSetView(ModelFormSetView):
         if 'position_id' in self.kwargs:
             query = query.filter(position__id=self.kwargs['position_id'])
         elif 'source_id' in self.kwargs and 'category_id' in self.kwargs:
-            query = query.filter(
-                position__category__id=self.kwargs['category_id'],
-                sources__id=self.kwargs['source_id'])
+            query = query.filter(sources__id=self.kwargs['source_id'])
+            cat_id = self.kwargs['category_id']
+            if len(cat_id) > 0:
+                query = query.filter(
+                   position__category__id=cat_id)                   
+            else:
+                query = query.filter(position__category__isnull=True)
         return query
             
