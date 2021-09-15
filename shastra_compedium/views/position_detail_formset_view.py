@@ -1,4 +1,4 @@
-from extra_views import ModelFormSetView
+from extra_views import FormSetSuccessMessageMixin, ModelFormSetView
 from django.urls import reverse_lazy
 from shastra_compedium.models import (
     PositionDetail,
@@ -8,7 +8,7 @@ from shastra_compedium.site_text import edit_post_detail_messages
 from shastra_compedium.forms import PositionDetailEditForm
 
 
-class PositionDetailFormSetView(ModelFormSetView):
+class PositionDetailFormSetView(FormSetSuccessMessageMixin, ModelFormSetView):
     model = PositionDetail
     form_class = PositionDetailEditForm
     factory_kwargs = {'extra': 0}
@@ -47,3 +47,5 @@ class PositionDetailFormSetView(ModelFormSetView):
                 query = query.filter(position__category__isnull=True)
         return query
             
+    def get_success_message(self, formset):
+        return '{} position details were updated.'.format(len(formset.forms))
