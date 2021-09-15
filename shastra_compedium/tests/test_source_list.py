@@ -128,8 +128,9 @@ class TestSourceList(TestCase):
                 str([chapter.pk])))
         self.assertContains(
             response,
-            ('<td class="lakshmi-table-success">10:1-100&nbsp;&nbsp;<a class="lakshmi-' +
-             'detail" href="%s" title="Edit Chapter"><i class="fas fa-edit">' +
+            ('<td class="align-top" class="lakshmi-table-success">10:1-100' +
+             '&nbsp;&nbsp;<a class="lakshmi-detail" href="%s" ' +
+             'title="Edit Chapter"><i class="fas fa-edit">' +
              '</i></a></td>') % reverse(
              "categorydetail-update",
              urlconf="shastra_compedium.urls",
