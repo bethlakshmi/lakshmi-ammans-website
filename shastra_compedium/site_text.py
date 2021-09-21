@@ -26,6 +26,9 @@ make_position_messages = {
     'create_intro':  "Use this form to create a new position.",
     'edit_intro':  "Use this form to update this position.",
 }
+edit_post_detail_messages = {
+    'intro': 'Edit any of these position details and press "Submit".'
+}
 user_messages = {
     'CHAPTER_BASICS_INTRO': {
         'summary': 'Introduction on first page of upload',

@@ -1,0 +1,54 @@
+{% extends 'shastra_compedium/generic_wizard.tmpl' %}
+{% block special_handling_form %}
+<p>{{ instructions | safe }}</p>
+    {% csrf_token %}
+{{ formset.management_form }}
+
+  <table class="lakshmi-table">
+    <thead class="lakshmi-table-header">
+      <tr>
+      <th>Position<br>Ch:Start-End<br>Usage</th>
+      <th>Text</th>
+      <th>Sources</th>
+      </tr>
+
+    </thead>
+    <tbody>
+      {% for item_form in formset %}
+      <tr {% if item_form.errors %}class="lakshmi-table-error"{% endif %}>
+        <td>{{item_form.position}}<br>
+            {{item_form.chapter}}:{{item_form.verse_start}}-{{item_form.verse_end}}<br>
+            {{item_form.usage}}
+          {% if item_form.position.errors %}<br>
+          <font class="lakshmi-form-error">{{ item_form.position.errors }}</font>
+          {% endif %}{% if item_form.chapter.errors %}<br>
+            <font class="lakshmi-form-error">{{ item_form.chapter.errors }}</font>
+          {% endif %}{% if item_form.verse_start.errors %}<br>
+            <font class="lakshmi-form-error">{{ item_form.verse_start.errors }}</font>
+          {% endif %}{% if item_form.verse_end.errors %}<br>
+            <font class="lakshmi-form-error">{{ item_form.verse_end.errors }}</font>
+          {% endif %}{% if item_form.usage.errors %}<br>
+            <font class="lakshmi-form-error">{{ item_form.usage.errors }}</font>
+          {% endif %}
+          <font class="lakshmi-form-error">{{ item_form.non_field_errors }}<br>{{ item_form.errors }}</font></td>
+          <td>{{item_form.contents}}
+          {% if item_form.contents.errors %}<br>
+            <font class="lakshmi-form-error">{{ item_form.contents.errors }}</font>
+          {% endif %}</td>
+          <td>{{item_form.sources}}
+          {% if item_form.sources.errors %}<br>
+            <font class="lakshmi-form-error">{{ item_form.sources.errors }}</font>
+          {% endif %}</td>
+        </tr>
+    {% for hidden in item_form.hidden_fields %}
+    {{ hidden }}
+    {% endfor %}
+        {% endfor %}
+    </tbody>
+  </table>
+  <br>
+{% endblock %}
+{% block buttons %}
+    <input type="submit" name="submit" value="Submit" class="btn lakshmi-btn-primary" >
+    <input type="submit" name="cancel" value="Cancel" class="btn lakshmi-btn-light" formnovalidate>
+{% endblock %}

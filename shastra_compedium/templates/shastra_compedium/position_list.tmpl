@@ -40,6 +40,9 @@ Original Source Abbreviations:
 {% endblock %}
 {% block details %}
     var html = []
+    html.push('<div class="row"><div class="col-12 py-2">')
+    html.push('<a href="' + row.edit_url + '" class="btn lakshmi-btn-primary">Edit Details for ' + row.position + '</a>')
+    html.push('</div></div>')
     html.push('<div class="row">')
     html.push('<div class="col-12"><table class="table lakshmi-table"><thead class="thead-dark"><tr><th>Source</th><th>Posture Description</th><th>Meaning</th></tr></thead><tbody>' + row.details + '</tbody></table></div>')
     html.push('</div>')
@@ -48,6 +51,7 @@ Original Source Abbreviations:
 {% block item_data %}
   {% for position,details in items.items %}
       {
+        'edit_url': '{% url 'shastra_compedium:position-detail-update' position.id %}?next={{request.path}}',
         'id': {{ position.pk}},
         'position': '{{ position.name }}',
         'category': '{% if position.category %}{{ position.category }}&nbsp;&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:category-update' position.category.pk %}?next={{request.path}}" title="Edit"><i class="fas fa-edit"></i></a>{% endif %}',
