@@ -120,6 +120,12 @@ class PositionDetail(Detail):
     position = ForeignKey(Position,
                           on_delete=CASCADE,
                           related_name='details')
+    description = ForeignKey('PositionDetail',
+                             on_delete=SET_NULL,
+                             blank=True,
+                             null=True,
+                             related_name='meaning')
+    dependencies = ManyToManyField('PositionDetail')
 
     class Meta:
         app_label = "shastra_compedium"

@@ -69,10 +69,12 @@ class UploadChapter(GenericWizard):
             for form in self.forms[1:]:
                 if form.cleaned_data['position']:
                     position_detail = form.save(commit=False)
+                    meaning_detail = None
                     if len(form.cleaned_data['contents'].strip()) > 0:
                         position_detail = form.save()
                         self.num_created = self.num_created + 1
                         self.changed_ids += [position_detail.position.pk]
+                        meaning_detail = position_detail
                     if len(form.cleaned_data['posture']) > 0:
                         position_detail.pk = None
                         position_detail.contents = form.cleaned_data['posture']
@@ -81,6 +83,11 @@ class UploadChapter(GenericWizard):
                         form.save_m2m()
                         self.num_created = self.num_created + 1
                         self.changed_ids += [position_detail.position.pk]
+                        # this is obscure, but it is retrofitted into the 
+                        # form to avoid too much refactoring.
+                        if meaning_detail is not None:
+                            meaning_detail.description = position_detail
+                            meaning_detail.save()
 
     def finish(self, request):
         return_url = self.return_url
