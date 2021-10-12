@@ -3,7 +3,10 @@ from shastra_compedium.forms import (
     ChapterDetailMapping,
     PositionDetailForm,
 )
-from shastra_compedium.models import CategoryDetail
+from shastra_compedium.models import (
+    CategoryDetail,
+    PositionDetail,
+)
 from shastra_compedium.views import GenericWizard
 import re
 from django.urls import reverse
@@ -55,39 +58,36 @@ class UploadChapter(GenericWizard):
                     '\n',
                     ' ').replace('\r', '').split('(Uses)')
                 if len(match_text) > 1:
-                    chapter_pos['posture'] = match_text[0].strip()
-                    chapter_pos['contents'] = match_text[1].strip()
+                    chapter_pos['contents'] = match_text[0].strip()
+                    chapter_pos['meaning'] = match_text[1].strip()
                 else:
-                    chapter_pos['contents'] = chapter_pos['text'].strip()
+                    chapter_pos['meaning'] = chapter_pos['text'].strip()
                 chapter_pos['chapter'] = self.chapter.chapter
                 chapter_pos['sources'] = self.chapter.sources.all(
                     ).values_list('pk', flat=True)
-                chapter_pos['usage'] = "Meaning"
+                chapter_pos['usage'] = "Posture Description"
                 self.chapter_positions += [chapter_pos]
         else:
             self.num_created = 0
             for form in self.forms[1:]:
                 if form.cleaned_data['position']:
                     position_detail = form.save(commit=False)
-                    meaning_detail = None
+                    posture_pk = None
                     if len(form.cleaned_data['contents'].strip()) > 0:
                         position_detail = form.save()
                         self.num_created = self.num_created + 1
                         self.changed_ids += [position_detail.position.pk]
-                        meaning_detail = position_detail
-                    if len(form.cleaned_data['posture']) > 0:
+                        posture_pk = position_detail.pk
+                    if len(form.cleaned_data['meaning']) > 0:
                         position_detail.pk = None
-                        position_detail.contents = form.cleaned_data['posture']
-                        position_detail.usage = "Posture Description"
+                        position_detail.contents = form.cleaned_data['meaning']
+                        position_detail.usage = "Meaning"
+                        if posture_pk is not None:
+                            position_detail.description = PositionDetail.objects.get(pk=posture_pk)
                         position_detail.save()
                         form.save_m2m()
                         self.num_created = self.num_created + 1
                         self.changed_ids += [position_detail.position.pk]
-                        # this is obscure, but it is retrofitted into the 
-                        # form to avoid too much refactoring.
-                        if meaning_detail is not None:
-                            meaning_detail.description = position_detail
-                            meaning_detail.save()
 
     def finish(self, request):
         return_url = self.return_url
