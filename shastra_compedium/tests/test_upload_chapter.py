@@ -172,6 +172,21 @@ class TestUploadChapter(TestCase):
         self.assertContains(response, "Uploaded 2 position details.")
         self.assertEqual(start + 2, PositionDetail.objects.all().count())
 
+    def test_create_post_only_meaning(self):
+        start = PositionDetail.objects.all().count()
+        pos_data = self.position_data()
+        del pos_data['0-contents']
+        response = self.client.post(self.create_url,
+                                    data=pos_data,
+                                    follow=True)
+        self.assertRedirects(
+            response,
+            "%s?changed_ids=%s&obj_type=Position" % (
+                reverse("position_list", urlconf='shastra_compedium.urls'),
+                str([self.position.pk])))
+        self.assertContains(response, "Uploaded 1 position details.")
+        self.assertEqual(start + 1, PositionDetail.objects.all().count())
+
     def test_create_post_positions_format_fail(self):
         data = self.position_data()
         del data['num_rows']
