@@ -8,7 +8,10 @@ from shastra_compedium.tests.factories import (
     UserFactory,
 )
 from shastra_compedium.site_text import edit_post_detail_messages
-from shastra_compedium.tests.functions import login_as
+from shastra_compedium.tests.functions import (
+    assert_option_state,
+    login_as,
+)
 from shastra_compedium.models import (
     CategoryDetail,
     PositionDetail,
@@ -65,6 +68,43 @@ class TestPositionDetailFormset(TestCase):
             response,
             edit_post_detail_messages['intro'])
         self.assertContains(response, detail.contents)
+
+    def test_get_w_description(self):
+        detail = PositionDetailFactory()
+        source = SourceFactory()
+        detail.description = PositionDetailFactory(position=detail.position,
+                                                   usage="Posture Description")
+        detail.sources.add(source)
+        detail.description.sources.add(source)
+        detail.save()
+        response = self.client.get(reverse(self.view_name,
+                                           urlconf='shastra_compedium.urls',
+                                           args=[detail.position.id]),
+                                   follow=True)
+        assert_option_state(self,
+                            response,
+                            detail.description.pk,
+                            "%s - %s..." % (detail.description.verses(),
+                                            detail.description.contents[3:28]),
+                            True)
+
+    def test_get_w_dependancy(self):
+        detail = PositionDetailFactory()
+        source = SourceFactory()
+        dependancy = PositionDetailFactory(usage="Posture Description")
+        detail.sources.add(source)
+        dependancy.sources.add(source)
+        detail.dependencies.add(dependancy)
+        response = self.client.get(reverse(self.view_name,
+                                           urlconf='shastra_compedium.urls',
+                                           args=[detail.position.id]),
+                                   follow=True)
+        assert_option_state(self,
+                            response,
+                            dependancy.pk,
+                            "%s - %s..." % (dependancy.position.name,
+                                            dependancy.contents[3:28]),
+                            True)
 
     def test_post_by_position(self):
         detail = PositionDetailFactory()

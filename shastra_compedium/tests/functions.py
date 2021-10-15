@@ -11,6 +11,19 @@ def login_as(user, testcase):
                           email=user.email,
                           password='foo')
 
+
+def assert_option_state(testcase, response, value, text, selected=False):
+    selected_state = ""
+    if selected:
+        selected_state = " selected"
+    option_state = (
+        '<option value="%s"%s>%s</option>' % (
+                    value, selected_state, text))
+    testcase.assertContains(
+        response,
+        option_state,
+        html=True)
+
 '''
 def set_image(itemimage=None, folder_name=None):
     folder = None
@@ -35,14 +48,4 @@ def set_image(itemimage=None, folder_name=None):
         itemimage.filer_image_id = current_img.pk
         itemimage.save()
     return current_img
-
-
-def assert_option_state(response, value, text, selected=False):
-    selected_state = ""
-    if selected:
-        selected_state = " selected"
-    option_state = (
-        '<option value="%s"%s>%s</option>' % (
-                    value, selected_state, text))
-    assert bytes(option_state, 'utf-8') in response.content
 '''

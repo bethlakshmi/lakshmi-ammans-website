@@ -61,15 +61,17 @@ class PositionDetailEditForm(ModelForm):
         super(PositionDetailEditForm, self).__init__(*args, **kwargs)
         if 'instance' in kwargs:
             detail = kwargs.get('instance')
-            self.fields['description'].queryset = PositionDetail.objects.filter(
-                usage="Posture Description",
-                position=detail.position,
-                sources__in=detail.sources.all(),
-                )
-            self.fields['dependencies'].queryset = PositionDetail.objects.filter(
-                usage="Posture Description",
-                sources__in=detail.sources.all(),
-                ).exclude(position=detail.position)
+            self.fields[
+                'description'].queryset = PositionDetail.objects.filter(
+                    usage="Posture Description",
+                    position=detail.position,
+                    sources__in=detail.sources.all(),
+                    )
+            self.fields[
+                'dependencies'].queryset = PositionDetail.objects.filter(
+                    usage="Posture Description",
+                    sources__in=detail.sources.all(),
+                    ).exclude(position=detail.position)
 
     class Meta:
         model = PositionDetail

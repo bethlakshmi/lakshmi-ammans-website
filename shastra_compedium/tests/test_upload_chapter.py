@@ -50,8 +50,8 @@ class TestUploadChapter(TestCase):
                 '0-chapter': 1,
                 '0-verse_start': 10,
                 '0-verse_end': 20,
-                '0-posture': "Posture text",
-                '0-contents': "Meaning text",
+                '0-contents': "Posture text",
+                '0-meaning': "Meaning text",
                 'step': 1,
                 'num_rows': 1,
                 'finish': True}
@@ -83,23 +83,23 @@ class TestUploadChapter(TestCase):
             html=True)
         self.assertContains(
             response,
-            '<textarea name="0-posture" cols="40" rows="10" class="' +
-            'admin-tiny-mce" id="id_0-posture">\nDescription One</textarea>',
-            html=True)
-        self.assertContains(
-            response,
             '<textarea name="0-contents" cols="40" rows="10" class="' +
-            'admin-tiny-mce" id="id_0-contents">\nMeaning One</textarea>',
+            'admin-tiny-mce" id="id_0-contents">\nDescription One</textarea>',
             html=True)
         self.assertContains(
             response,
-            '<textarea name="1-posture" cols="40" rows="10" class="' +
-            'admin-tiny-mce" id="id_1-posture">\nDescription Two</textarea>',
+            '<textarea name="0-meaning" cols="40" rows="10" class="' +
+            'admin-tiny-mce" id="id_0-meaning">\nMeaning One</textarea>',
             html=True)
         self.assertContains(
             response,
             '<textarea name="1-contents" cols="40" rows="10" class="' +
-            'admin-tiny-mce" id="id_1-contents">\nMeaning Two</textarea>',
+            'admin-tiny-mce" id="id_1-contents">\nDescription Two</textarea>',
+            html=True)
+        self.assertContains(
+            response,
+            '<textarea name="1-meaning" cols="40" rows="10" class="' +
+            'admin-tiny-mce" id="id_1-meaning">\nMeaning Two</textarea>',
             html=True)
         self.assertContains(
             response,
