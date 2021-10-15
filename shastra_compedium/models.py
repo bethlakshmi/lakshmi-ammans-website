@@ -184,6 +184,9 @@ class Performer(Model):
     contact = OneToOneField(User, on_delete=SET_NULL, blank=True, null=True)
     image = FilerImageField(on_delete=CASCADE, null=True)
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         app_label = "shastra_compedium"
 

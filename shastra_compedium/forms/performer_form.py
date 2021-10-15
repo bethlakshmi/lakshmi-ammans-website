@@ -1,7 +1,8 @@
 from django.forms import (
     CharField,
+    ImageField,
     ModelForm,
-    Select,
+    SelectMultiple,
     Textarea,
 )
 from shastra_compedium.models import Performer
@@ -32,7 +33,7 @@ class PerformerForm(ModelForm):
                  performer has studied with.'''}
         widgets = {
             'dance_styles': AddAnotherEditSelectedWidgetWrapper(
-                Select,
+                SelectMultiple,
                 reverse_lazy('dancestyle-add', urlconf='shastra_compedium.urls'),
                 reverse_lazy('dancestyle-update',
                              urlconf='shastra_compedium.urls',

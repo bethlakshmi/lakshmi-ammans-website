@@ -39,5 +39,6 @@ class PerformerUpdate(LoginRequiredMixin,
     valid_message = make_performer_messages['edit_success']
     intro_message = make_performer_messages['edit_intro']
     form_class = PerformerForm
+
     def get_queryset(self):
         return self.model.objects.filter(contact=self.request.user)
