@@ -1,5 +1,6 @@
 from django.forms import (
     CharField,
+    HiddenInput,
     ImageField,
     ModelForm,
     SelectMultiple,
@@ -32,6 +33,7 @@ class PerformerForm(ModelForm):
             'linneage': '''Please describe the history of the teachers the
                  performer has studied with.'''}
         widgets = {
+            'contact': HiddenInput(),
             'dance_styles': AddAnotherEditSelectedWidgetWrapper(
                 SelectMultiple,
                 reverse_lazy('dancestyle-add', urlconf='shastra_compedium.urls'),

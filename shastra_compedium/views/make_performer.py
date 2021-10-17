@@ -25,6 +25,10 @@ class PerformerCreate(LoginRequiredMixin,
     intro_message = make_performer_messages['create_intro']
     form_class = PerformerForm
 
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['contact'] = self.request.user
+        return initial
 
 class PerformerUpdate(LoginRequiredMixin,
                       UpdatePopupMixin,
