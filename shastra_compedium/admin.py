@@ -27,6 +27,7 @@ class PositionDetailAdmin(admin.ModelAdmin):
                     'verses',
                     'usage',
                     'created_date',
+                    'description',
                     'modified_date')
     list_filter = ['position', 'usage', 'created_date', 'modified_date']
 

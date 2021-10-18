@@ -43,6 +43,9 @@
 {% for form in forms %}
 {{ form.media }}
 {% endfor %}
+{% for form in formset %}
+{{ form.media }}
+{% endfor %}
 <script>
 (function($) {
     $('#add-form').click(function() {

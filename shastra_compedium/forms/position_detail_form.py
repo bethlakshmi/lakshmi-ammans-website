@@ -19,7 +19,7 @@ from django.urls import reverse_lazy
 class PositionDetailForm(ModelForm):
     required_css_class = 'required'
     error_css_class = 'error'
-    posture = CharField(
+    meaning = CharField(
         widget=Textarea(attrs={'class': 'admin-tiny-mce'}),
         required=False,
         initial=" ")

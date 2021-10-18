@@ -35,13 +35,13 @@
             <font class="lakshmi-form-error">{{ item_form.verse_end.errors }}</font>
           {% endif %}
           <font class="lakshmi-form-error">{{ item_form.non_field_errors }}<br>{{ item_form.errors }}</font></td>
-          <td>{{item_form.posture}}
-          {% if item_form.posture.errors %}<br>
-            <font class="lakshmi-form-error">{{ item_form.posture.errors }}</font>
-          {% endif %}</td>
           <td>{{item_form.contents}}
           {% if item_form.contents.errors %}<br>
             <font class="lakshmi-form-error">{{ item_form.contents.errors }}</font>
+          {% endif %}</td>
+          <td>{{item_form.meaning}}
+          {% if item_form.meaning.errors %}<br>
+            <font class="lakshmi-form-error">{{ item_form.meaning.errors }}</font>
           {% endif %}</td>
         </tr>
     {% for hidden in item_form.hidden_fields %}
