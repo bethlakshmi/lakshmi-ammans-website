@@ -19,7 +19,7 @@ class DanceStyleCreate(LoginRequiredMixin,
     success_url = reverse_lazy('position_list',
                                urlconf="shastra_compedium.urls")
     page_title = 'DanceStyle'
-    view_title = 'Create DanceStyle'
+    view_title = 'Create Dance Style'
     valid_message = make_dance_style_messages['create_success']
     intro_message = make_dance_style_messages['create_intro']
     fields = ['name', 'description']
@@ -34,7 +34,7 @@ class DanceStyleUpdate(LoginRequiredMixin,
     success_url = reverse_lazy('position_list',
                                urlconf="shastra_compedium.urls")
     page_title = 'DanceStyle'
-    view_title = 'Update DanceStyle'
+    view_title = 'Update Dance Style'
     valid_message = make_dance_style_messages['edit_success']
     intro_message = make_dance_style_messages['edit_intro']
     fields = ['name', 'description']
