@@ -26,9 +26,16 @@ def assert_option_state(testcase, response, value, text, selected=False):
 def set_image(itemimage=None, folder_name=None):
     folder = None
     if User.objects.filter(username='superuser_for_test').exists():
+        superuser = User.objects.get(username='superuser_for_test')
+    else:
+        superuser = User.objects.create_superuser(
+            'superuser_for_test',
+            'admin@importimage.com',
+            'secret')
     if folder_name:
         folder, created = Folder.objects.get_or_create(
             name=folder_name)
+
     path = "shastra_compedium/tests/made_up_filename.png"
     current_img = Image.objects.create(
         folder=folder,
