@@ -34,7 +34,8 @@ class TestMakeDanceStyle(TestCase):
     def test_create_get(self):
         response = self.client.get(self.create_url, follow=True)
         self.assertContains(response, "Create Dance Style")
-        self.assertContains(response, make_dance_style_messages['create_intro'])
+        self.assertContains(response,
+                            make_dance_style_messages['create_intro'])
         self.assertContains(response, "Style")
 
     def test_create_post(self):
@@ -55,7 +56,8 @@ class TestMakeDanceStyle(TestCase):
             response,
             make_dance_style_messages['create_success'] % "New Style")
         self.assertContains(response, "This field is required.")
-        self.assertContains(response, make_dance_style_messages['create_intro'])
+        self.assertContains(response,
+                            make_dance_style_messages['create_intro'])
 
     def test_get_edit(self):
         response = self.client.get(self.edit_url)

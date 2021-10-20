@@ -11,6 +11,7 @@ def login_as(user, testcase):
                           email=user.email,
                           password='foo')
 
+
 def assert_option_state(testcase, response, value, text, selected=False):
     selected_state = ""
     if selected:
@@ -22,6 +23,7 @@ def assert_option_state(testcase, response, value, text, selected=False):
         response,
         option_state,
         html=True)
+
 
 def set_image(itemimage=None, folder_name=None):
     folder = None

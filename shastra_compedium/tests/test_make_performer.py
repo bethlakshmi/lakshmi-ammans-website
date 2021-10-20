@@ -78,6 +78,12 @@ class TestMakePerformer(TestCase):
         self.assertContains(response, make_performer_messages['edit_intro'])
         self.assertContains(response, "Style")
 
+    def test_edit_wrong_performer(self):
+        self.user = UserFactory()
+        login_as(self.user, self)
+        response = self.client.get(self.edit_url)
+        self.assertEqual(404, response.status_code)
+
     def test_post_edit(self):
         self.user = self.object.contact
         login_as(self.user, self)

@@ -36,7 +36,8 @@ class PerformerForm(ModelForm):
             'contact': HiddenInput(),
             'dance_styles': AddAnotherEditSelectedWidgetWrapper(
                 SelectMultiple,
-                reverse_lazy('dancestyle-add', urlconf='shastra_compedium.urls'),
+                reverse_lazy('dancestyle-add',
+                             urlconf='shastra_compedium.urls'),
                 reverse_lazy('dancestyle-update',
                              urlconf='shastra_compedium.urls',
                              args=['__fk__'])),

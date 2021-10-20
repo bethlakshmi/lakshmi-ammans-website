@@ -11,9 +11,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class DanceStyleCreate(LoginRequiredMixin,
-                      CreatePopupMixin,
-                      ShastraFormMixin,
-                      CreateView):
+                       CreatePopupMixin,
+                       ShastraFormMixin,
+                       CreateView):
     model = DanceStyle
     template_name = 'shastra_compedium/modal_make_form.tmpl'
     success_url = reverse_lazy('position_list',
@@ -26,9 +26,9 @@ class DanceStyleCreate(LoginRequiredMixin,
 
 
 class DanceStyleUpdate(LoginRequiredMixin,
-                      UpdatePopupMixin,
-                      ShastraFormMixin,
-                      UpdateView):
+                       UpdatePopupMixin,
+                       ShastraFormMixin,
+                       UpdateView):
     model = DanceStyle
     template_name = 'shastra_compedium/modal_make_form.tmpl'
     success_url = reverse_lazy('position_list',

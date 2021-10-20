@@ -30,6 +30,7 @@ class PerformerCreate(LoginRequiredMixin,
         initial['contact'] = self.request.user
         return initial
 
+
 class PerformerUpdate(LoginRequiredMixin,
                       UpdatePopupMixin,
                       ShastraFormMixin,
