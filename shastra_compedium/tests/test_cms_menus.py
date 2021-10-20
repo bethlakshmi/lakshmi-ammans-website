@@ -36,4 +36,3 @@ class TestCMSMenus(TestCase):
         response = self.client.get(self.create_url)
         self.assertNotContains(response, self.create_url)
         self.assertContains(response, self.edit_url)
-
