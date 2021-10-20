@@ -67,6 +67,7 @@ class PerformerFactory(DjangoModelFactory):
     name = Sequence(lambda n: 'Perfromer %d' % n)
     linneage = Sequence(lambda n: 'Linneage %d' % n)
     bio = Sequence(lambda n: 'bio %d' % n)
+    contact = SubFactory(UserFactory)
 
     @factory.post_generation
     def dance_styles(self, create, extracted, **kwargs):
