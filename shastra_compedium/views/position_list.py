@@ -27,7 +27,7 @@ class PositionList(GenericList):
 
     def get_list(self):
         details = {}
-        for detail in PositionDetail.objects.all():
+        for detail in PositionDetail.objects.filter(description__isnull=True):
             if detail.position not in details:
                 details[detail.position] = {}
             for source in detail.sources.all():

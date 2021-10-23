@@ -6,9 +6,12 @@ from shastra_compedium.models import (
 )
 from shastra_compedium.site_text import edit_post_detail_messages
 from shastra_compedium.forms import PositionDetailEditForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class PositionDetailFormSetView(FormSetSuccessMessageMixin, ModelFormSetView):
+class PositionDetailFormSetView(LoginRequiredMixin,
+                                FormSetSuccessMessageMixin,
+                                ModelFormSetView):
     model = PositionDetail
     form_class = PositionDetailEditForm
     factory_kwargs = {'extra': 0}
