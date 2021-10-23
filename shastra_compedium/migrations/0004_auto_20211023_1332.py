@@ -13,6 +13,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='positiondetail',
             name='dependencies',
-            field=models.ManyToManyField(blank=True, to='shastra_compedium.PositionDetail'),
+            field=models.ManyToManyField(
+                blank=True,
+                to='shastra_compedium.PositionDetail'),
         ),
     ]
