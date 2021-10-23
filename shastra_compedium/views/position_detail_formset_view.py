@@ -31,14 +31,19 @@ class PositionDetailFormSetView(FormSetSuccessMessageMixin, ModelFormSetView):
         context['instructions'] = msg[0].description
         context['special_handling'] = True
         context['tiny_mce_width'] = 400
+        context['return_url'] = self.request.GET.get('next', self.success_url)
         return context
 
     def get_queryset(self):
         query = super(PositionDetailFormSetView, self).get_queryset()
         if 'position_id' in self.kwargs:
             query = query.filter(position__id=self.kwargs['position_id'])
+            self.changed_id = self.kwargs['position_id']
+            self.obj_type = "Position"
         elif 'source_id' in self.kwargs and 'category_id' in self.kwargs:
             query = query.filter(sources__id=self.kwargs['source_id'])
+            self.changed_id = self.kwargs['source_id']
+            self.obj_type = "Source"
             cat_id = self.kwargs['category_id']
             if len(cat_id) > 0:
                 query = query.filter(position__category__id=cat_id)
@@ -47,7 +52,22 @@ class PositionDetailFormSetView(FormSetSuccessMessageMixin, ModelFormSetView):
         return query
 
     def get_success_message(self, formset):
-        return '{} position details were updated.'.format(len(formset.forms))
+        names = []
+        name_list = ""
+        self.changed_ids = []
+        for form in formset.forms:
+            if form.instance.position.name not in names:
+                names += [form.instance.position.name]
+            self.changed_ids += [form.instance.pk]
+        for name in names:
+            if len(name_list) == 0:
+                name_list = name
+            else:
+                name_list = "%s, %s" % (name, name_list)
+        return '{} position details were updated.'.format(name_list)
 
     def get_success_url(self):
-        return self.request.GET.get('next', self.success_url)
+        return "%s?changed_ids=[%s]&obj_type=%s" % (
+            self.request.GET.get('next', self.success_url),
+            self.changed_id,
+            self.obj_type)
