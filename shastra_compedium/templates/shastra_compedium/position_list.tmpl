@@ -7,13 +7,13 @@
   {% endfor %}
  <a href="{% url 'shastra_compedium:chapter-add' %}" role="button" class="btn lakshmi-btn-primary">Add a Source & Chapter</a>&nbsp;
 {% endblock %}
-{% block extra_text %}
+{% block extra_text %}<div class="px-2">
 Original Source Abbreviations:
 <ul>
   {% for shastra in shastras %}
   <li>{{ shastra.initials }} - {{ shastra.title }}, by {{ shastra.author }}</li>
   {% endfor %}
-</ul>
+</ul></div>
 {% endblock %}
 {% block table_header %}
     <tr>

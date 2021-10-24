@@ -4,6 +4,18 @@ make_category_messages = {
     'create_intro':  "Use this form to create a new category.",
     'edit_intro':  "Use this form to update this category.",
 }
+make_performer_messages = {
+    'create_success':  "A new performer has been created.  Name: %s",
+    'edit_success':  "The %s performer has been updated.",
+    'create_intro':  "Use this form to create a new performer.",
+    'edit_intro':  "Use this form to update this performer.",
+}
+make_dance_style_messages = {
+    'create_success':  "A new style of dance has been created.  Name: %s",
+    'edit_success':  "The %s style has been updated.",
+    'create_intro':  "Use this form to create a new dance style.",
+    'edit_intro':  "Use this form to update this style.",
+}
 make_category_detail_messages = {
     'edit_success':  "The %s chapter has been updated.",
     'edit_intro':  "Use this form to update this chapter.",

@@ -24,7 +24,7 @@ def assert_option_state(testcase, response, value, text, selected=False):
         option_state,
         html=True)
 
-'''
+
 def set_image(itemimage=None, folder_name=None):
     folder = None
     if User.objects.filter(username='superuser_for_test').exists():
@@ -37,7 +37,8 @@ def set_image(itemimage=None, folder_name=None):
     if folder_name:
         folder, created = Folder.objects.get_or_create(
             name=folder_name)
-    path = "inventory/tests/made_up_filename.png"
+
+    path = "shastra_compedium/tests/made_up_filename.png"
     current_img = Image.objects.create(
         folder=folder,
         owner=superuser,
@@ -48,4 +49,3 @@ def set_image(itemimage=None, folder_name=None):
         itemimage.filer_image_id = current_img.pk
         itemimage.save()
     return current_img
-'''
