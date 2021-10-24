@@ -2,7 +2,6 @@ from django.views.generic.edit import (
     CreateView,
     UpdateView,
 )
-from django_addanother.views import CreatePopupMixin, UpdatePopupMixin
 from shastra_compedium.models import Performer
 from django.urls import reverse_lazy
 from shastra_compedium.site_text import make_performer_messages
@@ -12,7 +11,6 @@ from shastra_compedium.forms import PerformerForm
 
 
 class PerformerCreate(LoginRequiredMixin,
-                      CreatePopupMixin,
                       ShastraFormMixin,
                       CreateView):
     model = Performer
@@ -32,7 +30,6 @@ class PerformerCreate(LoginRequiredMixin,
 
 
 class PerformerUpdate(LoginRequiredMixin,
-                      UpdatePopupMixin,
                       ShastraFormMixin,
                       UpdateView):
     model = Performer
