@@ -14,3 +14,4 @@ from .make_shastra import (ShastraCreate, ShastraUpdate)
 from .make_position import (PositionCreate, PositionUpdate)
 from .position_list import PositionList
 from .source_list import SourceList
+from .bulk_image_upload import BulkImageUpload

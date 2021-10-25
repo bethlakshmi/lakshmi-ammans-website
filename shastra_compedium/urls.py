@@ -1,5 +1,6 @@
 from django.conf.urls import url
 from shastra_compedium.views import (
+    BulkImageUpload,
     CategoryCreate,
     CategoryDetailUpdate,
     CategoryUpdate,
@@ -74,4 +75,8 @@ urlpatterns = [
         SourceUpdate.as_view(),
         name='source-update'),
     url(r'^source/list/?', SourceList.as_view(), name='source_list'),
+    # Images
+    url(r'^image/upload/?',
+        BulkImageUpload.as_view(),
+        name='image_upload'),
 ]
