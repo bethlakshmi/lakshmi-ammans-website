@@ -12,7 +12,7 @@ from easy_thumbnails.files import get_thumbnailer
 
 class BulkImageUpload(GenericWizard):
     filer_images = []
-    template = 'shastra_compedium/generic_wizard.tmpl'
+    template = 'shastra_compedium/bulk_image_wizard.tmpl'
     page_title = 'Image Upload'
     first_title = 'Select Images to Upload'
     second_title = 'Connect Images to Positions & Details'
@@ -70,7 +70,7 @@ class BulkImageUpload(GenericWizard):
                                             prefix=str(i),
                                             label_suffix='')
                     if association_form.is_valid():
-                        image = association_form.cleaned_data['filer_image']
+                        image = association_form.cleaned_data['image']
                         thumb_url = get_thumbnailer(image).get_thumbnail(
                             self.options).url
                         association_form.fields['position'].label = mark_safe(
@@ -85,9 +85,15 @@ class BulkImageUpload(GenericWizard):
                 forms = []
                 association_num = 0
                 for image in self.filer_images:
-                    association_form = form(initial={'filer_image': image},
-                                            prefix=str(association_num),
-                                            label_suffix='')
+                    association_form = form(
+                        initial={
+                            'image': image,
+                            'dance_style': self.forms[0].cleaned_data[
+                                'default_dance_style'],
+                            'performer': self.forms[0].cleaned_data[
+                                'default_performer'],},
+                        prefix=str(association_num),
+                        label_suffix='')
                     thumb_url = get_thumbnailer(image).get_thumbnail(
                         self.options).url
                     association_form.fields['position'].label = mark_safe(
@@ -97,3 +103,9 @@ class BulkImageUpload(GenericWizard):
                 forms += [ImageAssociateMetaForm(
                     initial={'association_count': association_num})]
                 return forms
+
+    def make_context(self, request):
+        context = super(BulkImageUpload, self).make_context(request)
+        if str(self.forms[0].__class__.__name__) == "ImageAssociateForm":
+            context['special_handling'] = True
+        return context

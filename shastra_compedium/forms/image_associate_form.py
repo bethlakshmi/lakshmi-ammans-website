@@ -18,7 +18,7 @@ class ImageAssociateForm(ModelForm):
     image = ModelChoiceField(widget=HiddenInput(),queryset=Image.objects.all())
     position = ModelChoiceField(
         queryset=Position.objects.all(),
-        required=False,
+        required=True,
         widget=autocomplete.ModelSelect2(url='position-autocomplete'))
 
     class Meta:
@@ -26,6 +26,5 @@ class ImageAssociateForm(ModelForm):
         fields = [
             'image',
             'position',
-            'details',
             'performer',
             'dance_style']
