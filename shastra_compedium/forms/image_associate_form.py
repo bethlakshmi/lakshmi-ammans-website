@@ -14,7 +14,8 @@ from filer.models.imagemodels import Image
 class ImageAssociateForm(ModelForm):
     required_css_class = 'required'
     error_css_class = 'error'
-    image = ModelChoiceField(widget=HiddenInput(),queryset=Image.objects.all())
+    image = ModelChoiceField(widget=HiddenInput(),
+                             queryset=Image.objects.all())
     position = ModelChoiceField(
         queryset=Position.objects.all(),
         required=True,

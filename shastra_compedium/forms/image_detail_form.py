@@ -19,7 +19,7 @@ class DetailsChoiceField(ModelMultipleChoiceField):
 
 
 class ImageDetailForm(ModelForm):
-    options = {'size': (100, 100), 'crop': False}
+    options = {'size': (150, 150), 'crop': False}
     required_css_class = 'required'
     error_css_class = 'error'
     details = DetailsChoiceField(queryset=PositionDetail.objects.all(),

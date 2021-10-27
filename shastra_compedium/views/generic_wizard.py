@@ -147,6 +147,7 @@ class GenericWizard(View):
 
         if self.current_form_set['next_form'] is not None:
             self.forms = self.setup_forms(self.current_form_set['next_form'])
-            return render(request, self.template, self.make_context(request))
+            context = self.make_context(request)
+            return render(request, self.template, context)
 
         return HttpResponseRedirect(self.return_url)

@@ -1,0 +1,36 @@
+{% extends 'shastra_compedium/generic_wizard.tmpl' %}
+{% block special_handling_form %}
+<p>{{ instructions | safe }}</p>
+ <font class="lakshmi-form-error">
+  {% if form_error %}
+    <p class="lakshmi-form-error"> There is an error on the form.</p>
+  {% endif %}
+  </font>
+    {% csrf_token %}
+  <table class="lakshmi-table table-striped">
+    <thead>
+      <tr><th>Image/Position</th>
+          <th>Details (choose 1 or more)</th></tr>
+    </thead>
+    <tbody>
+      {% for form in forms %}
+      <tr {% if form.errors %}class="lakshmi-table-error"{% endif %}>
+        <td class="align-top">{{ form.details.label }}</td>
+        <td>
+        {% for checkbox in form.details %}
+        <div class="row"><div class="col-1 text-right">{{ checkbox.tag }}</div><div class="col-8">{{ checkbox.choice_label }}</div></div>{% endfor %}
+          {% if form.details.errors %}
+            <font class="lakshmi-form-error">{{ form.details.errors }}</font>
+          {% endif %}
+        </td>
+      {% for field in form.hidden_fields %}{{ field }}{% endfor%}
+      </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr><th>Image/Position</th>
+          <th>Details (choose 1 or more)</th></tr>
+    </tfoot>
+  </table>
+  <br>
+{% endblock %}
