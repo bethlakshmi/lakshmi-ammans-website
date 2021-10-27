@@ -1,5 +1,4 @@
 from django.forms import (
-    CharField,
     HiddenInput,
     ModelForm,
     ModelChoiceField,

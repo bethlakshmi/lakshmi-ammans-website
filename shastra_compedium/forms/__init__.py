@@ -6,5 +6,6 @@ from .position_detail_edit_form import PositionDetailEditForm
 from .position_form import PositionForm
 from .source_form import SourceForm
 from .image_upload_form import ImageUploadForm
+from .image_detail_form import ImageDetailForm
 from .image_associate_form import ImageAssociateForm
 from .image_associate_meta_form import ImageAssociateMetaForm
