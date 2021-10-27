@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import messages
+from shastra_compedium.forms import StepForm
 from shastra_compedium.models import UserMessage
 from shastra_compedium.site_text import user_messages
 from django.shortcuts import render
@@ -44,6 +45,7 @@ class GenericWizard(View):
             'first': self.current_form_set['the_form'] is None,
             'show_finish': True,
             'last': self.form_sets[self.step+1]['next_form'] is None,
+            'step_form': StepForm(initial={"step": self.step + 1})
         }
         if 'instruction_key' in self.current_form_set:
             context['instructions'] = UserMessage.objects.get_or_create(

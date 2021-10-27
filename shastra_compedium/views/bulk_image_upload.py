@@ -50,8 +50,7 @@ class BulkImageUpload(GenericWizard):
             self.filer_images = upload_and_attach(
                 files,
                 request.user)
-        elif self.forms[0].__class__.__name__ == "ImageAssociateForm" or (
-                self.forms[0].__class__.__name__ == "ImageDetailForm"):
+        elif self.forms[0].__class__.__name__ == "ImageAssociateForm":
             for form in self.forms:
                 if form.__class__.__name__ == "ImageAssociateForm" and (
                         form.cleaned_data['position']):
@@ -60,13 +59,13 @@ class BulkImageUpload(GenericWizard):
                     self.example_images += [form.save().pk]
         else:
             self.forms.save()
+            self.num_files = self.forms.total_form_count()
 
     def finish(self, request):
         messages.success(
             request,
-            "Uploaded %s images.<br>Attached %s images." % (
-                self.num_files,
-                len(self.example_images)))
+            "Uploaded %d images." % (
+                self.num_files))
         return self.return_url
 
     def setup_forms(self, form, request=None):
