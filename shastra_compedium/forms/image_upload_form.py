@@ -49,4 +49,3 @@ class ImageUploadForm(Form):
                     'summary': "New Image Help text",
                     'description': item_image_help['new_images']}
                 )[0].description)
-    step = IntegerField(widget=HiddenInput(), initial=0)
