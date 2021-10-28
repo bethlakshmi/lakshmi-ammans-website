@@ -42,7 +42,6 @@ class GenericWizard(View):
             'title': self.page_title,
             'subtitle': self.current_form_set['next_title'],
             'forms': self.forms,
-            'first': self.current_form_set['the_form'] is None,
             'show_finish': True,
             'last': self.form_sets[self.step+1]['next_form'] is None,
             'step_form': StepForm(initial={"step": self.step + 1})
@@ -58,10 +57,6 @@ class GenericWizard(View):
                         'instruction_key']]['description']}
                 )[0].description
         return context
-
-    def make_back_forms(self, request):
-        self.step = self.step - 2
-        self.current_form_set = self.form_sets[self.step]
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -132,8 +127,6 @@ class GenericWizard(View):
             if 'redirect' in list(request.POST.keys()):
                 return HttpResponseRedirect(self.redirect(request))
 
-        elif 'back' in list(request.POST.keys()):
-            self.make_back_forms(request)
         else:
             msg = UserMessage.objects.get_or_create(
                 view=self.__class__.__name__,
