@@ -125,7 +125,7 @@ class PositionDetail(Detail):
                              blank=True,
                              null=True,
                              related_name='meaning')
-    dependencies = ManyToManyField('PositionDetail')
+    dependencies = ManyToManyField('PositionDetail', blank=True)
 
     class Meta:
         app_label = "shastra_compedium"

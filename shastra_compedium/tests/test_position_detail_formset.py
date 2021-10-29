@@ -28,17 +28,21 @@ class TestPositionDetailFormset(TestCase):
         user = UserFactory()
         login_as(user, self)
 
-    def test_get_by_position(self):
+    def test_get_by_position_w_next(self):
         detail = PositionDetailFactory()
-        response = self.client.get(reverse(self.view_name,
-                                           urlconf='shastra_compedium.urls',
-                                           args=[detail.position.id]),
-                                   follow=True)
+        pos_list = reverse('position_list', urlconf='shastra_compedium.urls')
+        response = self.client.get("%s?next=%s" % (
+            reverse(self.view_name,
+                    urlconf='shastra_compedium.urls',
+                    args=[detail.position.id]),
+            pos_list),
+            follow=True)
         self.assertContains(response, "Edit Position Details")
         self.assertContains(
             response,
             edit_post_detail_messages['intro'])
         self.assertContains(response, detail.contents)
+        self.assertContains(response, pos_list)
 
     def test_get_by_source_category(self):
         detail = PositionDetailFactory()
@@ -54,6 +58,9 @@ class TestPositionDetailFormset(TestCase):
             response,
             edit_post_detail_messages['intro'])
         self.assertContains(response, detail.contents)
+        self.assertContains(
+            response, 
+            reverse('source_list', urlconf="shastra_compedium.urls"))
 
     def test_get_by_source_no_category(self):
         detail = PositionDetailFactory(position__category=None)
@@ -84,8 +91,10 @@ class TestPositionDetailFormset(TestCase):
         assert_option_state(self,
                             response,
                             detail.description.pk,
-                            "%s - %s..." % (detail.description.verses(),
-                                            detail.description.contents[3:28]),
+                            "%s - %s - %s..." % (
+                                detail.description.verses(),
+                                detail.description.position.name,
+                                detail.description.contents[3:28]),
                             True)
 
     def test_get_w_dependancy(self):
@@ -106,14 +115,19 @@ class TestPositionDetailFormset(TestCase):
                                             dependancy.contents[3:28]),
                             True)
 
-    def test_post_by_position(self):
+    def test_post_by_source(self):
         detail = PositionDetailFactory()
         detail2 = PositionDetailFactory(position=detail.position)
+        detail3 = PositionDetailFactory(
+            position__category=detail.position.category)
         source = SourceFactory()
+        detail.sources.add(source)
+        detail2.sources.add(source)
+        detail3.sources.add(source)
         response = self.client.post(
             reverse(self.view_name,
                     urlconf='shastra_compedium.urls',
-                    args=[detail.position.id]),
+                    args=[source.id, detail.position.category.id]),
             data={'form-0-sources': [source.pk],
                   'form-0-usage': "Meaning",
                   'form-0-position': detail.position.pk,
@@ -129,18 +143,32 @@ class TestPositionDetailFormset(TestCase):
                   'form-1-verse_start': 10,
                   'form-1-verse_end': 20,
                   'form-1-contents': "Meaning text",
-                  'form-1-id': detail2.id,
-                  'form-TOTAL_FORMS': 2,
-                  'form-INITIAL_FORMS': 2,
+                  'form-1-id': detail3.id,
+                  'form-2-sources': [source.pk],
+                  'form-2-usage': "Meaning",
+                  'form-2-position': detail3.position.pk,
+                  'form-2-chapter': 1,
+                  'form-2-verse_start': 20,
+                  'form-2-verse_end': 30,
+                  'form-2-contents': "Meaning text",
+                  'form-2-id': detail3.id,
+                  'form-TOTAL_FORMS': 3,
+                  'form-INITIAL_FORMS': 3,
                   'form-MIN_NUM_FORMS': 0,
                   'form-MAX_NUM_FORMS': 1000,
                   'submit': True},
             follow=True)
         self.assertContains(response, "List of Sources")
-        self.assertContains(response, "2 position details were updated.")
+        self.assertContains(
+            response,
+            "%s, %s position details were updated." % (
+                detail3.position.name,
+                detail.position.name))
         self.assertRedirects(
             response,
-            reverse('source_list', urlconf='shastra_compedium.urls'))
+            "%s?changed_ids=[%d]&obj_type=Source" % (
+                reverse('source_list', urlconf='shastra_compedium.urls'),
+                source.id))
 
     def test_post_w_next(self):
         detail = PositionDetailFactory()
@@ -164,6 +192,11 @@ class TestPositionDetailFormset(TestCase):
                   'form-MAX_NUM_FORMS': 1000,
                   'submit': True},
             follow=True)
-        self.assertRedirects(response, pos_list)
+        self.assertRedirects(
+            response,
+            "%s?changed_ids=[%d]&obj_type=Position" % (pos_list,
+                                                        detail.position.id))
         self.assertContains(response, "List of Positions")
-        self.assertContains(response, "1 position details were updated.")
+        self.assertContains(
+            response,
+            "%s position details were updated." % detail.position.name)

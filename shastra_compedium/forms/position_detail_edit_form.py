@@ -25,7 +25,10 @@ class DependanciesChoiceField(ModelMultipleChoiceField):
 
 class DescriptionChoiceField(ModelChoiceField):
     def label_from_instance(self, obj):
-        return "%s - %s..." % (obj.verses(), obj.contents[3:28])
+        return "%s - %s - %s..." % (
+            obj.verses(),
+            obj.position.name,
+            obj.contents[3:28])
 
 
 class PositionDetailEditForm(ModelForm):
