@@ -6,6 +6,7 @@ from shastra_compedium.tests.factories import (
     SourceFactory,
     UserFactory
 )
+from shastra_compedium.models import PositionDetail
 from shastra_compedium.tests.functions import login_as
 
 
@@ -115,6 +116,45 @@ class TestPositionList(TestCase):
                 another_source.pk,
                 another_source_detail.position.pk))
         self.assertContains(response, "1:2-3")
+        self.assertContains(response, "No associated description")
+        self.assertContains(response, "No associated meanings")
+        self.assertContains(response, 'rowspan="3"')
+
+    def test_list_linked_posture_meaning(self):
+        PositionDetail.objects.all().delete()
+        another_detail = PositionDetailFactory(
+            position=self.detail.position,
+            usage="Posture Description")
+        another_meaning = PositionDetailFactory(
+            position=self.detail.position,
+            description=another_detail,
+            usage="Meaning",
+            chapter=1,
+            verse_start=2,
+            verse_end=3)
+        another_detail.sources.add(self.source)
+        another_meaning.sources.add(self.source)
+        login_as(self.user, self)
+        response = self.client.get(self.url)
+        self.assertContains(response, "'id': %d" % self.detail.position.pk)
+        self.assertContains(response,
+                            "'position': '%s'" % self.detail.position.name)
+        header = ('<th data-field="%d" data-sortable="false"><span title=' +
+                  '"%s - %s">%s<br>%s</span></th>')
+        self.assertContains(
+            response,
+            header % (self.source.pk,
+                      self.source.title,
+                      self.source.translator,
+                      self.source.shastra.initials,
+                      self.source.short_form
+                      ),
+            html=True)
+        self.assertContains(response, 'rowspan="1"')
+        self.assertContains(response, another_detail.contents)
+        self.assertContains(response, another_meaning.contents)
+        self.assertNotContains(response, "No associated description")
+        self.assertNotContains(response, "No associated meanings")
 
     def test_list_empty(self):
         ex_url = reverse(
