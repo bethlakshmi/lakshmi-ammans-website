@@ -57,11 +57,9 @@ class PositionDetailFormSetView(LoginRequiredMixin,
     def get_success_message(self, formset):
         names = []
         name_list = ""
-        self.changed_ids = []
         for form in formset.forms:
             if form.instance.position.name not in names:
                 names += [form.instance.position.name]
-            self.changed_ids += [form.instance.pk]
         for name in names:
             if len(name_list) == 0:
                 name_list = name
