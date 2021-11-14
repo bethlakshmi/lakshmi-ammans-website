@@ -17,13 +17,20 @@
     <tbody>
       {% for form in forms %}
       <tr {% if form.errors %}class="lakshmi-table-error"{% endif %}>
-        <th>{{ form.position.label }}</th>
+        <td>{{ form.position.label }}
+            {% for field in form.hidden_fields %}
+              {{ field }}
+              {% if field.errors %}
+              <font class="lakshmi-form-error">{{ field.errors }}</font>
+              {% endif %}
+            {% endfor%}
+        </td>
       {% for field in form.visible_fields %}
-        <th>{{ field }}
+        <td>{{ field }}
         {% if field.errors %}
            <font class="lakshmi-form-error">{{ field.errors }}</font>
         {% endif %}
-        </th>{% endfor %}
+        </td>{% endfor %}
       {% for field in form.hidden_fields %}{{ field }}{% endfor%}
       </tr>
     {% endfor %}

@@ -13,6 +13,7 @@ from shastra_compedium.models import (
     Category,
     CategoryDetail,
     DanceStyle,
+    ExampleImage,
     Performer,
     Position,
     PositionDetail,
@@ -64,7 +65,7 @@ class DanceStyleFactory(DjangoModelFactory):
 class PerformerFactory(DjangoModelFactory):
     class Meta:
         model = Performer
-    name = Sequence(lambda n: 'Perfromer %d' % n)
+    name = Sequence(lambda n: 'Performer %d' % n)
     linneage = Sequence(lambda n: 'Linneage %d' % n)
     bio = Sequence(lambda n: 'bio %d' % n)
     contact = SubFactory(UserFactory)
@@ -106,3 +107,10 @@ class PositionDetailFactory(DjangoModelFactory):
     position = SubFactory(PositionFactory)
     usage = Sequence(lambda n: 'Usage %d' % n)
     contents = Sequence(lambda n: 'Contents %d' % n)
+
+class ExampleImageFactory(DjangoModelFactory):
+    class Meta:
+        model = ExampleImage
+    position = SubFactory(PositionFactory)
+    dance_style = SubFactory(DanceStyleFactory)
+    performer = SubFactory(PerformerFactory)
