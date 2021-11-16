@@ -17,6 +17,7 @@ from shastra_compedium.models import ExampleImage
 from easy_thumbnails.files import get_thumbnailer
 from filer.models import Image
 from django.utils.safestring import mark_safe
+from shastra_compedium.site_text import user_messages
 
 
 class TestBulkImageUpload(TestCase):
@@ -150,6 +151,31 @@ class TestBulkImageUpload(TestCase):
         self.assertContains(
             response,
             "That choice is not one of the available choices.")
+
+    def test_post_bad_meta_data(self):
+        img1 = set_image()
+        img2 = set_image()
+        position = PositionFactory()
+        style = DanceStyleFactory()
+        performer = PerformerFactory()
+        login_as(self.user, self)
+        response = self.client.post(
+            self.url,
+            data={'0-image': img1.pk,
+                  '1-image': img2.pk,
+                  '0-position': position.pk,
+                  '1-position': position.pk,
+                  '0-performer': performer.pk,
+                  '1-performer': performer.pk,
+                  '0-dance_style': style.pk,
+                  '1-dance_style': style.pk,
+                  'step': 1,
+                  'num_rows': 2,
+                  'finish': 'Finish'},
+            follow=True)
+        self.assertContains(
+            response,
+            user_messages['NO_FORM_ERROR']['description'])
 
     def test_post_attachments_bad_image(self):
         # The user would have to be hacking the form to do this.

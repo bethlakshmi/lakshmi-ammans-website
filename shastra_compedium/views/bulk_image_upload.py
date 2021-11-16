@@ -55,8 +55,6 @@ class BulkImageUpload(GenericWizard):
                 if form.__class__.__name__ == "ImageAssociateForm" and (
                         form.cleaned_data['position']):
                     self.example_images += [form.save().pk]
-                elif form.__class__.__name__ == "ImageDetailForm":
-                    self.example_images += [form.save().pk]
         else:
             self.forms.save()
             self.num_files = self.forms.total_form_count()
@@ -111,7 +109,7 @@ class BulkImageUpload(GenericWizard):
                             'dance_style': self.forms[0].cleaned_data[
                                 'default_dance_style'],
                             'performer': self.forms[0].cleaned_data[
-                                'default_performer'],},
+                                'default_performer']},
                         prefix=str(association_num),
                         label_suffix='')
                     thumb_url = get_thumbnailer(image).get_thumbnail(

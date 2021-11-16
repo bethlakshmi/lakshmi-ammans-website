@@ -108,6 +108,7 @@ class PositionDetailFactory(DjangoModelFactory):
     usage = Sequence(lambda n: 'Usage %d' % n)
     contents = Sequence(lambda n: 'Contents %d' % n)
 
+
 class ExampleImageFactory(DjangoModelFactory):
     class Meta:
         model = ExampleImage

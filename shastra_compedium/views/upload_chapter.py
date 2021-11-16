@@ -105,8 +105,8 @@ class UploadChapter(GenericWizard):
                 str(self.changed_ids))
         return return_url
 
-    def make_context(self, request):
-        context = super(UploadChapter, self).make_context(request)
+    def make_context(self, request, valid=True):
+        context = super(UploadChapter, self).make_context(request, valid)
         if str(self.forms[0].__class__.__name__) == "ChapterDetailMapping":
             context['special_handling'] = True
             context['tiny_mce_width'] = 400
