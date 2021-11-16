@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from shastra_compedium.models import ExampleImage
 
 
-def upload_and_attach(files, user, position=None):
+def upload_and_attach(files, user):
     superuser = User.objects.get(username='admin_img')
     folder, created = Folder.objects.get_or_create(
         name='PositionImageUploads')
@@ -18,7 +18,4 @@ def upload_and_attach(files, user, position=None):
             author="%s" % str(user.username))
         img.save()
         images += [img]
-        if position is not None:
-            new_link = ExampleImage(position=item, image=img)
-            new_link.save()
     return images
