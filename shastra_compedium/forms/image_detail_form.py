@@ -11,6 +11,7 @@ from shastra_compedium.models import (
 from filer.models.imagemodels import Image
 from django.utils.safestring import mark_safe
 from easy_thumbnails.files import get_thumbnailer
+from shastra_compedium.forms.default_form_text import item_image_help
 
 
 class DetailsChoiceField(ModelMultipleChoiceField):
@@ -23,7 +24,25 @@ class ImageDetailForm(ModelForm):
     required_css_class = 'required'
     error_css_class = 'error'
     details = DetailsChoiceField(queryset=PositionDetail.objects.all(),
-                                 widget=CheckboxSelectMultiple)
+                                 widget=CheckboxSelectMultiple,
+                                 required=False)
+
+    def is_valid(self):
+        from shastra_compedium.models import UserMessage
+        valid = super(ImageDetailForm, self).is_valid()
+
+        if valid:
+            if (not self.cleaned_data['general']) and (
+                    not self.cleaned_data['details']):
+                self._errors['details'] = UserMessage.objects.get_or_create(
+                    view="ImageDetailSet",
+                    code="GENERAL_OR_DETAILS_REQUIRED",
+                    defaults={
+                        'summary': "Must pick general or details or both",
+                        'description': item_image_help['general_or_details']
+                        })[0].description
+                valid = False
+        return valid
 
     def __init__(self, *args, **kwargs):
         super(ImageDetailForm, self).__init__(*args, **kwargs)
@@ -43,4 +62,6 @@ class ImageDetailForm(ModelForm):
         model = ExampleImage
         fields = [
             'id',
+            'general',
             'details']
+        labels = {'general': "Main Image?"}

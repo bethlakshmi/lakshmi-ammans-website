@@ -3,7 +3,7 @@
 <p>{{ instructions | safe }}</p>
  <font class="lakshmi-form-error">
   {% if form_error %}
-    <p class="lakshmi-form-error"> There is an error on the form.</p>
+    <p class="lakshmi-form-error">There is an error on the form.</p>
   {% endif %}
   </font>
     {% csrf_token %}
@@ -16,7 +16,8 @@
     <tbody>
       {% for form in forms %}
       <tr {% if form.errors %}class="lakshmi-table-error"{% endif %}>
-        <td class="align-top">{{ form.details.label }}</td>
+        <td class="align-top">{{ form.details.label }}
+          {% for field in form.hidden_fields %}{{ field }}{% endfor%}<br>{{form.general}}&nbsp;&nbsp;{{form.general.label}}</td>
         <td>
         {% for checkbox in form.details %}
         <div class="row"><div class="col-1 text-right">{{ checkbox.tag }}</div><div class="col-8">{{ checkbox.choice_label }}</div></div>{% endfor %}
@@ -24,7 +25,6 @@
             <font class="lakshmi-form-error">{{ form.details.errors }}</font>
           {% endif %}
         </td>
-      {% for field in form.hidden_fields %}{{ field }}{% endfor%}
       </tr>
     {% endfor %}
     </tbody>

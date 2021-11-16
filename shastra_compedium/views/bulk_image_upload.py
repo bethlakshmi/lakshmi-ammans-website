@@ -132,14 +132,10 @@ class BulkImageUpload(GenericWizard):
                         pk__in=self.example_images))
                 return forms
 
-    def make_context(self, request):
-        context = super(BulkImageUpload, self).make_context(request)
+    def make_context(self, request, valid=True):
+        context = super(BulkImageUpload, self).make_context(request, valid)
         if str(self.forms[0].__class__.__name__) == "ImageAssociateForm":
             context['special_handling'] = True
-            for form in self.forms:
-                if not form.is_valid():
-                    context['form_error'] = True
-                    break
         elif str(self.forms.__class__.__name__) == "ExampleImageFormFormSet":
             context['special_handling'] = True
             self.template = 'shastra_compedium/bulk_image_wizard2.tmpl'

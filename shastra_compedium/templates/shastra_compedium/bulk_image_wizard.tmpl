@@ -3,7 +3,7 @@
 <p>{{ instructions | safe }}</p>
  <font class="lakshmi-form-error">
   {% if form_error %}
-    <p class="lakshmi-form-error"> There is an error on the form.</p>
+    <p class="lakshmi-form-error">There is an error on the form.</p>
   {% endif %}
   </font>
     {% csrf_token %}
@@ -31,7 +31,6 @@
            <font class="lakshmi-form-error">{{ field.errors }}</font>
         {% endif %}
         </td>{% endfor %}
-      {% for field in form.hidden_fields %}{{ field }}{% endfor%}
       </tr>
     {% endfor %}
     </tbody>

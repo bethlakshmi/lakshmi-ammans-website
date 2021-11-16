@@ -36,7 +36,7 @@ class GenericWizard(View):
         self.return_url = reverse('position_list',
                                   urlconf='shastra_compedium.urls')
 
-    def make_context(self, request):
+    def make_context(self, request, valid=True):
         context = {
             'page_title': self.page_title,
             'title': self.page_title,
@@ -56,6 +56,7 @@ class GenericWizard(View):
                     'description': user_messages[self.current_form_set[
                         'instruction_key']]['description']}
                 )[0].description
+        context['form_error'] = not valid
         return context
 
     @method_decorator(login_required)
@@ -116,8 +117,8 @@ class GenericWizard(View):
             if not self.validate_forms():
                 self.step = self.step - 1
                 self.current_form_set = self.form_sets[self.step]
-                return render(request, self.template, self.make_context(
-                    request))
+                context = self.make_context(request, valid=False)
+                return render(request, self.template, context)
             self.finish_valid_form(request)
             if 'finish' in list(request.POST.keys()):
                 return HttpResponseRedirect(self.finish(request))

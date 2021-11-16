@@ -1,4 +1,5 @@
 from django.db.models import (
+    BooleanField,
     CASCADE,
     CharField,
     DateTimeField,
@@ -200,6 +201,7 @@ class Performer(Model):
 class Example(Model):
     position = ForeignKey(Position, on_delete=CASCADE)
     details = ManyToManyField(PositionDetail)
+    general = BooleanField(default=False)
     dance_style = ForeignKey(DanceStyle, on_delete=CASCADE)
     performer = ForeignKey(Performer,
                            on_delete=SET_NULL,

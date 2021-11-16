@@ -5,6 +5,7 @@ from shastra_compedium.tests.factories import (
     DanceStyleFactory,
     PerformerFactory,
     PositionFactory,
+    PositionDetailFactory,
     ExampleImageFactory,
     UserFactory
 )
@@ -15,6 +16,7 @@ from shastra_compedium.tests.functions import (
 from shastra_compedium.models import ExampleImage
 from easy_thumbnails.files import get_thumbnailer
 from filer.models import Image
+from django.utils.safestring import mark_safe
 
 
 class TestBulkImageUpload(TestCase):
@@ -26,12 +28,12 @@ class TestBulkImageUpload(TestCase):
     options = {'size': (100, 100), 'crop': False}
     image_checkbox = '''<input type="checkbox" name="current_images"
         style="display: none;" id="id_current_images_%d" value="%d" %s>'''
+    options2 = {'size': (150, 150), 'crop': False}
 
     def setUp(self):
         self.client = Client()
         self.user = UserFactory()
-        self.itemimage = ExampleImageFactory()
-        set_image(self.itemimage)
+        set_image()
         self.url = reverse(self.view_name,
                            urlconf="shastra_compedium.urls")
 
@@ -103,8 +105,8 @@ class TestBulkImageUpload(TestCase):
         self.assertContains(response, "Uploaded 2 images.")
 
     def test_post_attachments_and_finish(self):
-        img1 = set_image(self.itemimage)
-        img2 = set_image(self.itemimage)
+        img1 = set_image()
+        img2 = set_image()
         position = PositionFactory()
         style = DanceStyleFactory()
         performer = PerformerFactory()
@@ -130,7 +132,7 @@ class TestBulkImageUpload(TestCase):
     def test_post_attachments_bad_item(self):
         # This is legit if a user selects something that is then deleted
         # before they submit
-        img1 = set_image(self.itemimage)
+        img1 = set_image()
         position = PositionFactory()
         style = DanceStyleFactory()
         performer = PerformerFactory()
@@ -151,7 +153,7 @@ class TestBulkImageUpload(TestCase):
 
     def test_post_attachments_bad_image(self):
         # The user would have to be hacking the form to do this.
-        img1 = set_image(self.itemimage)
+        img1 = set_image()
         position = PositionFactory()
         style = DanceStyleFactory()
         performer = PerformerFactory()
@@ -170,7 +172,7 @@ class TestBulkImageUpload(TestCase):
 
     def test_post_attachments_bad_association(self):
         # The user would have to be hacking the form to do this.
-        img1 = set_image(self.itemimage)
+        img1 = set_image()
         style = DanceStyleFactory()
         performer = PerformerFactory()
         login_as(self.user, self)
@@ -187,11 +189,12 @@ class TestBulkImageUpload(TestCase):
         self.assertContains(response, "There is an error on the form.", 1)
 
     def test_post_attachments_and_continue(self):
-        img1 = set_image(self.itemimage)
-        img2 = set_image(self.itemimage)
+        img1 = set_image()
+        img2 = set_image()
         position = PositionFactory()
         style = DanceStyleFactory()
         performer = PerformerFactory()
+        detail1 = PositionDetailFactory(position=position)
         login_as(self.user, self)
         response = self.client.post(
             self.url,
@@ -207,6 +210,65 @@ class TestBulkImageUpload(TestCase):
                   'association_count': 2,
                   'next': 'Save & Continue >>'},
             follow=True)
+        thumb_url = get_thumbnailer(img1).get_thumbnail(self.options2).url
+        image_label = mark_safe(
+            "<img src='%s' title='%s'/><br>%s" % (
+                thumb_url,
+                img1,
+                position.name))
+        self.assertContains(response, "Set Specific Position Details")
+        self.assertContains(response, image_label)
+        self.assertContains(response, detail1.contents)
+
+    def test_pick_details(self):
+        img1 = set_image()
+        example_image = ExampleImageFactory(image=img1)
+        detail1 = PositionDetailFactory(position=example_image.position)
+
+        login_as(self.user, self)
+        response = self.client.post(
+            self.url,
+            data={'form-0-id': example_image.pk,
+                  'form-0-details': [detail1.pk],
+                  'form-0-general': True,
+                  'form-TOTAL_FORMS': 1,
+                  'form-INITIAL_FORMS': 1,
+                  'form-MIN_NUM_FORMS': 0,
+                  'form-MAX_NUM_FORMS': 1000,
+                  'step': 2,
+                  'association_count': 1,
+                  'finish': 'Finish'},
+            follow=True)
+        self.assertContains(response, "Uploaded 1 images.")
+        result = ExampleImage.objects.get(pk=example_image.pk)
+        self.assertTrue(detail1 in result.details.all())
+        self.assertTrue(result.general)
+
+    def test_pick_nothing_error(self):
+        from shastra_compedium.forms.default_form_text import item_image_help
+        img1 = set_image()
+        example_image = ExampleImageFactory(image=img1)
+        detail1 = PositionDetailFactory(position=example_image.position)
+
+        login_as(self.user, self)
+        response = self.client.post(
+            self.url,
+            data={'form-0-id': example_image.pk,
+                  'form-0-details': [],
+                  'form-0-general': False,
+                  'form-TOTAL_FORMS': 1,
+                  'form-INITIAL_FORMS': 1,
+                  'form-MIN_NUM_FORMS': 0,
+                  'form-MAX_NUM_FORMS': 1000,
+                  'step': 2,
+                  'association_count': 1,
+                  'finish': 'Finish'},
+            follow=True)
         self.assertContains(
             response,
-            "Set Specific Position Details")
+            item_image_help['general_or_details'])
+        thumb_url = get_thumbnailer(img1).get_thumbnail(self.options2).url
+        self.assertContains(
+            response,
+            "<img src='%s' title='%s'/>" % (thumb_url, img1),
+            html=True)
