@@ -8,24 +8,25 @@ from shastra_compedium.models import (
     ExampleImage,
     PositionDetail,
 )
-from filer.models.imagemodels import Image
 from django.utils.safestring import mark_safe
 from easy_thumbnails.files import get_thumbnailer
 from shastra_compedium.forms.default_form_text import item_image_help
+from django.utils.html import strip_tags
 
 
 class DetailsChoiceField(ModelMultipleChoiceField):
     def label_from_instance(self, obj):
-        return mark_safe(obj.contents)
+        return mark_safe(strip_tags(obj.contents))
 
 
 class ImageDetailForm(ModelForm):
-    options = {'size': (150, 150), 'crop': False}
+    options = {'size': (200, 200), 'crop': False}
     required_css_class = 'required'
     error_css_class = 'error'
-    details = DetailsChoiceField(queryset=PositionDetail.objects.all(),
-                                 widget=CheckboxSelectMultiple,
-                                 required=False)
+    details = DetailsChoiceField(
+        queryset=PositionDetail.objects.all(),
+        widget=CheckboxSelectMultiple(attrs={'class':'nobullet'}),
+        required=False)
 
     def is_valid(self):
         from shastra_compedium.models import UserMessage

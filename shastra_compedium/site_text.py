@@ -16,6 +16,13 @@ make_dance_style_messages = {
     'create_intro':  "Use this form to create a new dance style.",
     'edit_intro':  "Use this form to update this style.",
 }
+make_example_image_messages = {
+    'create_success':  "A new example image has been created.  Name: %s",
+    'edit_success':  "The %s example image has been updated.",
+    'create_intro':  '''Use this form to create a new example image based 
+    on existing uploaded images.''',
+    'edit_intro':  "Use this form to update this example image.",
+}
 make_category_detail_messages = {
     'edit_success':  "The %s chapter has been updated.",
     'edit_intro':  "Use this form to update this chapter.",

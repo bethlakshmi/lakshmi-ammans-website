@@ -128,6 +128,9 @@ class PositionDetail(Detail):
                              related_name='meaning')
     dependencies = ManyToManyField('PositionDetail', blank=True)
 
+    def detail_images(self):
+        return self.exampleimage_set.filter(general=False)
+
     class Meta:
         app_label = "shastra_compedium"
         ordering = ['position', 'chapter', 'verse_start', 'verse_end']

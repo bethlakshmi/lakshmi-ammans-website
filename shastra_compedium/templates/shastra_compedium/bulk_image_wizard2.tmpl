@@ -16,11 +16,11 @@
     <tbody>
       {% for form in forms %}
       <tr {% if form.errors %}class="lakshmi-table-error"{% endif %}>
-        <td class="align-top">{{ form.details.label }}
-          {% for field in form.hidden_fields %}{{ field }}{% endfor%}<br>{{form.general}}&nbsp;&nbsp;{{form.general.label}}</td>
-        <td>
-        {% for checkbox in form.details %}
-        <div class="row"><div class="col-1 text-right">{{ checkbox.tag }}</div><div class="col-8">{{ checkbox.choice_label }}</div></div>{% endfor %}
+        <td style="width: 200px" class="align-top p-3">{{ form.details.label }}
+          {% for field in form.hidden_fields %}{{ field }}{% endfor%}
+          <br>{{form.general}}&nbsp;&nbsp;{{form.general.label}}</td>
+        <td class="p-3">
+        {{form.details}}
           {% if form.details.errors %}
             <font class="lakshmi-form-error">{{ form.details.errors }}</font>
           {% endif %}

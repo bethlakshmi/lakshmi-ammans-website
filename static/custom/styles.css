@@ -119,3 +119,4 @@ span.dropt:hover span:hover {
 span.dropt span:hover { 
     border-color: rgba(0,0,0,1);
 }
+.nobullet { list-style-type: none; padding: 0px; }
