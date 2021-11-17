@@ -38,7 +38,14 @@ class ImageForm(ModelForm):
     position = ModelChoiceField(
         queryset=Position.objects.all(),
         required=True,
-        widget=autocomplete.ModelSelect2(url='position-autocomplete'))
+        widget=autocomplete.ModelSelect2(url='position-autocomplete'),
+        help_text=UserMessage.objects.get_or_create(
+            view="ImageUploadForm",
+            code="DEFAULT_POSITION",
+            defaults={
+                'summary': "Default Position Help text",
+                'description': item_image_help['default_position']}
+            )[0].description)
 
     performer = ModelChoiceField(
         queryset=Performer.objects.all(),
@@ -56,9 +63,9 @@ class ImageForm(ModelForm):
         required=True,
         help_text=UserMessage.objects.get_or_create(
             view="ImageUploadForm",
-            code="DEFAULT_PERFORMER",
+            code="DEFAULT_STYLE",
             defaults={
-                'summary': "Default Performer Help text",
+                'summary': "Default Dance Style Help text",
                 'description': item_image_help['default_dance_style']}
         )[0].description)
 

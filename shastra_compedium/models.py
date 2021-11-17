@@ -224,6 +224,9 @@ class ExampleImage(Example):
         on_delete=CASCADE,
         null=True)
 
+    def __str__(self):
+        return "Image for Position: %s" % (self.image, self.position.name)
+
     class Meta:
         app_label = "shastra_compedium"
 
