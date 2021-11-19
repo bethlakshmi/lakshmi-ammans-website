@@ -29,7 +29,7 @@ class TestBulkImageUpload(TestCase):
     options = {'size': (100, 100), 'crop': False}
     image_checkbox = '''<input type="checkbox" name="current_images"
         style="display: none;" id="id_current_images_%d" value="%d" %s>'''
-    options2 = {'size': (150, 150), 'crop': False}
+    options2 = {'size': (200, 200), 'crop': False}
 
     def setUp(self):
         self.client = Client()
@@ -243,6 +243,7 @@ class TestBulkImageUpload(TestCase):
                 img1,
                 position.name))
         self.assertContains(response, "Set Specific Position Details")
+        self.assertContains(response, "<img src='%s' title='%s'/>" % (thumb_url, img1))
         self.assertContains(response, image_label)
         self.assertContains(response, detail1.contents)
 
