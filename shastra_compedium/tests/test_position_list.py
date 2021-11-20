@@ -205,12 +205,6 @@ class TestPositionList(TestCase):
         example_image.details.add(self.detail)
         login_as(self.user, self)
         response = self.client.get(self.url)
-        print(self.detail.position.name)
-        print(self.detail.contents)
-        print(self.detail.exampleimage_set.first())
-        print(self.detail.exampleimage_set.first().general)
-
-        print(response.content)
         thumb_url = get_thumbnailer(img1).get_thumbnail(self.options).url
         self.assertContains(response, thumb_url)
 
