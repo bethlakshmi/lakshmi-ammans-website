@@ -71,11 +71,11 @@ class ImageForm(ModelForm):
 
     details = DetailsChoiceField(
         queryset=PositionDetail.objects.all(),
-        widget=CheckboxSelectMultiple(attrs={'class':'nobullet'}),
+        widget=CheckboxSelectMultiple(attrs={'class': 'nobullet'}),
         required=False)
 
     image = ThumbnailImageField(
-        widget=RadioSelect(attrs={'class':'nobullet'}),
+        widget=RadioSelect(attrs={'class': 'nobullet'}),
         queryset=Image.objects.all(),
         required=True,
         empty_label=None)

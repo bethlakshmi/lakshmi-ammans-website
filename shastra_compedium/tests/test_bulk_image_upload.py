@@ -243,7 +243,9 @@ class TestBulkImageUpload(TestCase):
                 img1,
                 position.name))
         self.assertContains(response, "Set Specific Position Details")
-        self.assertContains(response, "<img src='%s' title='%s'/>" % (thumb_url, img1))
+        self.assertContains(
+            response,
+            "<img src='%s' title='%s'/>" % (thumb_url, img1))
         self.assertContains(response, image_label)
         self.assertContains(response, detail1.contents)
 

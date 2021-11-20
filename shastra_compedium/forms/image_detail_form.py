@@ -25,7 +25,7 @@ class ImageDetailForm(ModelForm):
     error_css_class = 'error'
     details = DetailsChoiceField(
         queryset=PositionDetail.objects.all(),
-        widget=CheckboxSelectMultiple(attrs={'class':'nobullet'}),
+        widget=CheckboxSelectMultiple(attrs={'class': 'nobullet'}),
         required=False)
 
     def is_valid(self):

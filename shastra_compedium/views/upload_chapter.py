@@ -83,7 +83,8 @@ class UploadChapter(GenericWizard):
                         position_detail.contents = form.cleaned_data['meaning']
                         position_detail.usage = "Meaning"
                         if posture_pk is not None:
-                            position_detail.description = PositionDetail.objects.get(pk=posture_pk)
+                            position_detail.description = PositionDetail.objects.get(
+                                pk=posture_pk)
                         position_detail.save()
                         form.save_m2m()
                         self.num_created = self.num_created + 1
