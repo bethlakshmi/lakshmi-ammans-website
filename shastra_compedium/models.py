@@ -131,6 +131,9 @@ class PositionDetail(Detail):
     def detail_images(self):
         return self.exampleimage_set.filter(general=False)
 
+    def __str__(self):
+        return "%s - %s" % (self.position, self.usage)
+
     class Meta:
         app_label = "shastra_compedium"
         ordering = ['position', 'chapter', 'verse_start', 'verse_end']
@@ -217,6 +220,13 @@ class Example(Model):
     class Meta:
         abstract = True
         app_label = "shastra_compedium"
+
+    def save(self, *args, **kwargs):
+        super(Example, self).save(*args, **kwargs)
+        for detail in self.details.all():
+            if detail.position != self.position:
+                print(detail)
+                self.details.remove(detail)
 
 
 class ExampleImage(Example):

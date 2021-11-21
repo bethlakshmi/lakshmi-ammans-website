@@ -105,6 +105,13 @@ class ImageForm(ModelForm):
             self.fields['details'].queryset = PositionDetail.objects.filter(
                     position=kwargs.get('instance').position)
 
+    def clean_details(self):
+        real_details = []
+        for detail in self.cleaned_data['details']:
+           if detail.position == self.cleaned_data['position']:
+            real_details += [detail]
+        return real_details
+
     class Meta:
         model = ExampleImage
         fields = [

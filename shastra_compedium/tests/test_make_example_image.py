@@ -3,6 +3,8 @@ from django.urls import reverse
 from django.test import Client
 from shastra_compedium.tests.factories import (
     ExampleImageFactory,
+    PositionFactory,
+    PositionDetailFactory,
     UserFactory,
 )
 from shastra_compedium.site_text import make_example_image_messages
@@ -12,6 +14,7 @@ from shastra_compedium.tests.functions import (
 )
 from easy_thumbnails.files import get_thumbnailer
 from shastra_compedium.models import ExampleImage
+from django.urls import reverse
 
 
 class TestMakeExampleImage(TestCase):
@@ -70,3 +73,31 @@ class TestMakeExampleImage(TestCase):
                             make_example_image_messages['edit_intro'])
         thumb_url = get_thumbnailer(self.img1).get_thumbnail(self.options).url
         self.assertContains(response, thumb_url)
+
+    def test_change_position(self):
+        new_position = PositionFactory()
+        detail = PositionDetailFactory(position=self.object.position)
+        self.object.details.add(detail)
+        data = self.example_image_data()
+        data['details'] = [detail.pk]
+        data['position'] = new_position.pk
+        self.assertEqual(detail.exampleimage_set.all().count(), 1)
+        response = self.client.post(self.edit_url, data=data, follow=True)
+        self.assertContains(response, self.object.image)
+        self.assertRedirects(
+            response,
+            '%s?changed_ids=[%d]&obj_type=ExampleImage' % (
+                reverse('position_list', urlconf="shastra_compedium.urls"),
+                self.object.pk))
+
+    def test_keep_position(self):
+        detail = PositionDetailFactory(position=self.object.position)
+        self.object.details.add(detail)
+        data = self.example_image_data()
+        data['details'] = [detail.pk]
+        self.assertEqual(detail.exampleimage_set.all().count(), 1)
+        response = self.client.post(self.edit_url, data=data, follow=True)
+        self.assertEqual(detail.exampleimage_set.all().count(), 1)
+        self.assertContains(
+            response,
+            make_example_image_messages['edit_success'] % str(self.object))
