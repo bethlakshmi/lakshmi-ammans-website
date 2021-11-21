@@ -16,6 +16,14 @@ class PositionDetailAutocomplete(autocomplete.Select2QuerySetView):
         if position:
             qs = qs.exclude(position__pk=position)
 
+        position_limit = self.forwarded.get('position_only')
+        if position_limit:
+            qs = qs.filter(position__pk=position_limit)
+
+        detail_id = self.forwarded.get('id')
+        if detail_id:
+            qs = qs.exclude(id=detail_id)
+
         usage = self.forwarded.get('usage')
         if usage:
             qs = qs.filter(usage=usage)

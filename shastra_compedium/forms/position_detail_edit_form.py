@@ -20,14 +20,6 @@ from django_addanother.widgets import AddAnotherEditSelectedWidgetWrapper
 from django.urls import reverse_lazy
 
 
-class DescriptionChoiceField(ModelChoiceField):
-    def label_from_instance(self, obj):
-        return "%s - %s - %s..." % (
-            obj.verses(),
-            obj.position.name,
-            obj.contents[3:28])
-
-
 class PositionDetailEditForm(ModelForm):
     required_css_class = 'required'
     error_css_class = 'error'
@@ -48,24 +40,6 @@ class PositionDetailEditForm(ModelForm):
                                  ("Posture Description", "Posture Description")
                                  ), required=False)
 
-    description = DescriptionChoiceField(
-        required=False,
-        queryset=PositionDetail.objects.filter(usage="Posture Description"),
-        )
-
-    def __init__(self, *args, **kwargs):
-        super(PositionDetailEditForm, self).__init__(*args, **kwargs)
-        if 'instance' in kwargs:
-            detail = kwargs.get('instance')
-            self.fields[
-                'description'].queryset = PositionDetail.objects.filter(
-                    usage="Posture Description",
-                    position=detail.position,
-                    sources__in=detail.sources.all(),
-                    ).exclude(pk=detail.pk)
-            if self.fields['description'].queryset.count() == 0:
-                self.fields['description'].widget = HiddenInput()
-
     class Meta:
         model = PositionDetail
         fields = [
@@ -84,6 +58,12 @@ class PositionDetailEditForm(ModelForm):
             'verse_start': NumberInput(attrs={'style': 'width: 55px'}),
             'verse_end': NumberInput(attrs={'style': 'width: 55px'}),
             'sources': SelectMultiple(attrs={'style': 'width: 500px'}),
+            'description': autocomplete.ModelSelect2(
+                url='positiondetail-autocomplete',
+                forward=('sources',
+                         forward.Field('position', 'position_only'),
+                         'id',
+                         forward.Const('Posture Description', 'usage'))),
             'dependencies': autocomplete.ModelSelect2Multiple(
                 url='positiondetail-autocomplete',
                 forward=('sources',
