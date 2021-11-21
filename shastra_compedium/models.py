@@ -127,6 +127,12 @@ class PositionDetail(Detail):
                              related_name='meaning')
     dependencies = ManyToManyField('PositionDetail', blank=True)
 
+    def __str__(self):
+        return "%s - %s - %s..." % (
+            self.position.name,
+            self.verses(),
+            self.contents[3:28])
+
     class Meta:
         app_label = "shastra_compedium"
         ordering = ['position', 'chapter', 'verse_start', 'verse_end']

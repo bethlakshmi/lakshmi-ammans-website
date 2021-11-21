@@ -36,6 +36,8 @@ INSTALLED_ADDONS = [
     # </INSTALLED_ADDONS>
 ]
 
+CMS_TOOLBAR_HIDE = True
+
 # Now we will load auto-configured settings for addons. See:
 #
 #   http://docs.divio.com/en/latest/reference/configuration-aldryn-config.html

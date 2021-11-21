@@ -39,7 +39,9 @@ make_position_messages = {
     'edit_intro':  "Use this form to update this position.",
 }
 edit_post_detail_messages = {
-    'intro': 'Edit any of these position details and press "Submit".'
+    'intro': '''Edit any of these position details and press "Submit".  If
+    there are no other eligible position descriptions, the "Described by"
+    field will be omitted.'''
 }
 user_messages = {
     'CHAPTER_BASICS_INTRO': {

@@ -1,10 +1,9 @@
 from django.forms import (
     CharField,
     ChoiceField,
+    HiddenInput,
     ModelChoiceField,
-    ModelMultipleChoiceField,
     ModelForm,
-    MultipleHiddenInput,
     NumberInput,
     SelectMultiple,
     Textarea,
@@ -13,14 +12,12 @@ from shastra_compedium.models import (
     Position,
     PositionDetail,
 )
-from dal import autocomplete
+from dal import (
+    autocomplete,
+    forward
+)
 from django_addanother.widgets import AddAnotherEditSelectedWidgetWrapper
 from django.urls import reverse_lazy
-
-
-class DependanciesChoiceField(ModelMultipleChoiceField):
-    def label_from_instance(self, obj):
-        return "%s - %s..." % (obj.position.name, obj.contents[3:33])
 
 
 class DescriptionChoiceField(ModelChoiceField):
@@ -50,10 +47,6 @@ class PositionDetailEditForm(ModelForm):
     usage = ChoiceField(choices=(("Meaning", "Meaning"),
                                  ("Posture Description", "Posture Description")
                                  ), required=False)
-    dependencies = DependanciesChoiceField(
-        required=False,
-        queryset=PositionDetail.objects.filter(usage="Posture Description"),
-        )
 
     description = DescriptionChoiceField(
         required=False,
@@ -69,12 +62,9 @@ class PositionDetailEditForm(ModelForm):
                     usage="Posture Description",
                     position=detail.position,
                     sources__in=detail.sources.all(),
-                    )
-            self.fields[
-                'dependencies'].queryset = PositionDetail.objects.filter(
-                    usage="Posture Description",
-                    sources__in=detail.sources.all(),
-                    ).exclude(position=detail.position)
+                    ).exclude(pk=detail.pk)
+            if self.fields['description'].queryset.count() == 0:
+                self.fields['description'].widget = HiddenInput()
 
     class Meta:
         model = PositionDetail
@@ -93,4 +83,9 @@ class PositionDetailEditForm(ModelForm):
             'chapter': NumberInput(attrs={'style': 'width: 40px'}),
             'verse_start': NumberInput(attrs={'style': 'width: 55px'}),
             'verse_end': NumberInput(attrs={'style': 'width: 55px'}),
-            'sources': SelectMultiple(attrs={'style': 'width: 500px'})}
+            'sources': SelectMultiple(attrs={'style': 'width: 500px'}),
+            'dependencies': autocomplete.ModelSelect2Multiple(
+                url='positiondetail-autocomplete',
+                forward=('sources',
+                         'position',
+                         forward.Const('Posture Description', 'usage')))}
