@@ -38,7 +38,7 @@
             {% if item_form.description.errors %}<br>
               <font class="lakshmi-form-error">{{ item_form.description.errors }}</font>
             {% endif %}
-          <font class="lakshmi-form-error">{{ item_form.non_field_errors }}<br>{{ item_form.errors }}</font></td>
+          <font class="lakshmi-form-error">{{ item_form.non_field_errors }}<br></font></td>
           <td>{{item_form.contents}}
           {% if item_form.contents.errors %}<br>
             <font class="lakshmi-form-error">{{ item_form.contents.errors }}</font>
@@ -50,7 +50,8 @@
             {% endif %}
             {{item_form.dependencies}}
             {% if item_form.dependencies.errors %}<br>
-              <font class="lakshmi-form-error">{{ item_form.dependencies.errors }}</font>
+              <font class="lakshmi-form-error">{% for error in item_form.dependencies.errors %}
+                {{ error }}<br>{% endfor %}</font>
             {% endif %}
           </td>
         </tr>

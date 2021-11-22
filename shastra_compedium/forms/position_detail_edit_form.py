@@ -17,6 +17,7 @@ from dal import (
     forward
 )
 from django_addanother.widgets import AddAnotherEditSelectedWidgetWrapper
+from shastra_compedium.forms.default_form_text import position_detail_help
 from django.urls import reverse_lazy
 
 
@@ -39,6 +40,35 @@ class PositionDetailEditForm(ModelForm):
     usage = ChoiceField(choices=(("Meaning", "Meaning"),
                                  ("Posture Description", "Posture Description")
                                  ), required=False)
+
+    def is_valid(self):
+        from shastra_compedium.models import UserMessage
+        valid = super(PositionDetailEditForm, self).is_valid()
+
+        if valid:
+            if self.cleaned_data['description'] and self.cleaned_data[
+                    'description'].sources.filter(
+                        id__in=self.cleaned_data['sources']).count() == 0:
+                self._errors[
+                    'description'] = UserMessage.objects.get_or_create(
+                        view=self.__class__.__name__,
+                        code="MUST_HAVE_SAME_SOURCE",
+                        defaults={
+                            'summary': "Must Have the Same Source",
+                            'description': position_detail_help['same_source']
+                            })[0].description
+                valid = False
+            if self.cleaned_data['dependencies']:
+                errors = []
+                for dependancy in self.cleaned_data['dependencies']:
+                    if dependancy.sources.filter(id__in=self.cleaned_data[
+                            'sources']).count() == 0:
+                        errors += [position_detail_help[
+                            'same_source2'] % str(dependancy)]
+                        valid = False
+                if len(errors) > 0:
+                    self._errors['dependencies'] = errors
+        return valid
 
     class Meta:
         model = PositionDetail
