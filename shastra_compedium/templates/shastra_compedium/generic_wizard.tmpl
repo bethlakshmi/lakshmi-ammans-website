@@ -1,4 +1,4 @@
-{% extends 'less_border_base.html' %}
+{% extends 'base.html' %}
 {% load static sekizai_tags %}
 {% block title %}
    {{page_title}}
@@ -11,6 +11,8 @@
     <script type="text/javascript" src="/static/tinymce/tinymce.min.js"></script>
     <script>{% include "tiny-mce-admin-settings.tmpl" %}</script>
 {% endblock %}
+{% block layout %}
+   <div>{% endblock %}
 {% block content %}
 <h2 class="lakshmi-title">{{title}}</h2>
 <h3 class="lakshmi-subtitle">{{subtitle}}</h3>

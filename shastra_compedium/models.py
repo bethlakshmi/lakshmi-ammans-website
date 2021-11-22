@@ -57,6 +57,7 @@ class Source(Model):
 
 class Category(Model):
     name = CharField(max_length=128, unique=True)
+    summary = CharField(max_length=128, blank=True)
     description = TextField(blank=True)
 
     def __str__(self):
@@ -73,15 +74,15 @@ class Position(Model):
                           related_name='positions',
                           blank=True,
                           null=True)
-    name = CharField(max_length=128, unique=True)
+    name = CharField(max_length=128)
     order = IntegerField()
 
     def __str__(self):
-        return self.name
+        return "%s, %s" % (self.name, self.category.name)
 
     class Meta:
         app_label = "shastra_compedium"
-        unique_together = [('category', 'order'), ('name', 'order')]
+        unique_together = [('category', 'order'), ('name', 'category')]
         ordering = ['category', 'order']
 
     def save(self, *args, **kwargs):
