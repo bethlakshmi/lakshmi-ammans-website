@@ -95,6 +95,7 @@ class PositionDetailEditForm(ModelForm):
                          'id',
                          forward.Const('Posture Description', 'usage'))),
             'dependencies': autocomplete.ModelSelect2Multiple(
+                attrs={'style': 'width: 100%'},
                 url='positiondetail-autocomplete',
                 forward=('sources',
                          'position',
