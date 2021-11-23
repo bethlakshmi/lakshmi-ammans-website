@@ -5,7 +5,7 @@
 {% block table_header %}
     <tr>
           <th colspan="4">Original Dance Treatise</th>
-          <th colspan="6">Referenced Publication</th>
+          <th colspan="5">Referenced Publication</th>
     </tr>
     <tr>
           <th data-field="title" data-sortable="true">Title</th>
@@ -16,7 +16,6 @@
           <th data-field="translator" data-sortable="true">Author/Translator</th>
           <th data-field="translation_language" data-sortable="true">Language</th>
           <th data-field="isbn" data-sortable="false">ISBN</th>
-          <th data-field="biblio" data-sortable="false">Bibliography</th>
           <th data-field="action">Action</th>
       </tr>
 {% endblock %}
@@ -35,6 +34,7 @@
 {% block details %}
     var html = []
     html.push('<div class="row">')
+    html.push('<div class="col-12"><b>Bibliography:</b><br>' + row.biblio + '</div>')
     html.push('<div class="col-12"><b>Description:</b><br>' + row.description + '</div>')
     if (row.chapters.length > 0) {
         html.push('<div class="col-12"><table class="table lakshmi-table"><thead class="thead-dark"><tr><th>Category</th><th>Chapter:verses</th><th>Usage</th><th>Chapter Text</th><th># Positions</th></tr></thead><tbody>' + row.chapters + '</tbody></table></div>')

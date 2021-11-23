@@ -78,7 +78,10 @@ class Position(Model):
     order = IntegerField()
 
     def __str__(self):
-        return "%s, %s" % (self.name, self.category.name)
+        if self.category:
+            return "%s, %s" % (self.name, self.category.name)
+        else:
+            return "%s, No Category" % self.name
 
     class Meta:
         app_label = "shastra_compedium"

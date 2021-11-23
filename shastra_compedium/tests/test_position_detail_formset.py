@@ -92,8 +92,8 @@ class TestPositionDetailFormset(TestCase):
                             response,
                             detail.description.pk,
                             "%s - %s - %s..." % (
-                                detail.description.verses(),
                                 detail.description.position.name,
+                                detail.description.verses(),
                                 detail.description.contents[3:28]),
                             True)
 
@@ -111,8 +111,10 @@ class TestPositionDetailFormset(TestCase):
         assert_option_state(self,
                             response,
                             dependancy.pk,
-                            "%s - %s..." % (dependancy.position.name,
-                                            dependancy.contents[3:28]),
+                            "%s - %s - %s..." % (
+                                dependancy.position.name,
+                                dependancy.verses(),
+                                dependancy.contents[3:28]),
                             True)
 
     def test_post_by_source(self):
