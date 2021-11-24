@@ -223,10 +223,8 @@ class Example(Model):
 
     def save(self, *args, **kwargs):
         super(Example, self).save(*args, **kwargs)
-        for detail in self.details.all():
-            if detail.position != self.position:
-                print(detail)
-                self.details.remove(detail)
+        for detail in self.details.exclude(position=self.position):
+            self.details.remove(detail)
 
 
 class ExampleImage(Example):

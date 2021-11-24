@@ -1,6 +1,5 @@
 from django.forms import (
     CheckboxSelectMultiple,
-    ImageField,
     ModelChoiceField,
     ModelForm,
 )

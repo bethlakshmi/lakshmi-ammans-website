@@ -1,8 +1,5 @@
-from django.views.generic.edit import (
-    CreateView,
-    UpdateView,
-)
-from django_addanother.views import CreatePopupMixin, UpdatePopupMixin
+from django.views.generic.edit import UpdateView
+from django_addanother.views import UpdatePopupMixin
 from shastra_compedium.models import ExampleImage
 from django.urls import reverse_lazy
 from shastra_compedium.site_text import make_example_image_messages
