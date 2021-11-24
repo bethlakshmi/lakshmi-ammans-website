@@ -8,7 +8,7 @@ from shastra_compedium.tests.factories import (
     UserFactory,
 )
 from shastra_compedium.site_text import edit_post_detail_messages
-from shastra_compedium.forms.default_form_text import position_detail_help 
+from shastra_compedium.forms.default_form_text import position_detail_help
 from shastra_compedium.tests.functions import (
     assert_option_state,
     login_as,
@@ -60,7 +60,7 @@ class TestPositionDetailFormset(TestCase):
             edit_post_detail_messages['intro'])
         self.assertContains(response, detail.contents)
         self.assertContains(
-            response, 
+            response,
             reverse('source_list', urlconf="shastra_compedium.urls"))
 
     def test_get_by_source_no_category(self):
@@ -198,7 +198,7 @@ class TestPositionDetailFormset(TestCase):
         self.assertRedirects(
             response,
             "%s?changed_ids=[%d]&obj_type=Position" % (pos_list,
-                                                        detail.position.id))
+                                                       detail.position.id))
         self.assertContains(response, "List of Positions")
         self.assertContains(
             response,
