@@ -8,6 +8,7 @@ from shastra_compedium.tests.factories import (
     UserFactory,
 )
 from shastra_compedium.site_text import edit_post_detail_messages
+from shastra_compedium.forms.default_form_text import position_detail_help 
 from shastra_compedium.tests.functions import (
     assert_option_state,
     login_as,
@@ -202,3 +203,63 @@ class TestPositionDetailFormset(TestCase):
         self.assertContains(
             response,
             "%s position details were updated." % detail.position.name)
+
+    def test_post_w_source_description_conflict(self):
+        detail = PositionDetailFactory()
+        source = SourceFactory()
+        pos_list = reverse('position_list', urlconf='shastra_compedium.urls')
+        description = PositionDetailFactory(
+            position=detail.position,
+            usage="Posture Description")
+        response = self.client.post(
+            "%s?next=%s" % (reverse(self.view_name,
+                                    urlconf='shastra_compedium.urls',
+                                    args=[detail.position.id]), pos_list),
+            data={'form-0-sources': [source.pk],
+                  'form-0-usage': "Meaning",
+                  'form-0-position': detail.position.pk,
+                  'form-0-chapter': 1,
+                  'form-0-verse_start': 10,
+                  'form-0-verse_end': 20,
+                  'form-0-contents': "Meaning text",
+                  'form-0-id': detail.id,
+                  'form-0-description': description.pk,
+                  'form-TOTAL_FORMS': 1,
+                  'form-INITIAL_FORMS': 1,
+                  'form-MIN_NUM_FORMS': 0,
+                  'form-MAX_NUM_FORMS': 1000,
+                  'submit': True},
+            follow=True)
+        self.assertContains(response, "Edit Position Details")
+        self.assertContains(
+            response,
+            position_detail_help['same_source'])
+
+    def test_post_w_source_dependancy_conflict(self):
+        detail = PositionDetailFactory()
+        source = SourceFactory()
+        pos_list = reverse('position_list', urlconf='shastra_compedium.urls')
+        dependancy = PositionDetailFactory(usage="Posture Description")
+        response = self.client.post(
+            "%s?next=%s" % (reverse(self.view_name,
+                                    urlconf='shastra_compedium.urls',
+                                    args=[detail.position.id]), pos_list),
+            data={'form-0-sources': [source.pk],
+                  'form-0-usage': "Meaning",
+                  'form-0-position': detail.position.pk,
+                  'form-0-chapter': 1,
+                  'form-0-verse_start': 10,
+                  'form-0-verse_end': 20,
+                  'form-0-contents': "Meaning text",
+                  'form-0-id': detail.id,
+                  'form-0-dependencies': [dependancy.pk],
+                  'form-TOTAL_FORMS': 1,
+                  'form-INITIAL_FORMS': 1,
+                  'form-MIN_NUM_FORMS': 0,
+                  'form-MAX_NUM_FORMS': 1000,
+                  'submit': True},
+            follow=True)
+        self.assertContains(response, "Edit Position Details")
+        self.assertContains(
+            response,
+            position_detail_help['same_source2'] % str(dependancy))
