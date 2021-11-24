@@ -11,6 +11,7 @@ from shastra_compedium.views import GenericWizard
 import re
 from django.urls import reverse
 from django.contrib import messages
+from django.shortcuts import get_object_or_404
 
 
 class UploadChapter(GenericWizard):
@@ -36,6 +37,13 @@ class UploadChapter(GenericWizard):
     }
     header = None
     changed_ids = []
+
+    def groundwork(self, request, args, kwargs):
+        redirect = super(UploadChapter, self).groundwork(request, args, kwargs)
+        self.category = None
+        if "category_id" in kwargs:
+            category_id = kwargs.get("category_id")
+            self.category = get_object_or_404(CategoryDetail, id=category_id)
 
     def finish_valid_form(self, request):
         self.changed_ids = []
@@ -115,7 +123,7 @@ class UploadChapter(GenericWizard):
     def setup_forms(self, form, request=None):
         if request:
             if str(form().__class__.__name__) == "ChapterForm":
-                return [form(request.POST)]
+                return [form(request.POST, instance=self.category)]
             else:
                 if 'num_rows' not in request.POST.keys():
                     return []
@@ -129,7 +137,7 @@ class UploadChapter(GenericWizard):
                 return forms
         else:
             if str(form().__class__.__name__) == "ChapterForm":
-                return [form()]
+                return [form(instance=self.category)]
             else:
                 # set up the choice form based on number of columns.
                 forms = [ChapterDetailMapping(initial={
