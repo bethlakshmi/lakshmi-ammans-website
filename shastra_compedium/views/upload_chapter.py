@@ -83,7 +83,8 @@ class UploadChapter(GenericWizard):
                         position_detail.contents = form.cleaned_data['meaning']
                         position_detail.usage = "Meaning"
                         if posture_pk is not None:
-                            position_detail.description = PositionDetail.objects.get(pk=posture_pk)
+                            position_detail.description = PositionDetail.objects.get(
+                                pk=posture_pk)
                         position_detail.save()
                         form.save_m2m()
                         self.num_created = self.num_created + 1
@@ -105,8 +106,8 @@ class UploadChapter(GenericWizard):
                 str(self.changed_ids))
         return return_url
 
-    def make_context(self, request):
-        context = super(UploadChapter, self).make_context(request)
+    def make_context(self, request, valid=True):
+        context = super(UploadChapter, self).make_context(request, valid)
         if str(self.forms[0].__class__.__name__) == "ChapterDetailMapping":
             context['special_handling'] = True
             context['tiny_mce_width'] = 400

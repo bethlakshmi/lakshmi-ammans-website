@@ -25,7 +25,7 @@ def assert_option_state(testcase, response, value, text, selected=False):
         html=True)
 
 
-def set_image(itemimage=None, folder_name=None):
+def set_image(folder_name=None):
     folder = None
     if User.objects.filter(username='superuser_for_test').exists():
         superuser = User.objects.get(username='superuser_for_test')
@@ -45,7 +45,4 @@ def set_image(itemimage=None, folder_name=None):
         original_filename="made_up_filename.png",
         file=File(open(path, 'rb')))
     current_img.save()
-    if itemimage:
-        itemimage.filer_image_id = current_img.pk
-        itemimage.save()
     return current_img
