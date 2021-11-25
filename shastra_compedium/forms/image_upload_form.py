@@ -1,9 +1,7 @@
 from django.forms import (
     ClearableFileInput,
     ImageField,
-    IntegerField,
     Form,
-    HiddenInput,
     ModelChoiceField,
 )
 from shastra_compedium.models import (
