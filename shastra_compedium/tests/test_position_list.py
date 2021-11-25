@@ -2,16 +2,22 @@ from django.test import TestCase
 from django.test import Client
 from django.urls import reverse
 from shastra_compedium.tests.factories import (
+    ExampleImageFactory,
     PositionDetailFactory,
     SourceFactory,
     UserFactory
 )
 from shastra_compedium.models import PositionDetail
-from shastra_compedium.tests.functions import login_as
+from shastra_compedium.tests.functions import (
+    login_as,
+    set_image
+)
+from easy_thumbnails.files import get_thumbnailer
 
 
 class TestPositionList(TestCase):
     view_name = "position_list"
+    options = {'size': (350, 350), 'crop': False}
 
     def setUp(self):
         self.client = Client()
@@ -166,3 +172,63 @@ class TestPositionList(TestCase):
         response = self.client.get(self.url)
         self.assertNotContains(response, ex_url)
         self.assertNotContains(response, "'action':")
+
+    def test_main_image(self):
+        img1 = set_image()
+        example_image = ExampleImageFactory(image=img1, general=True)
+        login_as(self.user, self)
+        response = self.client.get(self.url)
+        thumb_url = get_thumbnailer(img1).get_thumbnail(self.options).url
+        self.assertContains(response, thumb_url)
+
+    def test_posture_image(self):
+        another_detail = PositionDetailFactory(
+            position=self.detail.position,
+            usage="Posture Description")
+        another_detail.sources.add(self.source)
+        another_detail.save()
+        img1 = set_image()
+        example_image = ExampleImageFactory(
+            image=img1,
+            position=another_detail.position)
+        example_image.details.add(another_detail)
+        login_as(self.user, self)
+        response = self.client.get(self.url)
+        thumb_url = get_thumbnailer(img1).get_thumbnail(self.options).url
+        self.assertContains(response, thumb_url)
+
+    def test_meaning_image(self):
+        img1 = set_image()
+        example_image = ExampleImageFactory(
+            image=img1,
+            position=self.detail.position)
+        example_image.details.add(self.detail)
+        login_as(self.user, self)
+        response = self.client.get(self.url)
+        thumb_url = get_thumbnailer(img1).get_thumbnail(self.options).url
+        self.assertContains(response, thumb_url)
+
+    def test_meaning_w_description_image(self):
+        another_detail = PositionDetailFactory(
+            position=self.detail.position,
+            usage="Posture Description")
+        another_detail.sources.add(self.source)
+        another_detail.save()
+        self.detail.description = another_detail
+        self.detail.save()
+        img1 = set_image()
+        example_image = ExampleImageFactory(
+            image=img1,
+            position=self.detail.position)
+        example_image.details.add(self.detail)
+        login_as(self.user, self)
+        response = self.client.get(self.url)
+        print(self.detail.position.name)
+        print(self.detail.contents)
+        print(self.detail.exampleimage_set.first())
+        print(self.detail.exampleimage_set.first().general)
+
+        print(response.content)
+        thumb_url = get_thumbnailer(img1).get_thumbnail(self.options).url
+        self.assertContains(response, thumb_url)
+        self.assertNotContains(response, "No associated description")

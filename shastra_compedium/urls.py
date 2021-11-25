@@ -1,10 +1,12 @@
 from django.conf.urls import url
 from shastra_compedium.views import (
+    BulkImageUpload,
     CategoryCreate,
     CategoryDetailUpdate,
     CategoryUpdate,
     DanceStyleCreate,
     DanceStyleUpdate,
+    ExampleImageUpdate,
     PerformerCreate,
     PerformerUpdate,
     PositionCreate,
@@ -42,6 +44,9 @@ urlpatterns = [
     url(r'^categorydetail/update/(?P<pk>.*)/$',
         CategoryDetailUpdate.as_view(),
         name='categorydetail-update'),
+    url(r'^image/update/(?P<pk>.*)/$',
+        ExampleImageUpdate.as_view(),
+        name='exampleimage-update'),
     url(r'^position/add/(?P<order>\d+)/(?P<category>\d+)/$',
         PositionCreate.as_view(),
         name='position-add'),
@@ -77,4 +82,8 @@ urlpatterns = [
         SourceUpdate.as_view(),
         name='source-update'),
     url(r'^source/list/?', SourceList.as_view(), name='source_list'),
+    # Images
+    url(r'^image/upload/?',
+        BulkImageUpload.as_view(),
+        name='image_upload'),
 ]

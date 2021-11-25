@@ -1,4 +1,5 @@
 from django.db.models import (
+    BooleanField,
     CASCADE,
     CharField,
     DateTimeField,
@@ -136,6 +137,8 @@ class PositionDetail(Detail):
             self.position.name,
             self.verses(),
             self.contents[3:28])
+    def detail_images(self):
+        return self.exampleimage_set.filter(general=False)
 
     class Meta:
         app_label = "shastra_compedium"
@@ -210,6 +213,7 @@ class Performer(Model):
 class Example(Model):
     position = ForeignKey(Position, on_delete=CASCADE)
     details = ManyToManyField(PositionDetail)
+    general = BooleanField(default=False)
     dance_style = ForeignKey(DanceStyle, on_delete=CASCADE)
     performer = ForeignKey(Performer,
                            on_delete=SET_NULL,
@@ -223,11 +227,19 @@ class Example(Model):
         abstract = True
         app_label = "shastra_compedium"
 
+    def save(self, *args, **kwargs):
+        super(Example, self).save(*args, **kwargs)
+        for detail in self.details.exclude(position=self.position):
+            self.details.remove(detail)
+
 
 class ExampleImage(Example):
     image = FilerImageField(
         on_delete=CASCADE,
         null=True)
+
+    def __str__(self):
+        return "Image %s, for Position %s," % (self.image, self.position.name)
 
     class Meta:
         app_label = "shastra_compedium"

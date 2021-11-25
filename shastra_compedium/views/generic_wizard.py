@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import messages
+from shastra_compedium.forms import StepForm
 from shastra_compedium.models import UserMessage
 from shastra_compedium.site_text import user_messages
 from django.shortcuts import render
@@ -35,15 +36,15 @@ class GenericWizard(View):
         self.return_url = reverse('position_list',
                                   urlconf='shastra_compedium.urls')
 
-    def make_context(self, request):
+    def make_context(self, request, valid=True):
         context = {
             'page_title': self.page_title,
             'title': self.page_title,
             'subtitle': self.current_form_set['next_title'],
             'forms': self.forms,
-            'first': self.current_form_set['the_form'] is None,
             'show_finish': True,
             'last': self.form_sets[self.step+1]['next_form'] is None,
+            'step_form': StepForm(initial={"step": self.step + 1})
         }
         if 'instruction_key' in self.current_form_set:
             context['instructions'] = UserMessage.objects.get_or_create(
@@ -55,11 +56,8 @@ class GenericWizard(View):
                     'description': user_messages[self.current_form_set[
                         'instruction_key']]['description']}
                 )[0].description
+        context['form_error'] = not valid
         return context
-
-    def make_back_forms(self, request):
-        self.step = self.step - 2
-        self.current_form_set = self.form_sets[self.step]
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -85,8 +83,12 @@ class GenericWizard(View):
 
     def validate_forms(self):
         all_valid = True
-        for form in self.forms:
-            all_valid = form.is_valid() and all_valid
+        if "is_formset" in self.current_form_set and (
+                self.current_form_set['is_formset']):
+            all_valid = self.forms.is_valid()
+        else:
+            for form in self.forms:
+                all_valid = form.is_valid() and all_valid
         return all_valid
 
     @never_cache
@@ -107,14 +109,16 @@ class GenericWizard(View):
             self.forms = self.setup_forms(
                 self.current_form_set['the_form'],
                 request)
-            if len(self.forms) == 0:
+            if ("is_formset" not in self.current_form_set or (
+                    not self.current_form_set['is_formset'])) and len(
+                    self.forms) == 0:
                 return self.return_on_error(request, "NO_FORM_ERROR")
 
             if not self.validate_forms():
                 self.step = self.step - 1
                 self.current_form_set = self.form_sets[self.step]
-                return render(request, self.template, self.make_context(
-                    request))
+                context = self.make_context(request, valid=False)
+                return render(request, self.template, context)
             self.finish_valid_form(request)
             if 'finish' in list(request.POST.keys()):
                 return HttpResponseRedirect(self.finish(request))
@@ -124,8 +128,6 @@ class GenericWizard(View):
             if 'redirect' in list(request.POST.keys()):
                 return HttpResponseRedirect(self.redirect(request))
 
-        elif 'back' in list(request.POST.keys()):
-            self.make_back_forms(request)
         else:
             msg = UserMessage.objects.get_or_create(
                 view=self.__class__.__name__,
@@ -141,6 +143,7 @@ class GenericWizard(View):
 
         if self.current_form_set['next_form'] is not None:
             self.forms = self.setup_forms(self.current_form_set['next_form'])
-            return render(request, self.template, self.make_context(request))
+            context = self.make_context(request)
+            return render(request, self.template, context)
 
         return HttpResponseRedirect(self.return_url)

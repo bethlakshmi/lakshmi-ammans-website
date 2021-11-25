@@ -116,13 +116,24 @@ class MessageAdmin(admin.ModelAdmin):
     list_filter = ['view', 'code']
 
 
+class ExampleImageAdmin(admin.ModelAdmin):
+    list_display = (
+        'position',
+        'performer',
+        'dance_style',
+        'image',
+        'created_date',
+        'modified_date')
+    search_fields = ['position__name', 'performer__name', 'dance_style__name']
+
+
 admin.site.register(Position, PositionAdmin)
 admin.site.register(PositionDetail, PositionDetailAdmin)
 admin.site.register(CategoryDetail, CategoryDetailAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Shastra, ShastraAdmin)
 admin.site.register(Source, SourceAdmin)
-admin.site.register(ExampleImage)
+admin.site.register(ExampleImage, ExampleImageAdmin)
 admin.site.register(ExampleVideo)
 admin.site.register(DanceStyle)
 admin.site.register(Performer, PerformerAdmin)
