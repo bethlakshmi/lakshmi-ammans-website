@@ -1,15 +1,9 @@
-from django.views.generic import View
-from django.views.decorators.cache import never_cache
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
 from shastra_compedium.models import (
     ExampleImage,
     PositionDetail,
     Shastra,
     Source,
 )
-from django.urls import reverse
 from shastra_compedium.views import GenericList
 
 

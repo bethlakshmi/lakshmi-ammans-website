@@ -11,6 +11,7 @@ from shastra_compedium.functions import upload_and_attach
 from django.utils.safestring import mark_safe
 from easy_thumbnails.files import get_thumbnailer
 from django.forms import modelformset_factory
+from django.urls import reverse
 
 
 class BulkImageUpload(GenericWizard):
@@ -64,7 +65,7 @@ class BulkImageUpload(GenericWizard):
             request,
             "Uploaded %d images." % (
                 self.num_files))
-        return self.return_url
+        return reverse('image_list', urlconf='shastra_compedium.urls')
 
     def setup_forms(self, form, request=None):
         if request:

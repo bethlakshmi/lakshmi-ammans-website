@@ -13,6 +13,7 @@ from .make_performer import (PerformerCreate, PerformerUpdate)
 from .make_source import (SourceCreate, SourceUpdate)
 from .make_shastra import (ShastraCreate, ShastraUpdate)
 from .make_position import (PositionCreate, PositionUpdate)
+from .image_list import ImageList
 from .position_list import PositionList
 from .source_list import SourceList
 from .bulk_image_upload import BulkImageUpload

@@ -1,0 +1,44 @@
+{% extends 'shastra_compedium/generic_list.tmpl' %}
+{% load thumbnail %}
+{% block control_buttons %}
+  {% for example in items.exampleimages %}
+<!-- Detail Modal Start -->
+      <div class="modal" id="Modalexample_{{ example.pk }}" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content lakshmi-modal-content">
+            <div class="modal-header lakshmi-modal-header">
+                <h4 class="modal-title">{{example.position}} - {{ example.image.original_filename }}</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body text-left">
+              <img src="{{example.image.url}}">
+            </div>
+            <div class="modal-footer lakshmi-modal-footer">
+                <button type="button" class="btn btn-lakshmi-secondary" data-dismiss="modal">Close</button>
+            </div>
+      </div></div></div>
+<!-- Detail Modal End -->  {% endfor %}
+{% endblock %}
+{% block table_header %}
+    <tr>
+          <th data-field="image" data-sortable="true">Image</th>
+          <th data-field="position" data-sortable="true">Position</th>
+          <th data-field="category" data-sortable="true">Category</th>
+          <th data-field="main" data-sortable="true">Main Image?</th>
+          <th data-field="details" data-sortable="false">Linked Details</th>
+          <th data-field="action">Action</th>
+      </tr>
+{% endblock %}
+{% block item_data %}
+  {% for example in items.exampleimages %}
+      {
+        'id': {{ example.pk}},
+        'image': '<a href="#" data-toggle="modal" data-target="#Modalexample_{{ example.pk }}" data-backdrop="true"><img src="{% thumbnail example.image 250x250 crop=scale%}" title="{{example.position.name}}"></a>',
+        'position': '{{ example.position.name }}',
+        'category': '{% if example.position.category %}{{ example.position.category }}&nbsp;&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:category-update' example.position.category.pk %}?next={{request.path}}" title="Edit"><i class="fas fa-edit"></i></a>{% endif %}',
+        'main': '{% if example.general %}<i class="lakshmi-text-success far fa-check-square fa-3x"></i>{% else %}<i class="text-muted fas fa-times-circle fa-3x"></i>{% endif %}',
+        'details': '{% for detail in example.details.all %}<b>{{detail.verses}}</b> {{detail.contents|safe|escapejs}}{% endfor %}',
+        'action': '<a class="lakshmi-detail" href="{% url 'shastra_compedium:exampleimage-update' example.pk %}" title="Edit"><i class="fas fa-edit"></i></a>',
+      },
+  {% endfor %}
+{% endblock %}
