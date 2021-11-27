@@ -20,6 +20,7 @@ Original Source Abbreviations:
           <th data-field="position" data-sortable="true">Position</th>
           <th data-field="category" data-sortable="true">Category</th>
           <th data-field="order" data-sortable="true">Order</th>
+          <th data-field="img_count" data-sortable="true"># Images</th>
     {% for source in sources %}
           <th data-field="{{source.pk}}" data-sortable="false"><span title="{{source.title}} - {{source.translator}}">{{source.shastra.initials}}<br>{{source.short_form|safe}}</span></th>
     {% endfor %}
@@ -59,6 +60,7 @@ Original Source Abbreviations:
         'position': '{{ position.name }}',
         'category': '{% if position.category %}{{ position.category }}&nbsp;&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:category-update' position.category.pk %}?next={{request.path}}" title="Edit"><i class="fas fa-edit"></i></a>{% endif %}',
         'order': '{{ position.order }}',
+        'img_count': '{{details.image_total}}',
     {% for source,verses in details.sources.items %}
         '{{source.pk}}': '<a class="lakshmi-text-success" href="#" data-toggle="modal" data-target="#Modal{{source.pk}}_{{ position.pk }}" data-backdrop="true" ><i class="far fa-check-square fa-4x"></i></a>',
     {% endfor %}
