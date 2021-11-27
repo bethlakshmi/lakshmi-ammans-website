@@ -12,11 +12,11 @@ from django.utils.safestring import mark_safe
 from easy_thumbnails.files import get_thumbnailer
 from django.forms import modelformset_factory
 from django.urls import reverse
+from shastra_compedium.site_text import image_modal
 
 
 class BulkImageUpload(GenericWizard):
     filer_images = []
-    example_images = []
     template = 'shastra_compedium/bulk_image_wizard.tmpl'
     page_title = 'Image Upload'
     first_title = 'Select Images to Upload'
@@ -42,10 +42,11 @@ class BulkImageUpload(GenericWizard):
             'next_title': None},
     }
     options = {'size': (100, 100), 'crop': False}
+    changed_ids = []
 
     def finish_valid_form(self, request):
+        self.changed_ids = []
         files = request.FILES.getlist('new_images')
-        self.example_images = []
         if len(files) > 0:
             self.num_files = len(files)
             self.filer_images = upload_and_attach(
@@ -55,17 +56,24 @@ class BulkImageUpload(GenericWizard):
             for form in self.forms:
                 if form.__class__.__name__ == "ImageAssociateForm" and (
                         form.cleaned_data['position']):
-                    self.example_images += [form.save().pk]
+                    self.changed_ids += [form.save().pk]
         else:
             self.forms.save()
             self.num_files = self.forms.total_form_count()
+            for changed_object, changed_fields in self.forms.changed_objects:
+                self.changed_ids += [changed_object.pk]
 
     def finish(self, request):
+        return_url = reverse('image_list', urlconf='shastra_compedium.urls')
         messages.success(
             request,
             "Uploaded %d images." % (
                 self.num_files))
-        return reverse('image_list', urlconf='shastra_compedium.urls')
+        if len(self.changed_ids) > 0:
+            return_url = "%s?changed_ids=%s&obj_type=ExampleImage" % (
+                return_url,
+                str(self.changed_ids))
+        return return_url
 
     def setup_forms(self, form, request=None):
         if request:
@@ -86,7 +94,11 @@ class BulkImageUpload(GenericWizard):
                         thumb_url = get_thumbnailer(image).get_thumbnail(
                             self.options).url
                         association_form.fields['position'].label = mark_safe(
-                            "<img src='%s' title='%s'/>" % (thumb_url, image))
+                            image_modal % (image.pk,
+                                           thumb_url,
+                                           image,
+                                           image.pk,
+                                           image.url))
                     forms += [association_form]
                 forms += [meta_form]
                 return forms
@@ -116,7 +128,11 @@ class BulkImageUpload(GenericWizard):
                     thumb_url = get_thumbnailer(image).get_thumbnail(
                         self.options).url
                     association_form.fields['position'].label = mark_safe(
-                        "<img src='%s' title='%s'/>" % (thumb_url, image))
+                        image_modal % (image.pk,
+                                       thumb_url,
+                                       image,
+                                       image.pk,
+                                       image.url))
                     forms += [association_form]
                     association_num = association_num + 1
                 forms += [ImageAssociateMetaForm(
@@ -128,7 +144,7 @@ class BulkImageUpload(GenericWizard):
                                                           extra=0)
                 forms = ImageDetailFormSet(
                     queryset=ExampleImage.objects.filter(
-                        pk__in=self.example_images))
+                        pk__in=self.changed_ids))
                 return forms
 
     def make_context(self, request, valid=True):

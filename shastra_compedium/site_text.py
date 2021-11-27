@@ -89,3 +89,9 @@ user_messages = {
         to update these various elements.'''
     }
 }
+image_modal = (
+    "<a href='#' data-toggle='modal' data-target=" +
+    "'#Modal_%d' data-backdrop='true'><img src='%s' title='%s'/></a><div" +
+    " class='modal' id='Modal_%d' role='dialog'><div class='modal-dialog" +
+    " modal-dialog-centered modal-sm'><div class='modal-content " +
+    "modal-body'><img src='%s'/></div></div></div>")

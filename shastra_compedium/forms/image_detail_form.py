@@ -12,6 +12,7 @@ from django.utils.safestring import mark_safe
 from easy_thumbnails.files import get_thumbnailer
 from shastra_compedium.forms.default_form_text import item_image_help
 from django.utils.html import strip_tags
+from shastra_compedium.site_text import image_modal
 
 
 class DetailsChoiceField(ModelMultipleChoiceField):
@@ -54,10 +55,11 @@ class ImageDetailForm(ModelForm):
             thumb_url = get_thumbnailer(instance.image).get_thumbnail(
                 self.options).url
             self.fields['details'].label = mark_safe(
-                "<img src='%s' title='%s'/><br>%s" % (
-                            thumb_url,
-                            instance.image,
-                            instance.position.name))
+                image_modal % (instance.image.pk,
+                               thumb_url,
+                               instance.image,
+                               instance.image.pk,
+                               instance.image.url))
 
     class Meta:
         model = ExampleImage
