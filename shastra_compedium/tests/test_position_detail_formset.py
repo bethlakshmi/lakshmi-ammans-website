@@ -59,7 +59,7 @@ class TestPositionDetailFormset(TestCase):
             edit_post_detail_messages['intro'])
         self.assertContains(response, detail.contents)
         self.assertContains(
-            response, 
+            response,
             reverse('source_list', urlconf="shastra_compedium.urls"))
 
     def test_get_by_source_no_category(self):
@@ -92,8 +92,8 @@ class TestPositionDetailFormset(TestCase):
                             response,
                             detail.description.pk,
                             "%s - %s - %s..." % (
-                                detail.description.verses(),
                                 detail.description.position.name,
+                                detail.description.verses(),
                                 detail.description.contents[3:28]),
                             True)
 
@@ -111,8 +111,10 @@ class TestPositionDetailFormset(TestCase):
         assert_option_state(self,
                             response,
                             dependancy.pk,
-                            "%s - %s..." % (dependancy.position.name,
-                                            dependancy.contents[3:28]),
+                            "%s - %s - %s..." % (
+                                dependancy.position.name,
+                                dependancy.verses(),
+                                dependancy.contents[3:28]),
                             True)
 
     def test_post_by_source(self):
@@ -195,8 +197,72 @@ class TestPositionDetailFormset(TestCase):
         self.assertRedirects(
             response,
             "%s?changed_ids=[%d]&obj_type=Position" % (pos_list,
-                                                        detail.position.id))
+                                                       detail.position.id))
         self.assertContains(response, "List of Positions")
         self.assertContains(
             response,
             "%s position details were updated." % detail.position.name)
+
+    def test_post_w_source_description_conflict(self):
+        from shastra_compedium.forms.default_form_text import (
+            position_detail_help)
+        detail = PositionDetailFactory()
+        source = SourceFactory()
+        pos_list = reverse('position_list', urlconf='shastra_compedium.urls')
+        description = PositionDetailFactory(
+            position=detail.position,
+            usage="Posture Description")
+        response = self.client.post(
+            "%s?next=%s" % (reverse(self.view_name,
+                                    urlconf='shastra_compedium.urls',
+                                    args=[detail.position.id]), pos_list),
+            data={'form-0-sources': [source.pk],
+                  'form-0-usage': "Meaning",
+                  'form-0-position': detail.position.pk,
+                  'form-0-chapter': 1,
+                  'form-0-verse_start': 10,
+                  'form-0-verse_end': 20,
+                  'form-0-contents': "Meaning text",
+                  'form-0-id': detail.id,
+                  'form-0-description': description.pk,
+                  'form-TOTAL_FORMS': 1,
+                  'form-INITIAL_FORMS': 1,
+                  'form-MIN_NUM_FORMS': 0,
+                  'form-MAX_NUM_FORMS': 1000,
+                  'submit': True},
+            follow=True)
+        self.assertContains(response, "Edit Position Details")
+        self.assertContains(
+            response,
+            position_detail_help['same_source'])
+
+    def test_post_w_source_dependancy_conflict(self):
+        from shastra_compedium.forms.default_form_text import (
+            position_detail_help)
+        detail = PositionDetailFactory()
+        source = SourceFactory()
+        pos_list = reverse('position_list', urlconf='shastra_compedium.urls')
+        dependancy = PositionDetailFactory(usage="Posture Description")
+        response = self.client.post(
+            "%s?next=%s" % (reverse(self.view_name,
+                                    urlconf='shastra_compedium.urls',
+                                    args=[detail.position.id]), pos_list),
+            data={'form-0-sources': [source.pk],
+                  'form-0-usage': "Meaning",
+                  'form-0-position': detail.position.pk,
+                  'form-0-chapter': 1,
+                  'form-0-verse_start': 10,
+                  'form-0-verse_end': 20,
+                  'form-0-contents': "Meaning text",
+                  'form-0-id': detail.id,
+                  'form-0-dependencies': [dependancy.pk],
+                  'form-TOTAL_FORMS': 1,
+                  'form-INITIAL_FORMS': 1,
+                  'form-MIN_NUM_FORMS': 0,
+                  'form-MAX_NUM_FORMS': 1000,
+                  'submit': True},
+            follow=True)
+        self.assertContains(response, "Edit Position Details")
+        self.assertContains(
+            response,
+            position_detail_help['same_source2'] % str(dependancy))

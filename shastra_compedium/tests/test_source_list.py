@@ -131,10 +131,14 @@ class TestSourceList(TestCase):
             ('<td class="align-top" class="lakshmi-table-success">10:1-100' +
              '&nbsp;&nbsp;<a class="lakshmi-detail" href="%s" ' +
              'title="Edit Chapter"><i class="fas fa-edit">' +
-             '</i></a></td>') % reverse(
-             "categorydetail-update",
-             urlconf="shastra_compedium.urls",
-             args=[chapter.pk]))
+             '</i></a><br><a class="btn lakshmi-btn-primary" href="%s" ' +
+             'title="More Upload">Add to Chapter</a></td>') % (
+             reverse("categorydetail-update",
+                     urlconf="shastra_compedium.urls",
+                     args=[chapter.pk]),
+             reverse("chapter-additional",
+                     urlconf="shastra_compedium.urls",
+                     args=[chapter.pk])))
 
     def test_list_category_detail_variations(self):
         chapter = CategoryDetailFactory(

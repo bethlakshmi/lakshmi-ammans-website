@@ -22,7 +22,7 @@ class CategoryCreate(LoginRequiredMixin,
     view_title = 'Create Category'
     valid_message = make_category_messages['create_success']
     intro_message = make_category_messages['create_intro']
-    fields = ['name', 'description']
+    fields = ['name', 'summary', 'description']
 
 
 class CategoryUpdate(LoginRequiredMixin,
@@ -37,4 +37,4 @@ class CategoryUpdate(LoginRequiredMixin,
     view_title = 'Update Category'
     valid_message = make_category_messages['edit_success']
     intro_message = make_category_messages['edit_intro']
-    fields = ['name', 'description']
+    fields = ['name', 'summary', 'description']

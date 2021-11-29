@@ -102,7 +102,7 @@ class TestPositionList(TestCase):
         source_cell = (
             '\'%s\': \'<a class="lakshmi-text-success" href="#" data-toggle=' +
             '"modal" data-target="#Modal%s_%s" data-backdrop="true" ><i ' +
-            'class="far fa-check-square fa-4x"></i></a>\'')
+            'class="far fa-check-square fa-2x"></i></a>\'')
         self.assertContains(
             response,
             source_cell % (

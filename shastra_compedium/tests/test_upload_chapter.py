@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.test import Client
 from shastra_compedium.tests.factories import (
     CategoryFactory,
+    CategoryDetailFactory,
     PositionFactory,
     SourceFactory,
     UserFactory,
@@ -63,6 +64,19 @@ class TestUploadChapter(TestCase):
             response,
             user_messages['CHAPTER_BASICS_INTRO']['description'])
         self.assertContains(response, "Sources")
+
+    def test_add_more_get(self):
+        chapter = CategoryDetailFactory()
+        self.create_url = reverse('chapter-additional',
+                                  urlconf='shastra_compedium.urls',
+                                  args=[chapter.pk])
+        response = self.client.get(self.create_url, follow=True)
+        self.assertContains(response, "Upload Chapter")
+        self.assertContains(
+            response,
+            user_messages['CHAPTER_BASICS_INTRO']['description'])
+        self.assertContains(response, "Sources")
+        self.assertContains(response, chapter.contents)
 
     def test_create_post_basics_success(self):
         start = CategoryDetail.objects.all().count()
@@ -160,6 +174,23 @@ class TestUploadChapter(TestCase):
             user_messages['CHAPTER_BASICS_INTRO']['description'])
 
     def test_create_post_positions_success(self):
+        start = PositionDetail.objects.all().count()
+        response = self.client.post(self.create_url,
+                                    data=self.position_data(),
+                                    follow=True)
+        self.assertRedirects(
+            response,
+            "%s?changed_ids=%s&obj_type=Position" % (
+                reverse("position_list", urlconf='shastra_compedium.urls'),
+                str([self.position.pk, self.position.pk])))
+        self.assertContains(response, "Uploaded 2 position details.")
+        self.assertEqual(start + 2, PositionDetail.objects.all().count())
+
+    def test_create_post_positions_to_existing_chapter(self):
+        chapter = CategoryDetailFactory()
+        self.create_url = reverse('chapter-additional',
+                                  urlconf='shastra_compedium.urls',
+                                  args=[chapter.pk])
         start = PositionDetail.objects.all().count()
         response = self.client.post(self.create_url,
                                     data=self.position_data(),
