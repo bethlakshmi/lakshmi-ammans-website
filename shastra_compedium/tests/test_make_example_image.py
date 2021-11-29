@@ -125,7 +125,7 @@ class TestMakeExampleImage(TestCase):
             response,
             make_example_image_messages['create_success'] % (
                 "Image %s, for Position %s," % (self.img1,
-                                                self.object.position)))
+                                                self.object.position.name)))
         self.assertEqual(start+1, ExampleImage.objects.all().count())
         self.assertRedirects(
             response,
