@@ -204,7 +204,8 @@ class TestPositionDetailFormset(TestCase):
             "%s position details were updated." % detail.position.name)
 
     def test_post_w_source_description_conflict(self):
-        from shastra_compedium.forms.default_form_text import position_detail_help
+        from shastra_compedium.forms.default_form_text import (
+            position_detail_help)
         detail = PositionDetailFactory()
         source = SourceFactory()
         pos_list = reverse('position_list', urlconf='shastra_compedium.urls')
@@ -236,7 +237,8 @@ class TestPositionDetailFormset(TestCase):
             position_detail_help['same_source'])
 
     def test_post_w_source_dependancy_conflict(self):
-        from shastra_compedium.forms.default_form_text import position_detail_help
+        from shastra_compedium.forms.default_form_text import (
+            position_detail_help)
         detail = PositionDetailFactory()
         source = SourceFactory()
         pos_list = reverse('position_list', urlconf='shastra_compedium.urls')

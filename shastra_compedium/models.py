@@ -137,6 +137,7 @@ class PositionDetail(Detail):
             self.position.name,
             self.verses(),
             self.contents[3:28])
+
     def detail_images(self):
         return self.exampleimage_set.filter(general=False)
 
