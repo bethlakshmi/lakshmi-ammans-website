@@ -1,5 +1,6 @@
 from shastra_compedium.views import GenericList
 from shastra_compedium.models import ExampleImage
+from filer.models.imagemodels import Image
 
 
 class ImageList(GenericList):
@@ -13,4 +14,7 @@ class ImageList(GenericList):
         return context
 
     def get_list(self):
-        return {"exampleimages": ExampleImage.objects.all()}
+        return {"exampleimages": ExampleImage.objects.all(),
+                "images": Image.objects.filter(
+                    folder__name="PositionImageUploads",
+                    exampleimage__isnull=True)}

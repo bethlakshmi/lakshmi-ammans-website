@@ -17,7 +17,10 @@ from shastra_compedium.models import ExampleImage
 from easy_thumbnails.files import get_thumbnailer
 from filer.models import Image
 from django.utils.safestring import mark_safe
-from shastra_compedium.site_text import user_messages
+from shastra_compedium.site_text import (
+    image_modal,
+    user_messages,
+)
 
 
 class TestBulkImageUpload(TestCase):
@@ -68,16 +71,20 @@ class TestBulkImageUpload(TestCase):
             "Connect Images to Positions")
         self.assertContains(
             response,
-            "<img src='%s' title='%s'/>" % (
-                thumb_url,
-                image1))
+            image_modal % (image1.pk,
+                           thumb_url,
+                           image1,
+                           image1.pk,
+                           image1.url))
         thumb_url = get_thumbnailer(
             image2).get_thumbnail(self.options).url
         self.assertContains(
             response,
-            "<img src='%s' title='%s'/>" % (
-                thumb_url,
-                image2))
+            image_modal % (image2.pk,
+                           thumb_url,
+                           image2,
+                           image2.pk,
+                           image2.url))
         self.assertContains(
             response,
             '<input type="hidden" name="step" value="1" id="id_step">',
@@ -104,6 +111,9 @@ class TestBulkImageUpload(TestCase):
                   'finish': 'Finish'},
             follow=True)
         self.assertContains(response, "Uploaded 2 images.")
+        self.assertRedirects(
+            response,
+            reverse("image_list", urlconf="shastra_compedium.urls"))
 
     def test_post_attachments_and_finish(self):
         img1 = set_image()
@@ -126,9 +136,16 @@ class TestBulkImageUpload(TestCase):
                   'association_count': 2,
                   'finish': 'Finish'},
             follow=True)
+        example1 = ExampleImage.objects.get(image=img1)
+        example2 = ExampleImage.objects.get(image=img2)
         self.assertContains(
             response,
             "Uploaded 2 images.")
+        self.assertRedirects(
+            response,
+            "%s?changed_ids=%s&obj_type=ExampleImage" % (
+                reverse("image_list", urlconf="shastra_compedium.urls"),
+                str([example1.pk, example2.pk])))
 
     def test_post_attachments_bad_item(self):
         # This is legit if a user selects something that is then deleted
@@ -238,14 +255,12 @@ class TestBulkImageUpload(TestCase):
             follow=True)
         thumb_url = get_thumbnailer(img1).get_thumbnail(self.options2).url
         image_label = mark_safe(
-            "<img src='%s' title='%s'/><br>%s" % (
-                thumb_url,
-                img1,
-                position.name))
+            image_modal % (img1.pk,
+                           thumb_url,
+                           img1,
+                           img1.pk,
+                           img1.url))
         self.assertContains(response, "Set Specific Position Details")
-        self.assertContains(
-            response,
-            "<img src='%s' title='%s'/>" % (thumb_url, img1))
         self.assertContains(response, image_label)
         self.assertContains(response, detail1.contents)
 

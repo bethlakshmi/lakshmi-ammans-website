@@ -33,6 +33,7 @@
   {% for example in items.exampleimages %}
       {
         'id': {{ example.pk}},
+        'image_only': 0,
         'image': '<a href="#" data-toggle="modal" data-target="#Modalexample_{{ example.pk }}" data-backdrop="true"><img src="{% thumbnail example.image 250x250 crop=scale%}" title="{{example.position.name}}"></a>',
         'position': '{{ example.position.name }}',
         'category': '{% if example.position.category %}{{ example.position.category }}&nbsp;&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:category-update' example.position.category.pk %}?next={{request.path}}" title="Edit"><i class="fas fa-edit"></i></a>{% endif %}',
@@ -41,4 +42,17 @@
         'action': '<a class="lakshmi-detail" href="{% url 'shastra_compedium:exampleimage-update' example.pk %}" title="Edit"><i class="fas fa-edit"></i></a>',
       },
   {% endfor %}
+  {% for image in items.images %}
+      {
+        'id': 'image_{{ image.pk}}',
+        'image_only': 1,
+        'image': '<a href="#" data-toggle="modal" data-target="#Modalimage_{{ image.pk }}" data-backdrop="true"><img src="{% thumbnail image 250x250 crop=scale%}" title="image.original_filename"></a>',
+        'action': '<a class="lakshmi-detail" href="{% url 'shastra_compedium:exampleimage-add' image.pk %}" title="Edit"><i class="fas fa-edit"></i></a>',
+      },
+  {% endfor %}
 {% endblock %}
+    {% block row_style %}else if (row.image_only == 1) {
+      return {
+        classes: "lakshmi-table-error"
+      }
+    }{% endblock %}

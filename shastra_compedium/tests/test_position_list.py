@@ -7,7 +7,10 @@ from shastra_compedium.tests.factories import (
     SourceFactory,
     UserFactory
 )
-from shastra_compedium.models import PositionDetail
+from shastra_compedium.models import (
+    Position,
+    PositionDetail,
+)
 from shastra_compedium.tests.functions import (
     login_as,
     set_image
@@ -167,7 +170,7 @@ class TestPositionList(TestCase):
             "position-update",
             urlconf="shastra_compedium.urls",
             args=[self.detail.pk])
-        self.detail.delete()
+        Position.objects.all().delete()
         login_as(self.user, self)
         response = self.client.get(self.url)
         self.assertNotContains(response, ex_url)
@@ -207,6 +210,7 @@ class TestPositionList(TestCase):
         response = self.client.get(self.url)
         thumb_url = get_thumbnailer(img1).get_thumbnail(self.options).url
         self.assertContains(response, thumb_url)
+        self.assertContains(response, "'img_count': '1'")
 
     def test_meaning_w_description_image(self):
         another_detail = PositionDetailFactory(
@@ -223,12 +227,6 @@ class TestPositionList(TestCase):
         example_image.details.add(self.detail)
         login_as(self.user, self)
         response = self.client.get(self.url)
-        print(self.detail.position.name)
-        print(self.detail.contents)
-        print(self.detail.exampleimage_set.first())
-        print(self.detail.exampleimage_set.first().general)
-
-        print(response.content)
         thumb_url = get_thumbnailer(img1).get_thumbnail(self.options).url
         self.assertContains(response, thumb_url)
         self.assertNotContains(response, "No associated description")
