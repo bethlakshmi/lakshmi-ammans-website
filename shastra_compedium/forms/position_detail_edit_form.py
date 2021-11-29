@@ -2,9 +2,7 @@ from django.forms import (
     CharField,
     ChoiceField,
     ModelChoiceField,
-    ModelMultipleChoiceField,
     ModelForm,
-    MultipleHiddenInput,
     NumberInput,
     SelectMultiple,
     Textarea,
@@ -13,22 +11,13 @@ from shastra_compedium.models import (
     Position,
     PositionDetail,
 )
-from dal import autocomplete
+from dal import (
+    autocomplete,
+    forward
+)
 from django_addanother.widgets import AddAnotherEditSelectedWidgetWrapper
+from shastra_compedium.forms.default_form_text import position_detail_help
 from django.urls import reverse_lazy
-
-
-class DependanciesChoiceField(ModelMultipleChoiceField):
-    def label_from_instance(self, obj):
-        return "%s - %s..." % (obj.position.name, obj.contents[3:33])
-
-
-class DescriptionChoiceField(ModelChoiceField):
-    def label_from_instance(self, obj):
-        return "%s - %s - %s..." % (
-            obj.verses(),
-            obj.position.name,
-            obj.contents[3:28])
 
 
 class PositionDetailEditForm(ModelForm):
@@ -50,31 +39,35 @@ class PositionDetailEditForm(ModelForm):
     usage = ChoiceField(choices=(("Meaning", "Meaning"),
                                  ("Posture Description", "Posture Description")
                                  ), required=False)
-    dependencies = DependanciesChoiceField(
-        required=False,
-        queryset=PositionDetail.objects.filter(usage="Posture Description"),
-        )
 
-    description = DescriptionChoiceField(
-        required=False,
-        queryset=PositionDetail.objects.filter(usage="Posture Description"),
-        )
+    def is_valid(self):
+        from shastra_compedium.models import UserMessage
+        valid = super(PositionDetailEditForm, self).is_valid()
 
-    def __init__(self, *args, **kwargs):
-        super(PositionDetailEditForm, self).__init__(*args, **kwargs)
-        if 'instance' in kwargs:
-            detail = kwargs.get('instance')
-            self.fields[
-                'description'].queryset = PositionDetail.objects.filter(
-                    usage="Posture Description",
-                    position=detail.position,
-                    sources__in=detail.sources.all(),
-                    )
-            self.fields[
-                'dependencies'].queryset = PositionDetail.objects.filter(
-                    usage="Posture Description",
-                    sources__in=detail.sources.all(),
-                    ).exclude(position=detail.position)
+        if valid:
+            if self.cleaned_data['description'] and self.cleaned_data[
+                    'description'].sources.filter(
+                        id__in=self.cleaned_data['sources']).count() == 0:
+                self._errors[
+                    'description'] = UserMessage.objects.get_or_create(
+                        view=self.__class__.__name__,
+                        code="MUST_HAVE_SAME_SOURCE",
+                        defaults={
+                            'summary': "Must Have the Same Source",
+                            'description': position_detail_help['same_source']
+                            })[0].description
+                valid = False
+            if self.cleaned_data['dependencies']:
+                errors = []
+                for dependancy in self.cleaned_data['dependencies']:
+                    if dependancy.sources.filter(id__in=self.cleaned_data[
+                            'sources']).count() == 0:
+                        errors += [position_detail_help[
+                            'same_source2'] % str(dependancy)]
+                        valid = False
+                if len(errors) > 0:
+                    self._errors['dependencies'] = errors
+        return valid
 
     class Meta:
         model = PositionDetail
@@ -93,4 +86,16 @@ class PositionDetailEditForm(ModelForm):
             'chapter': NumberInput(attrs={'style': 'width: 40px'}),
             'verse_start': NumberInput(attrs={'style': 'width: 55px'}),
             'verse_end': NumberInput(attrs={'style': 'width: 55px'}),
-            'sources': SelectMultiple(attrs={'style': 'width: 500px'})}
+            'sources': SelectMultiple(attrs={'style': 'width: 500px'}),
+            'description': autocomplete.ModelSelect2(
+                url='positiondetail-autocomplete',
+                forward=('sources',
+                         forward.Field('position', 'position_only'),
+                         'id',
+                         forward.Const('Posture Description', 'usage'))),
+            'dependencies': autocomplete.ModelSelect2Multiple(
+                attrs={'style': 'width: 100%'},
+                url='positiondetail-autocomplete',
+                forward=('sources',
+                         'position',
+                         forward.Const('Posture Description', 'usage')))}

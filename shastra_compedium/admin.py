@@ -36,8 +36,13 @@ class PositionDetailAdmin(admin.ModelAdmin):
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name',
+    list_display = ('id',
+                    'name',
+                    'summary',
                     'description')
+    list_editable = ('name',
+                     'summary',
+                     'description')
 
 
 class CategoryDetailAdmin(admin.ModelAdmin):

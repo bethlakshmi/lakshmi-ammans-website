@@ -58,6 +58,7 @@ class Source(Model):
 
 class Category(Model):
     name = CharField(max_length=128, unique=True)
+    summary = CharField(max_length=128, blank=True)
     description = TextField(blank=True)
 
     def __str__(self):
@@ -74,15 +75,18 @@ class Position(Model):
                           related_name='positions',
                           blank=True,
                           null=True)
-    name = CharField(max_length=128, unique=True)
+    name = CharField(max_length=128)
     order = IntegerField()
 
     def __str__(self):
-        return self.name
+        if self.category:
+            return "%s, %s" % (self.name, self.category.name)
+        else:
+            return "%s, No Category" % self.name
 
     class Meta:
         app_label = "shastra_compedium"
-        unique_together = [('category', 'order'), ('name', 'order')]
+        unique_together = [('category', 'order'), ('name', 'category')]
         ordering = ['category', 'order']
 
     def save(self, *args, **kwargs):
@@ -128,11 +132,14 @@ class PositionDetail(Detail):
                              related_name='meaning')
     dependencies = ManyToManyField('PositionDetail', blank=True)
 
+    def __str__(self):
+        return "%s - %s - %s..." % (
+            self.position.name,
+            self.verses(),
+            self.contents[3:28])
+
     def detail_images(self):
         return self.exampleimage_set.filter(general=False)
-
-    def __str__(self):
-        return "%s - %s" % (self.position, self.usage)
 
     class Meta:
         app_label = "shastra_compedium"

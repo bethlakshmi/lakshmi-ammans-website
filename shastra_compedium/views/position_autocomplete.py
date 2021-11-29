@@ -10,6 +10,6 @@ class PositionAutocomplete(autocomplete.Select2QuerySetView):
         qs = Position.objects.all().order_by('name')
 
         if self.q:
-            qs = qs.filter(name__istartswith=self.q).order_by('name')
+            qs = qs.filter(name__icontains=self.q).order_by('name')
 
         return qs

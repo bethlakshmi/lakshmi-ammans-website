@@ -29,8 +29,9 @@ class TestMakePosition(TestCase):
         login_as(user, self)
 
     def position_data(self):
+        self.category = CategoryFactory()
         return {'name': "New Name",
-                'category': CategoryFactory().pk,
+                'category': self.category.pk,
                 'order': 0}
 
     def test_create_get(self):
@@ -92,7 +93,8 @@ class TestMakePosition(TestCase):
                                     follow=True)
         self.assertContains(
             response,
-            make_position_messages['edit_success'] % "New Name")
+            make_position_messages['edit_success'] % "%s, %s" % (
+                "New Name", self.category.name))
         self.assertEqual(start, Position.objects.all().count())
 
     def test_edit_bad_data(self):
