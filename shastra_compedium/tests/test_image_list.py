@@ -47,6 +47,10 @@ class TestImageList(TestCase):
         self.img2 = set_image(folder_name="PositionImageUploads")
         response = self.client.get(self.url)
         self.assertContains(response, self.img2.url)
+        self.assertContains(response, reverse(
+            "exampleimage-add",
+            urlconf="shastra_compedium.urls",
+            args=[self.img2.pk]))
 
     def test_list_empty(self):
         ex_url = reverse(

@@ -23,6 +23,7 @@ class ExampleImageUpdate(LoginRequiredMixin,
     intro_message = make_example_image_messages['edit_intro']
     form_class = ImageForm
 
+
 class ExampleImageCreate(LoginRequiredMixin,
                          CreatePopupMixin,
                          ShastraFormMixin,

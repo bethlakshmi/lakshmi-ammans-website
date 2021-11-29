@@ -1,5 +1,6 @@
 from django.forms import (
     CheckboxSelectMultiple,
+    HiddenInput,
     ModelChoiceField,
     ModelForm,
 )
@@ -105,7 +106,7 @@ class ImageForm(ModelForm):
                     position=kwargs.get('instance').position)
         elif 'initial' in kwargs and 'image' in kwargs['initial']:
             self.fields['image'].queryset = Image.objects.filter(
-                pk=kwargs.get('initial').get('image').pk)  
+                pk=kwargs.get('initial').get('image').pk)
 
     def clean_details(self):
         real_details = []
