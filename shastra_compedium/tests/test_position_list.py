@@ -184,6 +184,17 @@ class TestPositionList(TestCase):
         thumb_url = get_thumbnailer(img1).get_thumbnail(self.options).url
         self.assertContains(response, thumb_url)
 
+    def test_main_image_w_existing_detail(self):
+        img1 = set_image()
+        example_image = ExampleImageFactory(
+            image=img1,
+            general=True,
+            position=self.detail.position)
+        login_as(self.user, self)
+        response = self.client.get(self.url)
+        thumb_url = get_thumbnailer(img1).get_thumbnail(self.options).url
+        self.assertContains(response, thumb_url)
+
     def test_posture_image(self):
         another_detail = PositionDetailFactory(
             position=self.detail.position,
