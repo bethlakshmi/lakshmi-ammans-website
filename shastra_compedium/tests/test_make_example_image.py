@@ -133,15 +133,6 @@ class TestMakeExampleImage(TestCase):
                 reverse('image_list', urlconf="shastra_compedium.urls"),
                 last_pk+1))
 
-    def test_create_get(self):
-        response = self.client.get(self.create_url)
-        self.assertContains(response, 'Create Example Image')
-        self.assertContains(response,
-                            make_example_image_messages['create_intro'])
-        self.assertContains(response, "Main Image?")
-        thumb_url = get_thumbnailer(self.img1).get_thumbnail(self.options).url
-        self.assertContains(response, thumb_url)
-
     def test_create_post_error(self):
         from shastra_compedium.forms.default_form_text import item_image_help
         data = self.example_image_data()
