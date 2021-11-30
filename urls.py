@@ -5,6 +5,7 @@ import aldryn_addons.urls
 from shastra_compedium.views import (
     CategoryAutocomplete,
     PositionAutocomplete,
+    PositionDetailAutocomplete,
 )
 
 
@@ -14,6 +15,11 @@ urlpatterns = [
         r'^category-autocomplete/$',
         CategoryAutocomplete.as_view(),
         name='category-autocomplete',
+    ),
+    url(
+        r'^positiondetail-autocomplete/$',
+        PositionDetailAutocomplete.as_view(),
+        name='positiondetail-autocomplete',
     ),
     url(
         r'^position-autocomplete/$',

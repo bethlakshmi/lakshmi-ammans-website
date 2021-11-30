@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.test import Client
 from shastra_compedium.tests.factories import (
     CategoryFactory,
+    CategoryDetailFactory,
     PositionFactory,
     SourceFactory,
     UserFactory,
@@ -50,8 +51,8 @@ class TestUploadChapter(TestCase):
                 '0-chapter': 1,
                 '0-verse_start': 10,
                 '0-verse_end': 20,
-                '0-posture': "Posture text",
-                '0-contents': "Meaning text",
+                '0-contents': "Posture text",
+                '0-meaning': "Meaning text",
                 'step': 1,
                 'num_rows': 1,
                 'finish': True}
@@ -63,6 +64,19 @@ class TestUploadChapter(TestCase):
             response,
             user_messages['CHAPTER_BASICS_INTRO']['description'])
         self.assertContains(response, "Sources")
+
+    def test_add_more_get(self):
+        chapter = CategoryDetailFactory()
+        self.create_url = reverse('chapter-additional',
+                                  urlconf='shastra_compedium.urls',
+                                  args=[chapter.pk])
+        response = self.client.get(self.create_url, follow=True)
+        self.assertContains(response, "Upload Chapter")
+        self.assertContains(
+            response,
+            user_messages['CHAPTER_BASICS_INTRO']['description'])
+        self.assertContains(response, "Sources")
+        self.assertContains(response, chapter.contents)
 
     def test_create_post_basics_success(self):
         start = CategoryDetail.objects.all().count()
@@ -83,23 +97,23 @@ class TestUploadChapter(TestCase):
             html=True)
         self.assertContains(
             response,
-            '<textarea name="0-posture" cols="40" rows="10" class="' +
-            'admin-tiny-mce" id="id_0-posture">\nDescription One</textarea>',
-            html=True)
-        self.assertContains(
-            response,
             '<textarea name="0-contents" cols="40" rows="10" class="' +
-            'admin-tiny-mce" id="id_0-contents">\nMeaning One</textarea>',
+            'admin-tiny-mce" id="id_0-contents">\nDescription One</textarea>',
             html=True)
         self.assertContains(
             response,
-            '<textarea name="1-posture" cols="40" rows="10" class="' +
-            'admin-tiny-mce" id="id_1-posture">\nDescription Two</textarea>',
+            '<textarea name="0-meaning" cols="40" rows="10" class="' +
+            'admin-tiny-mce" id="id_0-meaning">\nMeaning One</textarea>',
             html=True)
         self.assertContains(
             response,
             '<textarea name="1-contents" cols="40" rows="10" class="' +
-            'admin-tiny-mce" id="id_1-contents">\nMeaning Two</textarea>',
+            'admin-tiny-mce" id="id_1-contents">\nDescription Two</textarea>',
+            html=True)
+        self.assertContains(
+            response,
+            '<textarea name="1-meaning" cols="40" rows="10" class="' +
+            'admin-tiny-mce" id="id_1-meaning">\nMeaning Two</textarea>',
             html=True)
         self.assertContains(
             response,
@@ -171,6 +185,38 @@ class TestUploadChapter(TestCase):
                 str([self.position.pk, self.position.pk])))
         self.assertContains(response, "Uploaded 2 position details.")
         self.assertEqual(start + 2, PositionDetail.objects.all().count())
+
+    def test_create_post_positions_to_existing_chapter(self):
+        chapter = CategoryDetailFactory()
+        self.create_url = reverse('chapter-additional',
+                                  urlconf='shastra_compedium.urls',
+                                  args=[chapter.pk])
+        start = PositionDetail.objects.all().count()
+        response = self.client.post(self.create_url,
+                                    data=self.position_data(),
+                                    follow=True)
+        self.assertRedirects(
+            response,
+            "%s?changed_ids=%s&obj_type=Position" % (
+                reverse("position_list", urlconf='shastra_compedium.urls'),
+                str([self.position.pk, self.position.pk])))
+        self.assertContains(response, "Uploaded 2 position details.")
+        self.assertEqual(start + 2, PositionDetail.objects.all().count())
+
+    def test_create_post_only_meaning(self):
+        start = PositionDetail.objects.all().count()
+        pos_data = self.position_data()
+        del pos_data['0-contents']
+        response = self.client.post(self.create_url,
+                                    data=pos_data,
+                                    follow=True)
+        self.assertRedirects(
+            response,
+            "%s?changed_ids=%s&obj_type=Position" % (
+                reverse("position_list", urlconf='shastra_compedium.urls'),
+                str([self.position.pk])))
+        self.assertContains(response, "Uploaded 1 position details.")
+        self.assertEqual(start + 1, PositionDetail.objects.all().count())
 
     def test_create_post_positions_format_fail(self):
         data = self.position_data()

@@ -3,11 +3,15 @@ from shastra_compedium.forms import (
     ChapterDetailMapping,
     PositionDetailForm,
 )
-from shastra_compedium.models import CategoryDetail
+from shastra_compedium.models import (
+    CategoryDetail,
+    PositionDetail,
+)
 from shastra_compedium.views import GenericWizard
 import re
 from django.urls import reverse
 from django.contrib import messages
+from django.shortcuts import get_object_or_404
 
 
 class UploadChapter(GenericWizard):
@@ -34,6 +38,13 @@ class UploadChapter(GenericWizard):
     header = None
     changed_ids = []
 
+    def groundwork(self, request, args, kwargs):
+        redirect = super(UploadChapter, self).groundwork(request, args, kwargs)
+        self.category = None
+        if "category_id" in kwargs:
+            category_id = kwargs.get("category_id")
+            self.category = get_object_or_404(CategoryDetail, id=category_id)
+
     def finish_valid_form(self, request):
         self.changed_ids = []
         if self.forms[0].__class__.__name__ == "ChapterForm":
@@ -55,28 +66,33 @@ class UploadChapter(GenericWizard):
                     '\n',
                     ' ').replace('\r', '').split('(Uses)')
                 if len(match_text) > 1:
-                    chapter_pos['posture'] = match_text[0].strip()
-                    chapter_pos['contents'] = match_text[1].strip()
+                    chapter_pos['contents'] = match_text[0].strip()
+                    chapter_pos['meaning'] = match_text[1].strip()
                 else:
-                    chapter_pos['contents'] = chapter_pos['text'].strip()
+                    chapter_pos['meaning'] = chapter_pos['text'].strip()
                 chapter_pos['chapter'] = self.chapter.chapter
                 chapter_pos['sources'] = self.chapter.sources.all(
                     ).values_list('pk', flat=True)
-                chapter_pos['usage'] = "Meaning"
+                chapter_pos['usage'] = "Posture Description"
                 self.chapter_positions += [chapter_pos]
         else:
             self.num_created = 0
             for form in self.forms[1:]:
                 if form.cleaned_data['position']:
                     position_detail = form.save(commit=False)
+                    posture_pk = None
                     if len(form.cleaned_data['contents'].strip()) > 0:
                         position_detail = form.save()
                         self.num_created = self.num_created + 1
                         self.changed_ids += [position_detail.position.pk]
-                    if len(form.cleaned_data['posture']) > 0:
+                        posture_pk = position_detail.pk
+                    if len(form.cleaned_data['meaning']) > 0:
                         position_detail.pk = None
-                        position_detail.contents = form.cleaned_data['posture']
-                        position_detail.usage = "Posture Description"
+                        position_detail.contents = form.cleaned_data['meaning']
+                        position_detail.usage = "Meaning"
+                        if posture_pk is not None:
+                            position_detail.description = PositionDetail.objects.get(
+                                pk=posture_pk)
                         position_detail.save()
                         form.save_m2m()
                         self.num_created = self.num_created + 1
@@ -98,8 +114,8 @@ class UploadChapter(GenericWizard):
                 str(self.changed_ids))
         return return_url
 
-    def make_context(self, request):
-        context = super(UploadChapter, self).make_context(request)
+    def make_context(self, request, valid=True):
+        context = super(UploadChapter, self).make_context(request, valid)
         if str(self.forms[0].__class__.__name__) == "ChapterDetailMapping":
             context['special_handling'] = True
             context['tiny_mce_width'] = 400
@@ -108,7 +124,7 @@ class UploadChapter(GenericWizard):
     def setup_forms(self, form, request=None):
         if request:
             if str(form().__class__.__name__) == "ChapterForm":
-                return [form(request.POST)]
+                return [form(request.POST, instance=self.category)]
             else:
                 if 'num_rows' not in request.POST.keys():
                     return []
@@ -122,7 +138,7 @@ class UploadChapter(GenericWizard):
                 return forms
         else:
             if str(form().__class__.__name__) == "ChapterForm":
-                return [form()]
+                return [form(instance=self.category)]
             else:
                 # set up the choice form based on number of columns.
                 forms = [ChapterDetailMapping(initial={

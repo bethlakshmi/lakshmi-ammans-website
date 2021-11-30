@@ -1,6 +1,19 @@
 {% extends 'shastra_compedium/generic_list.tmpl' %}
+{% load thumbnail %}
 {% block control_buttons %}
- <a href="{% url 'shastra_compedium:chapter-add' %}" role="button" class="btn lakshmi-btn-primary">Add a Chapter</a>&nbsp;
+  {% for position,details in items.items %}
+    {% for source,verses in details.sources.items %}
+        {% include "shastra_compedium/detail_modal.tmpl"%}
+    {% endfor %}
+  {% endfor %}
+{% endblock %}
+{% block extra_text %}<div class="px-2">
+Original Source Abbreviations:
+<ul>
+  {% for shastra in shastras %}
+  <li>{{ shastra.initials }} - {{ shastra.title }}, by {{ shastra.author }}</li>
+  {% endfor %}
+</ul></div>
 {% endblock %}
 {% block table_header %}
     <tr>
@@ -8,8 +21,7 @@
           <th data-field="category" data-sortable="true">Category</th>
           <th data-field="order" data-sortable="true">Order</th>
     {% for source in sources %}
-          <th data-field="{{source.pk}}_Posture Description" data-sortable="false">{{source.title}}<br>{{source.translator}}<br>Description</th>
-          <th data-field="{{source.pk}}_Meaning" data-sortable="false">{{source.title}}<br>{{source.translator}}<br>Meaning</th>
+          <th data-field="{{source.pk}}" data-sortable="false"><span title="{{source.title}} - {{source.translator}}">{{source.shastra.initials}}<br>{{source.short_form|safe}}</span></th>
     {% endfor %}
           <th data-field="action">Action</th>
       </tr>
@@ -26,18 +38,32 @@
         }
       }
 {% endblock %}
+{% block details %}
+    var html = []
+    html.push('<div class="row"><div class="col-12 py-2">')
+    html.push('<a href="' + row.edit_url + '" class="btn lakshmi-btn-primary">Edit Details for ' + row.position + '</a>')
+    html.push('</div></div>')
+    html.push('<div class="row">')
+    html.push(row.images)
+    html.push('</div>')
+    html.push('<div class="row">')
+    html.push('<div class="col-12"><table class="table lakshmi-table"><thead class="thead-dark"><tr><th>Source</th><th>Posture Description</th><th>Meaning</th></tr></thead><tbody>' + row.details + '</tbody></table></div>')
+    html.push('</div>')
+    return html.join('')
+{% endblock %}
 {% block item_data %}
   {% for position,details in items.items %}
       {
+        'edit_url': '{% url 'shastra_compedium:position-detail-update' position.id %}?next={{request.path}}',
         'id': {{ position.pk}},
         'position': '{{ position.name }}',
         'category': '{% if position.category %}{{ position.category }}&nbsp;&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:category-update' position.category.pk %}?next={{request.path}}" title="Edit"><i class="fas fa-edit"></i></a>{% endif %}',
         'order': '{{ position.order }}',
-    {% for source,verses in details.items %}
-      {% for usage,detail in verses.items %}
-        '{{source.pk}}_{{usage}}': '{{ detail.contents|escapejs|safe }}',
-      {% endfor %}
+    {% for source,verses in details.sources.items %}
+        '{{source.pk}}': '<a class="lakshmi-text-success" href="#" data-toggle="modal" data-target="#Modal{{source.pk}}_{{ position.pk }}" data-backdrop="true" ><i class="far fa-check-square fa-2x"></i></a>',
     {% endfor %}
+        'details': '{% for source,verses in details.sources.items %}<tr><td class="align-top" rowspan="{{verses.num_details}}">{{ source.title }} ({{source.shastra.initials}}) - {{source.translator}}</td>{% for detail in verses.PostureDescription %}{% if not forloop.first %}<tr>{% endif %}<td class="align-top">{% include "shastra_compedium/image_overlay.tmpl" with images=detail.detail_images extra="col-6 float-left"%}<b>{{detail.verses}}:</b>  {{detail.contents|escapejs|safe}}</td><td class="align-top">{% for meaning in detail.meaning.all %}{% include "shastra_compedium/image_overlay.tmpl" with images=meaning.detail_images extra="col-6 float-left"%}<b>{{meaning.verses}}:</b>  {{meaning.contents|escapejs|safe}}<br>{% empty %}<i>No associated meanings</i>{% endfor %}</td></tr>{% endfor %}{% if verses.Meaning|length > 0 %}<tr><td class="align-top"><i>No associated description</i></td><td class="align-top">{% for detail in verses.Meaning %}{% include "shastra_compedium/image_overlay.tmpl" with images=detail.detail_images extra="col-6 float-left"%}<b>{{detail.verses}}:</b>  {{detail.contents|escapejs|safe}}{% endfor %}</td></tr>{% endif %}{% endfor %}',
+        'images': '{% include "shastra_compedium/image_overlay.tmpl" with images=details.images extra="col-sm-4 col-lg-3" %}',
         'action': '<a class="lakshmi-detail" href="{% url 'shastra_compedium:position-update' position.pk %}" title="Edit"><i class="fas fa-edit"></i></a>',
       },
   {% endfor %}

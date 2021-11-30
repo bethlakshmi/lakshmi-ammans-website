@@ -11,6 +11,8 @@
     <script type="text/javascript" src="/static/tinymce/tinymce.min.js"></script>
     <script>{% include "tiny-mce-admin-settings.tmpl" %}</script>
 {% endblock %}
+{% block layout %}
+   <div>{% endblock %}
 {% block content %}
 <h2 class="lakshmi-title">{{title}}</h2>
 <h3 class="lakshmi-subtitle">{{subtitle}}</h3>
@@ -22,23 +24,28 @@
        {% block special_handling_form %}
        {% endblock %}
     {% endif %}
+    {{step_form}}
   </div></div>
 <div class="row">
     <div class="col-sm-12 {% if add %}col-md-3 col-lg-5{% else %}col-md-6 col-lg-7{% endif %} text-right"><i>Cancel will only affect the current screen.</i></div>
 
   <div class="col-sm-12 col-md-6 {% if add %}col-md-9 col-lg-7{% else %}col-md-6 col-lg-5{% endif %}">
-    {% if not first %}<input type="submit" name="back" value="<< Back" class="btn btn-lakshmi-secondary" >{% endif %}
+    {% block buttons %}
     {% if not last %}<input type="submit" name="next" value="Save & Continue >>" class="btn lakshmi-btn-primary" >{% endif %}
     {% if add %}<input type="submit" name="add" value="Add Text" class="btn lakshmi-btn-primary" > <input type="submit" name="redirect" value="Proceed to Images >>" class="btn lakshmi-btn-primary" >{% endif %}
     {% if show_finish %}
     <input type="submit" name="finish" value="Finish" class="btn lakshmi-btn-primary" >{% endif %}
     <input type="submit" name="cancel" value="Cancel" class="btn lakshmi-btn-light" formnovalidate>
+    {% endblock %}
   </div>
 </div>
 </form>
 {% addtoblock "js" %}
 <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
 {% for form in forms %}
+{{ form.media }}
+{% endfor %}
+{% for form in formset %}
 {{ form.media }}
 {% endfor %}
 <script>

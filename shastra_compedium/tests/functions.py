@@ -11,8 +11,21 @@ def login_as(user, testcase):
                           email=user.email,
                           password='foo')
 
-'''
-def set_image(itemimage=None, folder_name=None):
+
+def assert_option_state(testcase, response, value, text, selected=False):
+    selected_state = ""
+    if selected:
+        selected_state = " selected"
+    option_state = (
+        '<option value="%s"%s>%s</option>' % (
+                    value, selected_state, text))
+    testcase.assertContains(
+        response,
+        option_state,
+        html=True)
+
+
+def set_image(folder_name=None):
     folder = None
     if User.objects.filter(username='superuser_for_test').exists():
         superuser = User.objects.get(username='superuser_for_test')
@@ -24,25 +37,12 @@ def set_image(itemimage=None, folder_name=None):
     if folder_name:
         folder, created = Folder.objects.get_or_create(
             name=folder_name)
-    path = "inventory/tests/made_up_filename.png"
+
+    path = "shastra_compedium/tests/made_up_filename.png"
     current_img = Image.objects.create(
         folder=folder,
         owner=superuser,
         original_filename="made_up_filename.png",
         file=File(open(path, 'rb')))
     current_img.save()
-    if itemimage:
-        itemimage.filer_image_id = current_img.pk
-        itemimage.save()
     return current_img
-
-
-def assert_option_state(response, value, text, selected=False):
-    selected_state = ""
-    if selected:
-        selected_state = " selected"
-    option_state = (
-        '<option value="%s"%s>%s</option>' % (
-                    value, selected_state, text))
-    assert bytes(option_state, 'utf-8') in response.content
-'''

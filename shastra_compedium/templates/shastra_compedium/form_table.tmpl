@@ -14,7 +14,10 @@
   {% if form.errors %}
     <p class="lakshmi-form-error"> There is an error on the form.</p>
   {% endif %}
-  {{ form.non_field_errors }}</font>
+  {{ form.non_field_errors }}
+    {% for hidden in form.hidden_fields %}
+    {{ hidden.errors }}
+    {% endfor %}</font>
 
     {# Include the visible fields #}
     {% for field in form.visible_fields %}

@@ -4,6 +4,27 @@ make_category_messages = {
     'create_intro':  "Use this form to create a new category.",
     'edit_intro':  "Use this form to update this category.",
 }
+make_performer_messages = {
+    'create_success':  "A new performer has been created.  Name: %s",
+    'edit_success':  "The %s performer has been updated.",
+    'create_intro':  "Use this form to create a new performer.",
+    'edit_intro':  "Use this form to update this performer.",
+}
+make_dance_style_messages = {
+    'create_success':  "A new style of dance has been created.  Name: %s",
+    'edit_success':  "The %s style has been updated.",
+    'create_intro':  "Use this form to create a new dance style.",
+    'edit_intro':  "Use this form to update this style.",
+}
+make_example_image_messages = {
+    'create_success':  "A new example image has been created.  %s",
+    'edit_success':  '''The %s has been updated.''',
+    'create_intro':  '''Use this form to create a new example image based
+    on existing uploaded images.  Be sure to select at lease one - Main Image
+    or at least one detail.''',
+    'edit_intro':  '''Use this form to update this example image.   Be sure
+    to select at lease one - Main Image or at least one detail.''',
+}
 make_category_detail_messages = {
     'edit_success':  "The %s chapter has been updated.",
     'edit_intro':  "Use this form to update this chapter.",
@@ -26,13 +47,18 @@ make_position_messages = {
     'create_intro':  "Use this form to create a new position.",
     'edit_intro':  "Use this form to update this position.",
 }
+edit_post_detail_messages = {
+    'intro': 'Edit any of these position details and press "Submit".'
+}
 user_messages = {
     'CHAPTER_BASICS_INTRO': {
         'summary': 'Introduction on first page of upload',
         'description': '''Use this form to upload text for a chapter.
     Each detail should be separated by a '|||'.  Verse numbers, if present,
     should be at the start of a detail, and should be in Arabic numerals as
-    either # or #-#.  For text pertaining to the chapter - paste it in the
+    either # or #-#.  To separate the posture from the meaning, put a "(Uses)"
+    in the format "posture (Uses) meaning".  For text pertaining to the
+    chapter - paste it in the
     'contents' field below.'''},
     'CHAPTER_DETAIL_INTRO': {
         'summary': 'Introduction on second page of upload',

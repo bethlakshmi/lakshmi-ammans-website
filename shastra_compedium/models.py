@@ -1,4 +1,5 @@
 from django.db.models import (
+    BooleanField,
     CASCADE,
     CharField,
     DateTimeField,
@@ -25,6 +26,7 @@ class Shastra(Model):
     min_age = IntegerField()
     max_age = IntegerField()
     description = TextField()
+    initials = CharField(max_length=128, blank=True)
 
     def __str__(self):
         return self.title
@@ -36,6 +38,7 @@ class Shastra(Model):
 
 class Source(Model):
     title = CharField(max_length=128, unique=True)
+    short_form = CharField(max_length=128, blank=True)
     shastra = ForeignKey(Shastra,
                          on_delete=CASCADE,
                          related_name='sources')
@@ -55,6 +58,7 @@ class Source(Model):
 
 class Category(Model):
     name = CharField(max_length=128, unique=True)
+    summary = CharField(max_length=128, blank=True)
     description = TextField(blank=True)
 
     def __str__(self):
@@ -71,15 +75,18 @@ class Position(Model):
                           related_name='positions',
                           blank=True,
                           null=True)
-    name = CharField(max_length=128, unique=True)
+    name = CharField(max_length=128)
     order = IntegerField()
 
     def __str__(self):
-        return self.name
+        if self.category:
+            return "%s, %s" % (self.name, self.category.name)
+        else:
+            return "%s, No Category" % self.name
 
     class Meta:
         app_label = "shastra_compedium"
-        unique_together = [('category', 'order'), ('name', 'order')]
+        unique_together = [('category', 'order'), ('name', 'category')]
         ordering = ['category', 'order']
 
     def save(self, *args, **kwargs):
@@ -97,6 +104,18 @@ class Detail(Model):
     verse_start = IntegerField(blank=True, null=True)
     verse_end = IntegerField(blank=True, null=True)
 
+    def verses(self):
+        return_val = ""
+        if self.chapter is not None:
+            return_val = str(self.chapter)
+        if self.verse_start is not None:
+            return_val = "%s:%d" % (return_val, self.verse_start)
+        if self.verse_end is not None:
+            return_val = "%s-%d" % (return_val, self.verse_end)
+        if len(return_val) == 0:
+            return_val = "No verse annotation"
+        return return_val
+
     class Meta:
         app_label = "shastra_compedium"
         abstract = True
@@ -106,6 +125,21 @@ class PositionDetail(Detail):
     position = ForeignKey(Position,
                           on_delete=CASCADE,
                           related_name='details')
+    description = ForeignKey('PositionDetail',
+                             on_delete=SET_NULL,
+                             blank=True,
+                             null=True,
+                             related_name='meaning')
+    dependencies = ManyToManyField('PositionDetail', blank=True)
+
+    def __str__(self):
+        return "%s - %s - %s..." % (
+            self.position.name,
+            self.verses(),
+            self.contents[3:28])
+
+    def detail_images(self):
+        return self.exampleimage_set.filter(general=False)
 
     class Meta:
         app_label = "shastra_compedium"
@@ -170,6 +204,9 @@ class Performer(Model):
     contact = OneToOneField(User, on_delete=SET_NULL, blank=True, null=True)
     image = FilerImageField(on_delete=CASCADE, null=True)
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         app_label = "shastra_compedium"
 
@@ -177,6 +214,7 @@ class Performer(Model):
 class Example(Model):
     position = ForeignKey(Position, on_delete=CASCADE)
     details = ManyToManyField(PositionDetail)
+    general = BooleanField(default=False)
     dance_style = ForeignKey(DanceStyle, on_delete=CASCADE)
     performer = ForeignKey(Performer,
                            on_delete=SET_NULL,
@@ -190,11 +228,19 @@ class Example(Model):
         abstract = True
         app_label = "shastra_compedium"
 
+    def save(self, *args, **kwargs):
+        super(Example, self).save(*args, **kwargs)
+        for detail in self.details.exclude(position=self.position):
+            self.details.remove(detail)
+
 
 class ExampleImage(Example):
     image = FilerImageField(
         on_delete=CASCADE,
         null=True)
+
+    def __str__(self):
+        return "Image %s, for Position %s," % (self.image, self.position.name)
 
     class Meta:
         app_label = "shastra_compedium"

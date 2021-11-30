@@ -22,7 +22,6 @@ class ChapterFormBasics(ModelForm):
         label="Chapter Intro",
         help_text='Source text for this chapter.',
         initial=" ")
-    chapter = IntegerField(required=True)
 
     class Meta:
         model = CategoryDetail
