@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static sekizai_tags thumbnail %}
+{% block title %}
+   {{ object.name }}
+{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.css">
+{% endblock %}
+
+{% block content %}
+<h2 class="lakshmi-title">{{object.name}}</h2>
+<h3 class="lakshmi-subtitle">{{object.category.name}} - {{object.category.summary}}</h3>
+<div class="container">
+  <div class="row">
+    <div class="col-2">Source</div>
+    <div class="col-3">Image</div>
+    <div class="col-3">Posture Description</div>
+    <div class="col-4">Meaning</div>
+  </div>
+{% for source,verses in object.independant_details_by_source.items %}
+  <div class="row">
+    <div class="col-2">
+        <b>{{source.shastra.age_range}}</b><br>
+        {{ source.title }} ({{source.shastra.initials}}) - {{source.translator}}</div>
+      {% for detail in verses.PostureDescription %}
+        {% if not forloop.first %}<div class="col-2">&nbsp;</div>{% endif %}
+        <div class="col-3">
+          {% for image in detail.exampleimage_set.all %}
+            <div class="image-display"><a href="#"><img src="{% thumbnail image.image 350x350 crop=scale%}" title="{{image.position.name}}"></a><div class="overlay"><div class="icons"><a class="preview lightbox" href="{{image.image.url}}" data-toggle="tooltip" title="View"><i class="far fa-eye"></i></a><a class="link" href="{% url 'shastra_compedium:exampleimage-update' image.pk %}" data-toggle="tooltip" title="Edit"><i class="far fa-edit"></i></a></div></div></div>
+          {% endfor %}
+        </div>
+        <div class="col-3"><b>{{detail.verses}}:</b>  {{detail.contents|safe}}</div>
+        <div class="col-4">{% for meaning in detail.meaning.all %}<b>{{meaning.verses}}:</b>  {{meaning.contents|safe}}<br>{% empty %}<i>No associated meanings</i>{% endfor %}</div>    
+      {% endfor %}
+      {% if verses.Meaning|length > 0 %}
+      <div class="col-3">&nbsp;</div>
+      <div class="col-3"><i>No associated description</i></div>
+      <div class="col-4">
+        {% for detail in verses.Meaning %}<b>{{detail.verses}}:</b>
+        {{detail.contents|safe}}{% endfor %}</div>
+      {% endif %}
+  </div>
+{% endfor %}
+</div>
+{% endblock content %}

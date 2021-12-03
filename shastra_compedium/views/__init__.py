@@ -1,6 +1,7 @@
 from .category_autocomplete import CategoryAutocomplete
 from .positiondetail_autocomplete import PositionDetailAutocomplete
 from .position_autocomplete import PositionAutocomplete
+from .position_view import PositionView
 from .generic_wizard import GenericWizard
 from .generic_list import GenericList
 from .shastra_form_mixin import ShastraFormMixin
