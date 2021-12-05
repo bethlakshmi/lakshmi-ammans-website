@@ -105,6 +105,9 @@ class Position(Model):
         else:
             return "%s, No Category" % self.name
 
+    def main_images(self):
+        return self.exampleimage_set.filter(general=True)
+
     def independant_details_by_source(self):
         # returns only the details w/out description
         # uses the format of source --> usage -> details 
