@@ -197,9 +197,6 @@ span.dropt span:hover {
 .image-display:hover .link {
   left: 50%;
 }
-.image-display .text:hover {
-    color: rgba(233,30,99,1);
-}
 .image-display:hover .text {
   left: 50%;
 }
@@ -213,6 +210,9 @@ span.dropt span:hover {
   -o-transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1) 0s;
   transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1) 0s;
 }
+.image-display .text a {
+    text-decoration: none;
+}
 .image-display .text i{
   color: rgba(255,255,255,1);
   font-size: 12px;
@@ -221,4 +221,7 @@ span.dropt span:hover {
   -moz-transition: all 0.2s linear;
   -o-transition: all 0.2s linear;
   transition: all 0.2s linear;
+}
+.image-display .text a:hover i {
+    color: rgba(233,30,99,1);
 }

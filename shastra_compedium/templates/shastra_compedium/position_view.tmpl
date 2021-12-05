@@ -24,7 +24,10 @@
         <a class="preview lightbox" href="{{image.image.url}}" data-toggle="tooltip" title="View"><i class="far fa-eye"></i></a>
       </div>
       <div class="text">
-          <i>{{ image.dance_style.name }}&nbsp;&nbsp;<i class="fas fa-link"></i><br>{{ image.performer.name }}&nbsp;&nbsp;<i class="fas fa-link"></i></i></div></div>
+          <a href="/stuff"><i>{{ image.dance_style.name }}</i>&nbsp;
+            <i class="fas fa-link"></i></a><br>
+          <a href="/stuff"><i>{{ image.performer.name }}</i>&nbsp;
+            <i class="fas fa-link"></i></i></a></div></div>
     </div>
   </div>
 {% endfor %}
@@ -39,7 +42,10 @@
         <div class="col-3">
           {% for image in detail.exampleimage_set.all %}
             <div class="col-12 my-2 mx-4 p-0"><div class="image-display"><a href="#"><img src="{% thumbnail image.image 350x350 crop=scale%}" title="{{image.position.name}}"></a><div class="overlay"><div class="icons"><a class="preview lightbox" href="{{image.image.url}}" data-toggle="tooltip" title="View"><i class="far fa-eye"></i></a></div>
-            <div class="text"><i>{{ image.dance_style.name }}&nbsp;&nbsp;<i class="fas fa-link"></i><br>{{ image.performer.name }}&nbsp;&nbsp;<i class="fas fa-link"></i></i></div></div></div></div></div>
+              <div class="text">
+                <a href="/stuff"><i>{{ image.dance_style.name }}</i>&nbsp;<i class="fas fa-link"></i></a><br>
+                <a href="/things"><i>{{ image.performer.name }}</i>&nbsp;<i class="fas fa-link"></i></a></div>
+            </div></div></div></div>
           {% endfor %}
         </div>
         <div class="col-3"><b>{{detail.verses}}:</b>  {{detail.contents|safe}}</div>
