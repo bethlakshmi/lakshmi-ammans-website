@@ -17,7 +17,7 @@
 </div>
 <div class="col-12 col-md-6 col-lg-8">
 {% for image in object.main_images %}
-  <div class="col-6 my-2 mx-4 p-0 float-right">
+  <div class="col-4 my-2 mx-2 p-0 float-right">
     <div class="image-display"><a href="#">
         <img src="{% thumbnail image.image 350x350 crop=scale%}" title="{{image.position.name}}"></a>
       <div class="overlay"><div class="icons">
@@ -27,38 +27,47 @@
           <a href="/stuff"><i>{{ image.dance_style.name }}</i>&nbsp;
             <i class="fas fa-link"></i></a><br>
           <a href="/stuff"><i>{{ image.performer.name }}</i>&nbsp;
-            <i class="fas fa-link"></i></i></a></div></div>
-    </div>
-  </div>
+            <i class="fas fa-link"></i></i></a></div>
+    </div></div></div>
 {% endfor %}
 </div></div>
 {% for source,verses in object.independant_details_by_source.items %}
-  <div class="row">
-    <div class="col-2">
+  <div class="row lakshmi-source-header">
+    <div class="col-12">
         <b>{{source.shastra.age_range}}</b><br>
         {{ source.title }} ({{source.shastra.initials}}) - {{source.translator}}</div>
-      {% for detail in verses.PostureDescription %}
-        {% if not forloop.first %}<div class="col-2">&nbsp;</div>{% endif %}
+  </div>
+    {% for detail in verses.PostureDescription %}
+      <div class="row">
         <div class="col-3">
           {% for image in detail.exampleimage_set.all %}
-            <div class="col-12 my-2 mx-4 p-0"><div class="image-display"><a href="#"><img src="{% thumbnail image.image 350x350 crop=scale%}" title="{{image.position.name}}"></a><div class="overlay"><div class="icons"><a class="preview lightbox" href="{{image.image.url}}" data-toggle="tooltip" title="View"><i class="far fa-eye"></i></a></div>
+            <div class="col-12 my-2 p-0"><div class="image-display"><a href="#"><img src="{% thumbnail image.image 350x350 crop=scale%}" title="{{image.position.name}}"></a><div class="overlay"><div class="icons"><a class="preview lightbox" href="{{image.image.url}}" data-toggle="tooltip" title="View"><i class="far fa-eye"></i></a></div>
               <div class="text">
                 <a href="/stuff"><i>{{ image.dance_style.name }}</i>&nbsp;<i class="fas fa-link"></i></a><br>
                 <a href="/things"><i>{{ image.performer.name }}</i>&nbsp;<i class="fas fa-link"></i></a></div>
-            </div></div></div></div>
+            </div></div></div>
           {% endfor %}
         </div>
         <div class="col-3"><b>{{detail.verses}}:</b>  {{detail.contents|safe}}</div>
-        <div class="col-4">{% for meaning in detail.meaning.all %}<b>{{meaning.verses}}:</b>  {{meaning.contents|safe}}<br>{% empty %}<i>No associated meanings</i>{% endfor %}</div>    
-      {% endfor %}
-      {% if verses.Meaning|length > 0 %}
-      <div class="col-3">&nbsp;</div>
-      <div class="col-3"><i>No associated description</i></div>
-      <div class="col-4">
+        <div class="col-4">{% for meaning in detail.meaning.all %}<b>{{meaning.verses}}:</b>  {{meaning.contents|safe}}<br>{% empty %}<i>No associated meanings</i>{% endfor %}</div>
+        <div col-2>{% for dependancy in detail.dependencies.all %}
+            {% if dependancy.exampleimage_set.all|length > 0 %}
+            <img src="{% thumbnail dependancy.exampleimage_set.first.image 250x250 crop=scale%}" title="{{dependancy.position.name}}">{% endif %}
+            {{ dependancy.position.name }}<br>{{detail.verses}}
+            {% empty %}<i>No dependancies</i>
+        {% endfor %}</div>
+      </div> 
+    {% endfor %}
+    {% if verses.Meaning|length > 0 %}
+      <div class="row">
+        <div class="col-3">&nbsp;</div>
+        <div class="col-3"><i>No associated description</i></div>
+        <div class="col-4">
         {% for detail in verses.Meaning %}<b>{{detail.verses}}:</b>
-        {{detail.contents|safe}}{% endfor %}</div>
-      {% endif %}
-  </div>
+          {{detail.contents|safe}}{% endfor %}</div>
+        <div col-2>dependancy also goes here</div>
+      </div>
+    {% endif %}
 {% endfor %}
 </div>
 {% endblock content %}
