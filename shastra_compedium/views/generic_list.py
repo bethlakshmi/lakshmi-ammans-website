@@ -37,7 +37,9 @@ class GenericList(View):
                 ("Position List",
                  reverse('position_list', urlconf='shastra_compedium.urls')),
                 ("Source List",
-                 reverse('source_list', urlconf='shastra_compedium.urls'))]
+                 reverse('source_list', urlconf='shastra_compedium.urls')),
+                ("Image List",
+                 reverse('image_list', urlconf='shastra_compedium.urls'))]
             }
         if self.__class__.__name__ in user_messages:
             context['instructions'] = UserMessage.objects.get_or_create(
