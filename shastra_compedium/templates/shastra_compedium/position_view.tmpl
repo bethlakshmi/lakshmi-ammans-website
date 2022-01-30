@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.css">
 {% endblock %}
-
+{% block layout %}
+    <div class="container-fluid py-3">{%endblock%}
 {% block content %}
 <div class="container">
 <div class="row">
@@ -30,15 +31,15 @@
             <i class="fas fa-link"></i></i></a></div>
     </div></div></div>
 {% endfor %}
-</div></div>
+</div></div></div>
 {% for source,verses in object.independant_details_by_source.items %}
-  <div class="row lakshmi-source-header">
+  <div class="row lakshmi-source-header px-5">
     <div class="col-12">
         <b>{{source.shastra.age_range}}</b><br>
         {{ source.title }} ({{source.shastra.initials}}) - {{source.translator}}</div>
   </div>
     {% for detail in verses.PostureDescription %}
-      <div class="row">
+      <div class="row px-5">
         <div class="col-3">
           {% for image in detail.exampleimage_set.all %}
             <div class="col-12 my-2 p-0"><div class="image-display"><a href="#"><img src="{% thumbnail image.image 350x350 crop=scale%}" title="{{image.position.name}}"></a><div class="overlay"><div class="icons"><a class="preview lightbox" href="{{image.image.url}}" data-toggle="tooltip" title="View"><i class="far fa-eye"></i></a></div>
@@ -50,12 +51,7 @@
         </div>
         <div class="col-3"><b>{{detail.verses}}:</b>  {{detail.contents|safe}}</div>
         <div class="col-4">{% for meaning in detail.meaning.all %}<b>{{meaning.verses}}:</b>  {{meaning.contents|safe}}<br>{% empty %}<i>No associated meanings</i>{% endfor %}</div>
-        <div col-2>{% for dependancy in detail.dependencies.all %}
-            {% if dependancy.exampleimage_set.all|length > 0 %}
-            <img src="{% thumbnail dependancy.exampleimage_set.first.image 250x250 crop=scale%}" title="{{dependancy.position.name}}">{% endif %}
-            {{ dependancy.position.name }}<br>{{detail.verses}}
-            {% empty %}<i>No dependancies</i>
-        {% endfor %}</div>
+        <div class="col-2">{% include "shastra_compedium/dependency.tmpl" with dependencies=detail.dependencies.all %}</div>
       </div> 
     {% endfor %}
     {% if verses.Meaning|length > 0 %}
@@ -69,5 +65,4 @@
       </div>
     {% endif %}
 {% endfor %}
-</div>
 {% endblock content %}

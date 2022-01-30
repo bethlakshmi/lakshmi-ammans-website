@@ -1,0 +1,7 @@
+{% load thumbnail %}
+{% for dependancy in dependencies %}
+    {% if dependancy.exampleimage_set.all|length > 0 %}
+        <img src="{% thumbnail dependancy.exampleimage_set.first.image 250x250 crop=scale%}" title="{{dependancy.position.name}}">{% endif %}
+        {{ dependancy.position.name }}<br>{{detail.verses}}
+    {% empty %}<i>No dependencies</i>
+{% endfor %}
