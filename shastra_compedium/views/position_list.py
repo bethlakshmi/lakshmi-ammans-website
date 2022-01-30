@@ -1,16 +1,12 @@
-from django.views.generic import View
-from django.views.decorators.cache import never_cache
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
 from shastra_compedium.models import (
     ExampleImage,
     PositionDetail,
+    Position,
     Shastra,
     Source,
 )
-from django.urls import reverse
 from shastra_compedium.views import GenericList
+from django.db.models import Count
 
 
 class PositionList(GenericList):
@@ -54,4 +50,10 @@ class PositionList(GenericList):
                 details[image.position]["images"] += [image]
             else:
                 details[image.position] = {"images": [image]}
+        for position in Position.objects.all().annotate(img_count=Count(
+                'exampleimage')):
+            if position not in details:
+                details[position] = {"image_total": position.img_count}
+            else:
+                details[position]["image_total"] = position.img_count
         return details

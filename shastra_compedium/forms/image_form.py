@@ -1,5 +1,6 @@
 from django.forms import (
     CheckboxSelectMultiple,
+    HiddenInput,
     ModelChoiceField,
     ModelForm,
 )
@@ -75,7 +76,7 @@ class ImageForm(ModelForm):
 
     image = ThumbnailImageField(
         widget=RadioSelect(attrs={'class': 'nobullet'}),
-        queryset=Image.objects.all(),
+        queryset=Image.objects.filter(folder__name="PositionImageUploads"),
         required=True,
         empty_label=None)
 
@@ -98,11 +99,14 @@ class ImageForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ImageForm, self).__init__(*args, **kwargs)
-        if 'instance' in kwargs:
+        if 'instance' in kwargs and kwargs.get('instance') is not None:
             self.fields['image'].queryset = Image.objects.filter(
                 pk=kwargs.get('instance').image.pk)
             self.fields['details'].queryset = PositionDetail.objects.filter(
                     position=kwargs.get('instance').position)
+        elif 'initial' in kwargs and 'image' in kwargs['initial']:
+            self.fields['image'].queryset = Image.objects.filter(
+                pk=kwargs.get('initial').get('image').pk)
 
     def clean_details(self):
         real_details = []
