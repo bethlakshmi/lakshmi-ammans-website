@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static sekizai_tags thumbnail %}
+{% block title %}
+   {{ object.name }}
+{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.css">
+{% endblock %}
+{% block content %}
+<div class="container">
+<div class="row">
+<div class="col-12 col-md-6 col-lg-4">
+<h2 class="lakshmi-title">{{object.name}}
+ {% if user.is_authenticated %}
+   <a class="lakshmi-detail" href="{% url 'shastra_compedium:performer-update' object.id %}?next={{request.path}}" title="Edit"><i class="fas fa-edit"></i></a>         
+ {% endif %}</h2>
+{% for style in object.dance_styles.all %}
+<h3 class="lakshmi-subtitle">{{style.name}} <a class="lakshmi-detail" href="{% url 'shastra_compedium:dancestyle-view' style.pk %}" title="Info"><i class="fas fa-link"></i></a></h3>
+{% endfor %}
+</div>
+<div class="col-12 col-md-6 col-lg-8">
+{% if object.image %}
+  <div class="col-4 p-1 float-right">
+    <div class="image-display p-0 col-12">
+        <img src="{% thumbnail object.image 350x350 crop=scale%}" title="{{object.name}}">
+    </div></div>
+{% endif %}
+</div></div></div>
+  <div class="row">
+    <div class="col-12">
+        <h4>Linneage</h4>
+        {{ object.linneage | safe }}</div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+        <h4>Biography</h4>
+        {{ object.bio | safe }}</div>
+  </div>
+</div>
+{% endblock content %}

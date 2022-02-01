@@ -10,8 +10,10 @@ from .position_detail_formset_view import PositionDetailFormSetView
 from .make_category import (CategoryCreate, CategoryUpdate)
 from .make_category_detail import CategoryDetailUpdate
 from .make_dance_style import (DanceStyleCreate, DanceStyleUpdate)
+from .dance_style_view import DanceStyleView
 from .make_example_image import (ExampleImageCreate, ExampleImageUpdate)
 from .make_performer import (PerformerCreate, PerformerUpdate)
+from .performer_view import PerformerView
 from .make_source import (SourceCreate, SourceUpdate)
 from .make_shastra import (ShastraCreate, ShastraUpdate)
 from .make_position import (PositionCreate, PositionUpdate)

@@ -28,10 +28,10 @@
         <a class="preview lightbox" href="{{image.image.url}}" data-toggle="tooltip" title="View"><i class="far fa-eye"></i></a>
       </div>
       <div class="text">
-          <a href="/stuff"><i>{{ image.dance_style.name }}</i>&nbsp;
+          <a href="{% url 'shastra_compedium:dancestyle-view' image.dance_style.pk %}"><i>{{ image.dance_style.name }}</i>&nbsp;
             <i class="fas fa-link"></i></a><br>
-          <a href="/stuff"><i>{{ image.performer.name }}</i>&nbsp;
-            <i class="fas fa-link"></i></i></a></div>
+          <a href="{% url 'shastra_compedium:performer-view' image.performer.pk %}"><i>{{ image.performer.name }}</i>&nbsp;
+            <i class="fas fa-link"></i></a></div>
     </div></div></div>
 {% endfor %}
 </div></div></div>
