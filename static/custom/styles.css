@@ -186,9 +186,9 @@ span.dropt span:hover {
   margin-left: 42px;
 }
 .image-display .icons .link {
-  left: 55%;
+  left: 60%;
   margin-left: 42px;
-  top: 45%;
+  top: 30%;
   -webkit-transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1) 0s;
   -moz-transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1) 0s;
   -o-transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1) 0s;
@@ -198,7 +198,7 @@ span.dropt span:hover {
   left: 40%;
 }
 .image-display:hover .link {
-  left: 50%;
+  left: 60%;
 }
 .image-display:hover .text {
   left: 40%;

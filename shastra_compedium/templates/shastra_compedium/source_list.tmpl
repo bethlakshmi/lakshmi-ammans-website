@@ -44,7 +44,7 @@
       {
         'id': {{source.pk}},
         'shastra_id': {{source.shastra.pk}},
-        'title': '{{ source.shastra.title|escapejs }}&nbsp;&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:shastra-update' source.shastra.pk %}" title="Edit"><i class="fas fa-edit"></i></a>',
+        'title': '{{ source.shastra.title|escapejs }}{% if user.is_authenticated %}&nbsp;&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:shastra-update' source.shastra.pk %}" title="Edit"><i class="fas fa-edit"></i></a>{% endif %}',
         'author': '{{ source.shastra.author|escapejs }}',
         'language': '{{ source.shastra.language }}',
         'dates': '{{ source.shastra.min_age }} - {{ source.shastra.max_age }}',
@@ -54,15 +54,15 @@
         'translation_language': '{{ source.translation_language }}',
         'isbn': '{{ source.isbn }}',
         'biblio': '{{ source.bibliography|escapejs }}',
-        'chapters': '{% for category, items in details.items %}<tr><td class="align-top" {% if items.details|length %}rowspan="{{items.details|length}}"{% endif %}>{{ category.name }}&nbsp;&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:category-update' category.pk %}?next={{request.path}}" title="Edit"><i class="fas fa-edit"></i></a><br>{% if items.positions|length > 0 %}<a href="{% url 'shastra_compedium:position-detail-update' source.id category.id %}" class="btn lakshmi-btn-primary">Edit All Position Details</a>{% endif %}<br><i>{{ category.summary }}</i></td>{% for chapter in items.details %}{% if not forloop.first %}<tr>{% endif %}<td class="align-top" {% if chapter.pk in categorydetail_ids %}class="lakshmi-table-success"{% endif %}>{% if chapter.chapter or chapter.verse_start%}{{ chapter.chapter|default_if_none:"" }}:{{chapter.verse_start|default_if_none:""}}{% endif %}{% if chapter.verse_end%}-{{chapter.verse_end}}{% endif %}&nbsp;&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:categorydetail-update' chapter.pk %}" title="Edit Chapter"><i class="fas fa-edit"></i></a><br><a class="btn lakshmi-btn-primary" href="{% url 'shastra_compedium:chapter-additional' chapter.pk %}" title="More Upload">Add to Chapter</a></td><td  class="align-top" {% if chapter.pk in categorydetail_ids %}class="lakshmi-table-success"{% endif %}>{{ chapter.usage }}</td><td {% if chapter.pk in categorydetail_ids %}class="lakshmi-table-success"{% endif %}>{{ chapter.contents|escapejs }}</td>{% if not forloop.first %}</tr>{% endif %}{% if forloop.first %}<td class="align-top" rowspan="{{items.details|length}}">{{items.positions|length}}</td>{% endif %}{% empty %}<td colspan="3">No Category Details</td><td class="align-top">{{items.positions|length}}</td>{% endfor %}</tr>{% endfor %}',
-        'action': '<a class="lakshmi-detail" href="{% url 'shastra_compedium:source-update' source.pk %}" title="Edit"><i class="fas fa-edit"></i></a>',
+        'chapters': '{% for category, items in details.items %}<tr><td class="align-top" {% if items.details|length %}rowspan="{{items.details|length}}"{% endif %}>{{ category.name }}{% if user.is_authenticated %}&nbsp;&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:category-update' category.pk %}?next={{request.path}}" title="Edit"><i class="fas fa-edit"></i></a>{% endif %}<br>{% if items.positions|length > 0 and user.is_authenticated %}<a href="{% url 'shastra_compedium:position-detail-update' source.id category.id %}" class="btn lakshmi-btn-primary">Edit All Position Details</a>{% endif %}<br><i>{{ category.summary }}</i></td>{% for chapter in items.details %}{% if not forloop.first %}<tr>{% endif %}<td class="align-top" {% if chapter.pk in categorydetail_ids %}class="lakshmi-table-success"{% endif %}>{% if chapter.chapter or chapter.verse_start%}{{ chapter.chapter|default_if_none:"" }}:{{chapter.verse_start|default_if_none:""}}{% endif %}{% if chapter.verse_end%}-{{chapter.verse_end}}{% endif %}{% if user.is_authenticated %}&nbsp;&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:categorydetail-update' chapter.pk %}" title="Edit Chapter"><i class="fas fa-edit"></i></a><br><a class="btn lakshmi-btn-primary" href="{% url 'shastra_compedium:chapter-additional' chapter.pk %}" title="More Upload">Add to Chapter</a>{% endif %}</td><td  class="align-top" {% if chapter.pk in categorydetail_ids %}class="lakshmi-table-success"{% endif %}>{{ chapter.usage }}</td><td {% if chapter.pk in categorydetail_ids %}class="lakshmi-table-success"{% endif %}>{{ chapter.contents|escapejs }}</td>{% if not forloop.first %}</tr>{% endif %}{% if forloop.first %}<td class="align-top" rowspan="{{items.details|length}}">{{items.positions|length}}</td>{% endif %}{% empty %}<td colspan="3">No Category Details</td><td class="align-top">{{items.positions|length}}</td>{% endfor %}</tr>{% endfor %}',
+        'action': '{% if user.is_authenticated %}<a class="lakshmi-detail" href="{% url 'shastra_compedium:source-update' source.pk %}" title="Edit"><i class="fas fa-edit"></i></a>{% endif %}',
       },
   {% endfor %}
   {% for shastra in shastras %}
       {
         'id': 'none',
         'shastra_id': {{shastra.pk}},
-        'title': '{{ shastra.title }}&nbsp;&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:shastra-update' shastra.pk %}" title="Edit"><i class="fas fa-edit"></i></a>',
+        'title': '{{ shastra.title }}{% if user.is_authenticated %}&nbsp;&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:shastra-update' shastra.pk %}" title="Edit"><i class="fas fa-edit"></i></a>{% endif %}',
         'author': '{{ shastra.author }}',
         'language': '{{ shastra.language }}',
         'dates': '{{ shastra.min_age }} - {{ shastra.max_age }}',
@@ -72,7 +72,7 @@
         'translation_language': 'N/A',
         'isbn': 'N/A',
         'biblio': '---',
-        'action': '<a class="lakshmi-detail" href="" title="Edit"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;',
+        'action': '{% if user.is_authenticated %}<a class="lakshmi-detail" href="" title="Edit"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;{% endif %}',
       },
   {% endfor %}
 {% endblock %}

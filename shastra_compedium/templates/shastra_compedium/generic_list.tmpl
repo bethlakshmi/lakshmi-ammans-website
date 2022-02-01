@@ -15,10 +15,12 @@
   <h2 class="lakshmi-title">{{title}}</h2>
   </div>
   <div class="col-8 text-right">
+{% if user.is_authenticated %}
 {% block control_buttons %}
 {% endblock %}
  <a href="{% url 'shastra_compedium:chapter-add' %}" role="button" class="btn lakshmi-btn-primary">Add a Source & Chapter</a>&nbsp;
  <a href="{% url 'shastra_compedium:image_upload' %}" role="button" class="btn lakshmi-btn-primary">Add Images</a>&nbsp;
+{% endif %}
   </div>
 </div>
 {% if path_list %}

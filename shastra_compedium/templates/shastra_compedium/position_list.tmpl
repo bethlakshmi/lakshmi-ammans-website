@@ -42,7 +42,7 @@ Original Source Abbreviations:
 {% block details %}
     var html = []
     html.push('<div class="row"><div class="col-12 py-2">')
-    html.push('<a href="' + row.edit_url + '" class="btn lakshmi-btn-primary">Edit Details for ' + row.position + '</a>')
+    {% if user.is_authenticated %}html.push('<a href="' + row.edit_url + '" class="btn lakshmi-btn-primary">Edit Details for ' + row.position + '</a>'){% endif %}
     html.push('</div></div>')
     html.push('<div class="row">')
     html.push(row.images)
@@ -55,10 +55,10 @@ Original Source Abbreviations:
 {% block item_data %}
   {% for position,details in items.items %}
       {
-        'edit_url': '{% url 'shastra_compedium:position-detail-update' position.id %}?next={{request.path}}',
+        {% if user.is_authenticated %}'edit_url': '{% url 'shastra_compedium:position-detail-update' position.id %}?next={{request.path}}',{% endif %}
         'id': {{ position.pk}},
         'position': '{{ position.name }}',
-        'category': '{% if position.category %}{{ position.category }}&nbsp;&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:category-update' position.category.pk %}?next={{request.path}}" title="Edit"><i class="fas fa-edit"></i></a>{% endif %}',
+        'category': '{% if position.category %}{{ position.category }}{% if user.is_authenticated %}&nbsp;&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:category-update' position.category.pk %}?next={{request.path}}" title="Edit"><i class="fas fa-edit"></i></a>{% endif %}{% endif %}',
         'order': '{{ position.order }}',
         'img_count': '{{details.image_total}}',
     {% for source,verses in details.sources.items %}
@@ -66,7 +66,7 @@ Original Source Abbreviations:
     {% endfor %}
         'details': '{% for source,verses in details.sources.items %}<tr><td class="align-top" rowspan="{{verses.num_details}}">{{ source.title }} ({{source.shastra.initials}}) - {{source.translator}}</td>{% for detail in verses.PostureDescription %}{% if not forloop.first %}<tr>{% endif %}<td class="align-top">{% include "shastra_compedium/image_overlay.tmpl" with images=detail.detail_images extra="col-6 float-left"%}<b>{{detail.verses}}:</b>  {{detail.contents|escapejs|safe}}</td><td class="align-top">{% for meaning in detail.meaning.all %}{% include "shastra_compedium/image_overlay.tmpl" with images=meaning.detail_images extra="col-6 float-left"%}<b>{{meaning.verses}}:</b>  {{meaning.contents|escapejs|safe}}<br>{% empty %}<i>No associated meanings</i>{% endfor %}</td></tr>{% endfor %}{% if verses.Meaning|length > 0 %}<tr><td class="align-top"><i>No associated description</i></td><td class="align-top">{% for detail in verses.Meaning %}{% include "shastra_compedium/image_overlay.tmpl" with images=detail.detail_images extra="col-6 float-left"%}<b>{{detail.verses}}:</b>  {{detail.contents|escapejs|safe}}{% endfor %}</td></tr>{% endif %}{% endfor %}',
         'images': '{% include "shastra_compedium/image_overlay.tmpl" with images=details.images extra="col-sm-4 col-lg-3" %}',
-        'action': '<a class="lakshmi-detail" href="{% url 'shastra_compedium:position-update' position.pk %}" title="Edit"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:position-view' position.pk %}" title="View"><i class="fas fa-eye"></i></a>',
+        'action': '{% if user.is_authenticated %}<a class="lakshmi-detail" href="{% url 'shastra_compedium:position-update' position.pk %}" title="Edit"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;{% endif %}<a class="lakshmi-detail" href="{% url 'shastra_compedium:position-view' position.pk %}" title="View"><i class="fas fa-eye"></i></a>',
       },
   {% endfor %}
 {% endblock %}
