@@ -1,7 +1,9 @@
 {% load thumbnail %}
 {% for dependancy in dependencies %}
-    {% if dependancy.exampleimage_set.all|length > 0 %}
-        <img src="{% thumbnail dependancy.exampleimage_set.first.image 250x250 crop=scale%}" title="{{dependancy.position.name}}">{% endif %}
-        {{ dependancy.position.name }}<br>{{detail.verses}}
+    {% if forloop.first %}<b>Based upon:</b><br>{% endif %}
+    <a href="{% url 'shastra_compedium:position-view' dependancy.position.pk %}">
+      {% if dependancy.exampleimage_set.all|length > 0 %}
+        <img src="{% thumbnail dependancy.exampleimage_set.first.image 150x150 crop=scale%}" title="{{dependancy.contents|striptags}}">{% else %}<i>No image available</i><br>{% endif %}
+        {{ dependancy.position.name }} - {{dependancy.verses}}</a>
     {% empty %}<i>No dependencies</i>
 {% endfor %}
