@@ -1,6 +1,5 @@
 from django.views.generic import View
 from django.views.decorators.cache import never_cache
-from django.utils.decorators import method_decorator
 from django.shortcuts import render
 from shastra_compedium.models import (
     Shastra,

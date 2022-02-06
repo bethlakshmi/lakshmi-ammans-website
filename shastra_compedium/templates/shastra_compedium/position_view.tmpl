@@ -37,9 +37,11 @@
 </div></div></div>
 {% for source,verses in object.independant_details_by_source.items %}
   <div class="row lakshmi-source-header px-5">
-    <div class="col-12">
+    <div class="col-11">
         <b>{{source.shastra.age_range}}</b><br>
         {{ source.title }} ({{source.shastra.initials}}) - {{source.translator}}</div>
+    <div class="col-1"><a href="{% url 'shastra_compedium:shastrachapter-view' source.shastra.pk object.category.pk %}" title="Show all items for {{object.category.name}} in {{source.shastra}}"><i class="fa fa-expand" aria-hidden="true"></i></a>
+</div>
   </div>
     {% for detail in verses.PostureDescription %}
       <div class="row px-5">
@@ -59,7 +61,8 @@
         <div class="col-7 col-sm-8 col-lg-4">{% for meaning in detail.meaning.all %}
           {% if forloop.first %}<b>Meaning:</b><br>{% endif %}
           <b>{{meaning.verses}}:</b>  {{meaning.contents|safe}}<br>{% empty %}<i>No associated meanings</i>{% endfor %}</div>
-        <div class="col-5 col-sm-4 col-lg-2">{% include "shastra_compedium/dependency.tmpl" with dependencies=detail.dependencies.all %}</div>
+        <div class="col-5 col-sm-4 col-lg-2">{% include "shastra_compedium/dependency.tmpl" with dependencies=detail.dependencies.all %}<br>{% include "shastra_compedium/dependedon.tmpl" with dependedon=detail.positiondetail_set.all %}</div>
+
       </div> 
     {% endfor %}
     {% if verses.Meaning|length > 0 %}
@@ -69,7 +72,7 @@
         <div class="col-4">
         {% for detail in verses.Meaning %}<b>{{detail.verses}}:</b>
           {{detail.contents|safe}}{% endfor %}</div>
-        <div class="col-2">{% include "shastra_compedium/dependency.tmpl" with dependencies=detail.dependencies.all %}</div>
+        <div class="col-2">{% include "shastra_compedium/dependency.tmpl" with dependencies=detail.dependencies.all %}<br>{% include "shastra_compedium/dependedon.tmpl" with dependedon=detail.positiondetail_set.all %}</div>
       </div>
     {% endif %}
 {% endfor %}

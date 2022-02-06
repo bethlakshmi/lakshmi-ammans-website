@@ -21,3 +21,4 @@ from .image_list import ImageList
 from .position_list import PositionList
 from .source_list import SourceList
 from .bulk_image_upload import BulkImageUpload
+from .shastra_chapter_view import ShastraChapterView
