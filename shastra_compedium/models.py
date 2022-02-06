@@ -115,7 +115,7 @@ class Position(Model):
         details_by_source = OrderedDict()
 
         for detail in self.details.filter(description__isnull=True).order_by(
-                "sources__shastra__min_age"):
+                "sources__shastra__min_age", "chapter", "verse_start"):
             for source in detail.sources.all():
                 usage = detail.usage.replace(" ", "")
                 if source not in details_by_source:
