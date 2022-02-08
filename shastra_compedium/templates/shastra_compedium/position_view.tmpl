@@ -36,23 +36,18 @@
 {% endfor %}
 </div></div></div>
 {% for source,verses in object.independant_details_by_source.items %}
-  <div class="row lakshmi-source-header px-5">
+  <div class="row lakshmi-source-header px-5 align-items-center">
     <div class="col-11">
         <b>{{source.shastra.age_range}}</b><br>
         {{ source.title }} ({{source.shastra.initials}}) - {{source.translator}}</div>
-    <div class="col-1"><a href="{% url 'shastra_compedium:shastrachapter-view' source.shastra.pk object.category.pk %}" title="Show all items for {{object.category.name}} in {{source.shastra}}"><i class="fa fa-expand" aria-hidden="true"></i></a>
-</div>
+    <div class="col-1 text-right"><a class="btn btn-secondary" href="{% url 'shastra_compedium:shastrachapter-view' source.shastra.pk object.category.pk %}" title="Show all {{object.category.name}} in {{source.shastra}}"><i class="fas fa-link"></i></a></div>
   </div>
     {% for detail in verses.PostureDescription %}
       <div class="row px-5">
         <div class="col-6 col-md-4 col-lg-3">
           {% for image in detail.exampleimage_set.all %}
           {% if forloop.first %}<b>Image:</b><br>{% endif %}
-            <div class="col-12 my-2 p-0"><div class="image-display"><a href="#"><img src="{% thumbnail image.image 350x350 crop=scale%}" title="{{image.position.name}}"></a><div class="overlay"><div class="icons"><a class="preview lightbox" href="{{image.image.url}}" data-toggle="tooltip" title="View"><i class="far fa-eye"></i></a></div>
-              <div class="text">
-                <a href="/stuff"><i>{{ image.dance_style.name }}</i>&nbsp;<i class="fas fa-link"></i></a><br>
-                <a href="/things"><i>{{ image.performer.name }}</i>&nbsp;<i class="fas fa-link"></i></a></div>
-            </div></div></div>
+          {% include "shastra_compedium/image_350.tmpl" %}
           {% empty %}<i>No associated images</i>{% endfor %}
         </div>
         <div class="col-6 col-md-8 col-lg-3">{% if detail.contents|safe|length > 0 %}<b>Description:<br>

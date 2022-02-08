@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static sekizai_tags thumbnail %}
+{% block title %}
+   {{ object.name }}
+{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.css">
+{% endblock %}
+{% block layout %}
+    <div class="container-fluid py-3">{%endblock%}
+{% block content %}
+<div class="container">
+<div class="row">
+<div class="col-12">
+<h2 class="lakshmi-title">{{shastra}}: {{category}} ({{category.summary}})</h2>
+<h3 class="lakshmi-subtitle">{{shastra.age_range}} - by {{shastra.author}}</h3>
+<p>{% if user.is_authenticated %}
+   <a class="lakshmi-detail" href="{% url 'shastra_compedium:category-update' category.pk %}?next={{request.path}}" title="Edit"><i class="fas fa-edit"></i></a>         
+ {% endif %}
+ <b>{{category}}</b> - {{category.summary}}</p>
+<p>{% if user.is_authenticated %}
+   <a class="lakshmi-detail" href="{% url 'shastra_compedium:shastra-update' shastra.pk %}?next={{request.path}}" title="Edit"><i class="fas fa-edit"></i></a>         
+ {% endif %}
+ <b>{{shastra}}</b> - Language: {{shastra.language}}</p>
+<p>{{shastra.description}}</p>
+</div>
+<div class="col-12">
+</div>
+</div></div>
+{% for position, source_dict in details.items %}
+  <div class="row lakshmi-source-header px-5 align-items-center">
+    <div class="col-11">
+        <b>{{position.name}}</b></div>
+    <div class="col-1 text-right"><a class="btn btn-secondary p-1 m-1" href="{% url 'shastra_compedium:position-view' position.pk %}" title="Position Details"><i class="fas fa-link"></i></a></div></div>
+  <div class="row px-5">
+    {% for source, details in source_dict.items %}
+    <div class="col-{{source_size}}">
+      <b>{{source.title}}</b>
+      {% for detail in details %}
+        {% for image in detail.exampleimage_set.all %}
+          {% include "shastra_compedium/image_350.tmpl" %}
+        {% endfor %}
+        <br><b>{{detail.verses}}</b>  {{detail.contents|safe}}
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+{% endfor %}
+  </div>
+{% endblock content %}

@@ -88,7 +88,7 @@ urlpatterns = [
     url(r'^position/view/(?P<pk>.*)/$',
         PositionView.as_view(),
         name='position-view'),
-    url(r'^source/chapter/(?P<shastra_pk>.*)/(?P<chapter_pk>.*)/$',
+    url(r'^source/chapter/(?P<shastra_pk>.*)/(?P<category_pk>.*)/$',
         ShastraChapterView.as_view(),
         name='shastrachapter-view'),
     url(r'^shastra/add/$',
