@@ -21,6 +21,14 @@ class ShastraChapterView(View):
         5: 2,
         6: 2,
     }
+    pic_size = {
+        1: "col-6 col-md-4 col-lg-3",
+        2: "col-12 col-md-6 col-lg-4",
+        3: "col-12 col-lg-6",
+        4: "col-12",
+        5: "col-12",
+        6: "col-12",
+    }
 
     def get_context_dict(self):
         shastra = Shastra.objects.get(pk=self.shastra_pk)
@@ -48,7 +56,8 @@ class ShastraChapterView(View):
             'shastra': shastra,
             'category': category,
             'details': details,
-            'source_size': self.source_align[shastra.sources.count()]
+            'source_size': self.source_align[shastra.sources.count()],
+            'pic_size': self.pic_size[shastra.sources.count()],
             }
         if self.__class__.__name__ in user_messages:
             context['instructions'] = UserMessage.objects.get_or_create(

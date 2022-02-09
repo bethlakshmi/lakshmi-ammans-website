@@ -38,9 +38,11 @@
     <div class="col-{{source_size}}">
       <b>{{source.title}}</b>
       {% for detail in details %}
+        <div class="row">
         {% for image in detail.exampleimage_set.all %}
-          {% include "shastra_compedium/image_350.tmpl" %}
-        {% endfor %}
+          <div class="{{pic_size}} p-0 my-2">
+          {% include "shastra_compedium/image_350.tmpl" %}</div>
+        {% endfor %}</div>
         <br><b>{{detail.verses}}</b>  {{detail.contents|safe}}
       {% endfor %}
     </div>

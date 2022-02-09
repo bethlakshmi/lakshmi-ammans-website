@@ -118,7 +118,8 @@ class Position(Model):
                 "sources__shastra__min_age",
                 "sources__translator", 
                 "chapter",
-                "verse_start"):
+                "verse_start",
+                "pk"):
             for source in detail.sources.all():
                 usage = detail.usage.replace(" ", "")
                 if source not in details_by_source:

@@ -38,6 +38,7 @@
 {% for source,verses in object.independant_details_by_source.items %}
   <div class="row lakshmi-source-header px-5 align-items-center">
     <div class="col-11">
+        <a id="{{source.pk}}_{{object.pk}}"></a>
         <b>{{source.shastra.age_range}}</b><br>
         {{ source.title }} ({{source.shastra.initials}}) - {{source.translator}}</div>
     <div class="col-1 text-right"><a class="btn btn-secondary" href="{% url 'shastra_compedium:shastrachapter-view' source.shastra.pk object.category.pk %}" title="Show all {{object.category.name}} in {{source.shastra}}"><i class="fas fa-link"></i></a></div>
@@ -47,7 +48,7 @@
         <div class="col-6 col-md-4 col-lg-3">
           {% for image in detail.exampleimage_set.all %}
           {% if forloop.first %}<b>Image:</b><br>{% endif %}
-          {% include "shastra_compedium/image_350.tmpl" %}
+          <div class="col-12 my-2 p-0">{% include "shastra_compedium/image_350.tmpl" %}</div>
           {% empty %}<i>No associated images</i>{% endfor %}
         </div>
         <div class="col-6 col-md-8 col-lg-3">{% if detail.contents|safe|length > 0 %}<b>Description:<br>

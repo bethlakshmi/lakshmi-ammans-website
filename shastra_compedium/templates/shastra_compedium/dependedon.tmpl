@@ -1,7 +1,7 @@
 {% load thumbnail %}
 {% for dependancy in dependedon %}
     {% if forloop.first %}<b>Mentioned by:</b><br>{% endif %}
-    <a href="{% url 'shastra_compedium:position-view' dependancy.position.pk %}">
+    <a href="{% url 'shastra_compedium:position-view' dependancy.position.pk %}#{{source.pk}}_{{dependancy.position.pk}}">
       {% if dependancy.exampleimage_set.all|length > 0 %}
         <img src="{% thumbnail dependancy.exampleimage_set.first.image 50x50 crop=scale%}" title="{{dependancy.contents|striptags}}">{% endif %}
         {{ dependancy.position.name }}</a><br>
