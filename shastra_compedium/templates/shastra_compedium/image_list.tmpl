@@ -46,7 +46,7 @@
       {
         'id': 'image_{{ image.pk}}',
         'image_only': 1,
-        'image': '<a href="#" data-toggle="modal" data-target="#Modalimage_{{ image.pk }}" data-backdrop="true"><img src="{% thumbnail image 250x250 crop=scale%}" title="image.original_filename"></a>',
+        'image': '<a href="#" data-toggle="modal" data-target="#Modalimage_{{ image.pk }}" data-backdrop="true"><img src="{% thumbnail image 250x250 crop=scale%}" title="{{image.original_filename}}"></a>',
         'action': '{% if user.is_authenticated %}<a class="lakshmi-detail" href="{% url 'shastra_compedium:exampleimage-add' image.pk %}" title="Edit"><i class="fas fa-edit"></i></a>{% endif %}',
       },
   {% endfor %}
