@@ -60,7 +60,7 @@ class ImageForm(ModelForm):
 
     dance_style = ModelChoiceField(
         queryset=DanceStyle.objects.all(),
-        required=False,
+        required=True,
         help_text=UserMessage.objects.get_or_create(
             view="ImageUploadForm",
             code="DEFAULT_STYLE",
