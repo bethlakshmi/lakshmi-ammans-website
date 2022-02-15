@@ -22,10 +22,10 @@ class ShastraChapterView(View):
         6: 2,
     }
     pic_size = {
-        1: "col-6 col-md-4 col-lg-3",
-        2: "col-12 col-md-6 col-lg-4",
-        3: "col-12 col-lg-6",
-        4: "col-12",
+        1: "col-6 col-md-4 col-lg-3 col-xl-2",
+        2: "col-12 col-md-6 col-lg-4 col-xl-3",
+        3: "col-12 col-lg-6 col-xl-4",
+        4: "col-12 col-xl-6",
         5: "col-12",
         6: "col-12",
     }

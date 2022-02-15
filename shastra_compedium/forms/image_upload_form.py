@@ -29,7 +29,7 @@ class ImageUploadForm(Form):
             )[0].description)
     default_dance_style = ModelChoiceField(
         queryset=DanceStyle.objects.all(),
-        required=True,
+        required=False,
         help_text=UserMessage.objects.get_or_create(
             view="ImageUploadForm",
             code="DEFAULT_PERFORMER",
