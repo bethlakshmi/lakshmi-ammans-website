@@ -45,13 +45,13 @@
   </div>
     {% for detail in verses.PostureDescription %}
       <div class="row px-5">
-        <div class="col-6 col-md-4 col-lg-3">
+        <div class="col-6 col-md-4 col-lg-3 col-xl-2">
           {% for image in detail.exampleimage_set.all %}
           {% if forloop.first %}<b>Image:</b><br>{% endif %}
           <div class="col-12 my-2 p-0">{% include "shastra_compedium/image_350.tmpl" %}</div>
           {% empty %}<i>No associated images</i>{% endfor %}
         </div>
-        <div class="col-6 col-md-8 col-lg-3">{% if detail.contents|safe|length > 0 %}<b>Description:<br>
+        <div class="col-6 col-md-8 col-lg-3 col-xl-4">{% if detail.contents|safe|length > 0 %}<b>Description:<br>
           {{detail.verses}}</b>  {{detail.contents|safe}}
           {% else %}<i>No description available</i>{% endif %}</div>
         <div class="col-7 col-sm-8 col-lg-4">{% for meaning in detail.meaning.all %}
