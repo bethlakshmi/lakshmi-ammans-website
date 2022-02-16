@@ -3,7 +3,7 @@
     {% if forloop.first %}<b>Based upon:</b><br>{% endif %}
     <a href="{% url 'shastra_compedium:position-view' dependancy.position.pk %}#{{source.pk}}_{{dependancy.position.pk}}">
       {% if dependancy.exampleimage_set.all|length > 0 %}
-        <img src="{% thumbnail dependancy.exampleimage_set.first.image 150x150 crop=scale%}" title="{{dependancy.contents|striptags}}">{% else %}<i>No image available</i><br>{% endif %}
+        <img src="{% thumbnail dependancy.exampleimage_set.first.image 150x150 crop=scale%}" title="{{dependancy.contents|striptags}}"><br>{% else %}<i>No image available</i><br>{% endif %}
         {{ dependancy.position.name }} - {{dependancy.verses}}</a>
     {% empty %}<i>No dependencies</i>
 {% endfor %}
