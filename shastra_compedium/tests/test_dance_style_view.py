@@ -7,11 +7,9 @@ from shastra_compedium.tests.factories import (
     UserFactory,
 )
 from shastra_compedium.tests.functions import login_as
-from shastra_compedium.models import Performer
 
 
 class TestViewDanceStyle(TestCase):
-    '''Tests for Performer create & update'''
 
     view_name = 'dancestyle-view'
     update_name = 'dancestyle-update'

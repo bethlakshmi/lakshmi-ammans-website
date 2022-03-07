@@ -10,12 +10,10 @@ from shastra_compedium.tests.functions import (
     login_as,
     set_image,
 )
-from shastra_compedium.models import Performer
 from easy_thumbnails.files import get_thumbnailer
 
 
 class TestViewPerformer(TestCase):
-    '''Tests for Performer create & update'''
 
     view_name = 'performer-view'
     update_name = 'performer-update'

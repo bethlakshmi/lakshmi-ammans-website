@@ -2,9 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.test import Client
 from shastra_compedium.tests.factories import (
-    DanceStyleFactory,
     ExampleImageFactory,
-    PerformerFactory,
     PositionDetailFactory,
     PositionFactory,
     SourceFactory,
@@ -14,12 +12,10 @@ from shastra_compedium.tests.functions import (
     login_as,
     set_image,
 )
-from shastra_compedium.models import Performer
 from easy_thumbnails.files import get_thumbnailer
 
 
 class TestViewPosition(TestCase):
-    '''Tests for Performer create & update'''
 
     view_name = 'position-view'
     update_name = 'position-detail-update'
@@ -99,6 +95,45 @@ class TestViewPosition(TestCase):
         self.assertNotContains(response, "<i>No associated meanings</i>")
         self.assertNotContains(response, "<i>No associated description</i>")
         self.assertNotContains(response, "<b>Based upon:</b>")
+
+    def test_posture_and_meaning_disconnected(self):
+        self.source = SourceFactory()
+        another_detail = PositionDetailFactory(
+            position=self.object,
+            usage="Posture Description")
+        another_meaning = PositionDetailFactory(
+            position=self.object,
+            usage="Meaning",
+            chapter=1,
+            verse_start=2,
+            verse_end=3)
+        another_detail.sources.add(self.source)
+        another_meaning.sources.add(self.source)
+        response = self.client.get(self.view_url)
+        self.assertContains(response, another_detail.contents)
+        self.assertContains(response, another_meaning.verses())
+        self.assertContains(response, "<i>No associated images</i>")
+        self.assertContains(response, "<i>No associated meanings</i>")
+        self.assertContains(response, "<i>No associated description</i>")
+
+    def test_2_postures_1_position(self):
+        self.source = SourceFactory()
+        another_detail = PositionDetailFactory(
+            position=self.object,
+            usage="Posture Description")
+        second_detail = PositionDetailFactory(
+            position=self.object,
+            usage="Posture Description")
+        another_detail.sources.add(self.source)
+        second_detail.sources.add(self.source)
+        response = self.client.get(self.view_url)
+        self.assertContains(response, '<a id="%d_%d"></a>' % (
+            self.source.pk,
+            self.object.pk))
+        self.assertContains(response, another_detail.contents)
+        self.assertContains(response, second_detail.verses())
+        self.assertContains(response, "<i>No associated images</i>", 2)
+        self.assertContains(response, "<i>No associated meanings</i>", 2)
 
     def test_meaning_only(self):
         self.source = SourceFactory()
