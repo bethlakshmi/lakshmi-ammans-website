@@ -118,13 +118,14 @@ class MessageAdmin(admin.ModelAdmin):
 
 class ExampleImageAdmin(admin.ModelAdmin):
     list_display = (
+        'image',
         'position',
         'performer',
         'dance_style',
-        'image',
         'created_date',
         'modified_date')
     search_fields = ['position__name', 'performer__name', 'dance_style__name']
+    list_editable = ('position', 'performer', 'dance_style')
 
 
 admin.site.register(Position, PositionAdmin)

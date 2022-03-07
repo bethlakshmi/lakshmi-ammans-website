@@ -1,7 +1,5 @@
 from django.views.generic import View
 from django.views.decorators.cache import never_cache
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from shastra_compedium.models import (
     Shastra,
@@ -21,8 +19,6 @@ class GenericList(View):
     # if you override get_context_dict, call this version first so that
     # path list is set centrally
     #
-
-    @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(GenericList, self).dispatch(*args, **kwargs)
 

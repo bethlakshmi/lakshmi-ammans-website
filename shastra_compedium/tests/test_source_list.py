@@ -27,12 +27,11 @@ class TestSourceList(TestCase):
         from shastra_compedium.site_text import user_messages
         chapter = CategoryDetailFactory(category=self.detail.position.category)
         chapter.sources.add(self.source)
-        login_as(self.user, self)
         response = self.client.get(self.url)
         self.assertContains(response,
                             user_messages['SourceList']['description'])
         self.assertContains(response, self.source.title)
-        self.assertContains(response, reverse(
+        self.assertNotContains(response, reverse(
             "source-update",
             urlconf="shastra_compedium.urls",
             args=[self.source.pk]))
@@ -41,6 +40,14 @@ class TestSourceList(TestCase):
             '<a href="%s" class="nav-link active">Source List</a>' % (
                 self.url),
             html=True)
+        self.assertNotContains(
+            response,
+            ("'title': '%s&nbsp;&nbsp;<a class=\"lakshmi-detail\" " +
+             "href=\"%s\" title=\"Edit\"><i class=\"fas fa-edit\"></i></a>'"
+             ) % (self.source.shastra.title, reverse(
+                "shastra-update",
+                urlconf="shastra_compedium.urls",
+                args=[self.source.shastra.pk])))
 
     def test_list_sources_no_cat_detail(self):
         from shastra_compedium.site_text import user_messages

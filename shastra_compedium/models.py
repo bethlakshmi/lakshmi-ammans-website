@@ -17,6 +17,7 @@ from filer.models.filemodels import File
 from filer import settings as filer_settings
 from filer.fields.file import FilerFileField
 from django.contrib.auth.models import User
+from collections import OrderedDict
 
 
 class Shastra(Model):
@@ -30,6 +31,26 @@ class Shastra(Model):
 
     def __str__(self):
         return self.title
+
+
+    def format_age(self, age):
+        if age < 0:
+            return "%d BCE" % abs(age)
+        else:
+            return "%d CE" % age  
+
+    def age_range(self):
+        age_range = ""
+        if self.min_age:
+            age_range = self.format_age(self.min_age)
+            if self.max_age:
+                age_range = age_range + " - "
+
+        if self.max_age:
+            age_range = age_range + self.format_age(self.max_age)
+
+        return age_range
+
 
     class Meta:
         app_label = "shastra_compedium"
@@ -83,6 +104,36 @@ class Position(Model):
             return "%s, %s" % (self.name, self.category.name)
         else:
             return "%s, No Category" % self.name
+
+    def main_images(self):
+        return self.exampleimage_set.filter(general=True)
+
+    def independant_details_by_source(self):
+        # returns only the details w/out description
+        # uses the format of source --> usage -> details 
+        #                           --> num_details 
+        details_by_source = OrderedDict()
+
+        for detail in self.details.filter(description__isnull=True).order_by(
+                "sources__shastra__min_age",
+                "sources__translator", 
+                "chapter",
+                "verse_start",
+                "pk"):
+            for source in detail.sources.all():
+                usage = detail.usage.replace(" ", "")
+                if source not in details_by_source:
+                    details_by_source[source] = {
+                        usage: [detail],
+                        'num_details': 0}
+                elif usage not in details_by_source[source]:
+                    details_by_source[source][usage] = [detail]
+                else:
+                    details_by_source[source][usage] += [detail]
+                details_by_source[source][
+                    'num_details'] = details_by_source[source][
+                    'num_details'] + 1
+        return details_by_source
 
     class Meta:
         app_label = "shastra_compedium"

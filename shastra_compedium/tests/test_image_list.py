@@ -24,15 +24,10 @@ class TestImageList(TestCase):
         self.img1 = set_image(folder_name="PositionImageUploads")
         self.example_image = ExampleImageFactory(image=self.img1, general=True)
         self.url = reverse(self.view_name, urlconf="shastra_compedium.urls")
-        login_as(self.user, self)
 
-    def test_list_positions_basic(self):
+    def test_list_positions_basic_no_login(self):
         response = self.client.get(self.url)
         self.assertContains(response, self.example_image.position.name)
-        self.assertContains(response, reverse(
-            "exampleimage-update",
-            urlconf="shastra_compedium.urls",
-            args=[self.example_image.pk]))
         self.assertContains(response, self.img1.url)
         self.assertContains(
             response,
@@ -42,8 +37,21 @@ class TestImageList(TestCase):
             '<a href="%s" class="nav-link active">Image List</a>' % (
                 self.url),
             html=True)
+        self.assertNotContains(response, reverse(
+            "exampleimage-update",
+            args=[self.example_image.pk],
+            urlconf="shastra_compedium.urls"))
+        self.assertNotContains(response, reverse(
+            "category-update",
+            args=[self.example_image.position.category.pk],
+            urlconf="shastra_compedium.urls"))
+        self.assertNotContains(response, reverse(
+            "exampleimage-update",
+            urlconf="shastra_compedium.urls",
+            args=[self.example_image.pk]))
 
     def test_list_image(self):
+        login_as(self.user, self)
         self.img2 = set_image(folder_name="PositionImageUploads")
         response = self.client.get(self.url)
         self.assertContains(response, self.img2.url)
@@ -51,6 +59,18 @@ class TestImageList(TestCase):
             "exampleimage-add",
             urlconf="shastra_compedium.urls",
             args=[self.img2.pk]))
+        self.assertContains(response, reverse(
+            "exampleimage-update",
+            args=[self.example_image.pk],
+            urlconf="shastra_compedium.urls"))
+        self.assertContains(response, reverse(
+            "category-update",
+            args=[self.example_image.position.category.pk],
+            urlconf="shastra_compedium.urls"))
+        self.assertContains(response, reverse(
+            "exampleimage-update",
+            urlconf="shastra_compedium.urls",
+            args=[self.example_image.pk]))
 
     def test_list_empty(self):
         ex_url = reverse(

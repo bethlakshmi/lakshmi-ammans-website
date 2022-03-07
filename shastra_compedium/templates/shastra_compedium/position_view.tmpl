@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static sekizai_tags thumbnail %}
+{% block title %}
+   {{ object.name }}
+{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.css">
+{% endblock %}
+{% block layout %}
+    <div class="container-fluid py-3">{%endblock%}
+{% block content %}
+<div class="container">
+<div class="row">
+<div class="col-12 col-md-6 col-lg-4">
+<h2 class="lakshmi-title">{{object.name}}
+ {% if user.is_authenticated %}
+   <a class="lakshmi-detail" href="{% url 'shastra_compedium:position-detail-update' object.id %}?next={{request.path}}" title="Edit"><i class="fas fa-edit"></i></a>         
+ {% endif %}</h2>
+<h3 class="lakshmi-subtitle">{{object.category.name}} - {{object.category.summary}}</h3>
+</div>
+<div class="col-12 col-md-6 col-lg-8">
+{% for image in object.main_images %}
+  <div class="col-4 p-1 float-right">
+    <div class="image-display p-0 col-12"><a href="#">
+        <img src="{% thumbnail image.image 350x350 crop=scale%}" title="{{image.position.name}}"></a>
+      <div class="overlay"><div class="icons">
+        <a class="preview lightbox" href="{{image.image.url}}" data-toggle="tooltip" title="View"><i class="far fa-eye"></i></a>
+      </div>
+      <div class="text">
+          <a href="{% url 'shastra_compedium:dancestyle-view' image.dance_style.pk %}"><i>{{ image.dance_style.name }}</i>&nbsp;
+            <i class="fas fa-link"></i></a><br>
+          <a href="{% url 'shastra_compedium:performer-view' image.performer.pk %}"><i>{{ image.performer.name }}</i>&nbsp;
+            <i class="fas fa-link"></i></a></div>
+    </div></div></div>
+{% endfor %}
+</div></div></div>
+{% for source,verses in object.independant_details_by_source.items %}
+  <div class="row lakshmi-source-header px-5 align-items-center">
+    <div class="col-11">
+        <a id="{{source.pk}}_{{object.pk}}"></a>
+        <b>{{source.shastra.age_range}}</b><br>
+        {{ source.title }} ({{source.shastra.initials}}) - {{source.translator}}</div>
+    <div class="col-1 text-right"><a class="btn btn-secondary" href="{% url 'shastra_compedium:shastrachapter-view' source.shastra.pk object.category.pk %}" title="Show all {{object.category.name}} in {{source.shastra}}"><i class="fas fa-link"></i></a></div>
+  </div>
+    {% for detail in verses.PostureDescription %}
+      <div class="row px-5">
+        <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+          {% for image in detail.exampleimage_set.all %}
+          {% if forloop.first %}<b>Image:</b><br>{% endif %}
+          <div class="col-12 my-2 p-0">{% include "shastra_compedium/image_350.tmpl" %}</div>
+          {% empty %}<i>No associated images</i>{% endfor %}
+        </div>
+        <div class="col-6 col-md-8 col-lg-3 col-xl-4">{% if detail.contents|safe|length > 0 %}<b>Description:<br>
+          {{detail.verses}}</b>  {{detail.contents|safe}}
+          {% else %}<i>No description available</i>{% endif %}</div>
+        <div class="col-7 col-sm-8 col-lg-4">{% for meaning in detail.meaning.all %}
+          {% if forloop.first %}<b>Meaning:</b><br>{% endif %}
+          <b>{{meaning.verses}}:</b>  {{meaning.contents|safe}}<br>{% empty %}<i>No associated meanings</i>{% endfor %}</div>
+        <div class="col-5 col-sm-4 col-lg-2">{% include "shastra_compedium/dependency.tmpl" with dependencies=detail.dependencies.all %}<br>{% include "shastra_compedium/dependedon.tmpl" with dependedon=detail.positiondetail_set.all %}</div>
+
+      </div> 
+    {% endfor %}
+    {% if verses.Meaning|length > 0 %}
+      <div class="row">
+        <div class="col-3">&nbsp;</div>
+        <div class="col-3"><i>No associated description</i></div>
+        <div class="col-4">
+        {% for detail in verses.Meaning %}<b>{{detail.verses}}:</b>
+          {{detail.contents|safe}}{% endfor %}</div>
+        <div class="col-2">{% include "shastra_compedium/dependency.tmpl" with dependencies=detail.dependencies.all %}<br>{% include "shastra_compedium/dependedon.tmpl" with dependedon=detail.positiondetail_set.all %}</div>
+      </div>
+    {% endif %}
+{% endfor %}
+{% endblock content %}

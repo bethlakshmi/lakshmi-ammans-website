@@ -5,7 +5,7 @@ div.bootstrap-table.fullscreen {
 .modal-body {
     background-color: rgb(255, 233, 199);
 }
-.btn-lakshmi-secondary { 
+.btn-lakshmi-secondary, .lakshmi-source-header { 
     background-color: rgba(108,117,125,1);
     border-color: rgba(108,117,125,1);
     color: rgba(255,255,255,1);
@@ -146,11 +146,11 @@ span.dropt span:hover {
 .image-display .icons i {
   color: rgba(255,255,255,1);
   border: 2px solid rgba(255,255,255,1);
-  padding: 12px;
-  margin: -42px;
+  padding: 9px;
+  margin: -52px;
   font-size: 18px;
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   -webkit-transition: all 0.2s linear;
   -moz-transition: all 0.2s linear;
@@ -167,7 +167,7 @@ span.dropt span:hover {
 }
 .image-display .icons .preview {
   left: 40%;
-  top: 45%;
+  top: 30%;
   -webkit-transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1) 0s;
   -moz-transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1) 0s;
   -o-transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1) 0s;
@@ -186,18 +186,45 @@ span.dropt span:hover {
   margin-left: 42px;
 }
 .image-display .icons .link {
-  left: 55%;
+  left: 60%;
   margin-left: 42px;
-  top: 45%;
+  top: 30%;
   -webkit-transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1) 0s;
   -moz-transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1) 0s;
   -o-transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1) 0s;
   transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1) 0s;
 }
 .image-display:hover .preview {
-  left: 45%;
+  left: 40%;
 }
 .image-display:hover .link {
-  left: 50%;
+  left: 60%;
 }
-
+.image-display:hover .text {
+  left: 40%;
+}
+.image-display .text {
+  position: absolute;
+  left: 65%;
+  top: 23%;
+  line-height: 1.15;
+  -webkit-transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1) 0s;
+  -moz-transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1) 0s;
+  -o-transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1) 0s;
+  transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1) 0s;
+}
+.image-display .text a {
+    text-decoration: none;
+}
+.image-display .text i{
+  color: rgba(255,255,255,1);
+  font-size: 12px;
+  border-radius: 50%;
+  -webkit-transition: all 0.2s linear;
+  -moz-transition: all 0.2s linear;
+  -o-transition: all 0.2s linear;
+  transition: all 0.2s linear;
+}
+.image-display .text a:hover i {
+    color: rgba(233,30,99,1);
+}
