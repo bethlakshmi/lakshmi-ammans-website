@@ -31,11 +31,10 @@ class TestPositionList(TestCase):
         self.detail.save()
         self.url = reverse(self.view_name, urlconf="shastra_compedium.urls")
 
-    def test_list_positions_basic(self):
-        login_as(self.user, self)
+    def test_list_positions_basic_no_login(self):
         response = self.client.get(self.url)
         self.assertContains(response, self.detail.position.name)
-        self.assertContains(response, reverse(
+        self.assertNotContains(response, reverse(
             "position-update",
             urlconf="shastra_compedium.urls",
             args=[self.detail.position.pk]))
@@ -44,6 +43,20 @@ class TestPositionList(TestCase):
             '<a href="%s" class="nav-link active">Position List</a>' % (
                 self.url),
             html=True)
+        self.assertNotContains(
+            response,
+            ('%s&nbsp;&nbsp;<a class="lakshmi-detail" href="%s?next=%s" ' +
+             'title="Edit"><i class="fas fa-edit"></i></a>') % (
+             self.detail.position.category,
+             reverse("category-update",
+                     urlconf="shastra_compedium.urls",
+                     args=[self.detail.position.category.pk]),
+             self.url))
+        self.assertNotContains(
+            response,
+            reverse("position-detail-update",
+                     urlconf="shastra_compedium.urls",
+                     args=[self.detail.position.id]))
 
     def test_list_categories_all_the_things(self):
         another_detail = PositionDetailFactory(
@@ -102,6 +115,11 @@ class TestPositionList(TestCase):
              reverse("position-update",
                      urlconf="shastra_compedium.urls",
                      args=[self.detail.position.pk])))
+        self.assertContains(
+            response,
+            reverse("position-detail-update",
+                     urlconf="shastra_compedium.urls",
+                     args=[self.detail.position.id]))
         source_cell = (
             '\'%s\': \'<a class="lakshmi-text-success" href="#" data-toggle=' +
             '"modal" data-target="#Modal%s_%s" data-backdrop="true" ><i ' +
