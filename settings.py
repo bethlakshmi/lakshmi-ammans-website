@@ -35,7 +35,7 @@ INSTALLED_ADDONS = [
     # </INSTALLED_ADDONS>
 ]
 
-CMS_TOOLBAR_HIDE = True
+CMS_TOOLBAR_HIDE = False
 
 # Now we will load auto-configured settings for addons. See:
 #
