@@ -20,6 +20,7 @@ class PositionDetailFormSetView(LoginRequiredMixin,
     page_title = "Position Details"
     view_title = "Edit Position Details"
     success_url = reverse_lazy('source_list', urlconf="shastra_compedium.urls")
+    source_id = -1
 
     def get_context_data(self, **kwargs):
         msg = UserMessage.objects.get_or_create(
@@ -42,13 +43,10 @@ class PositionDetailFormSetView(LoginRequiredMixin,
         if 'position_id' in self.kwargs:
             query = query.filter(position__id=self.kwargs['position_id'])
             self.changed_id = self.kwargs['position_id']
-            self.obj_type = "Position"
         if 'source_id' in self.kwargs:
             query = query.filter(sources__id=self.kwargs['source_id'])
-            self.changed_id = self.kwargs['source_id']
-            self.obj_type = "Source"
+            self.source_id = self.kwargs['source_id']
         if 'category_id' in self.kwargs:
-            self.obj_type = "Source"
             cat_id = self.kwargs['category_id']
             if len(cat_id) > 0:
                 query = query.filter(position__category__id=cat_id)
@@ -70,7 +68,7 @@ class PositionDetailFormSetView(LoginRequiredMixin,
         return '{} position details were updated.'.format(name_list)
 
     def get_success_url(self):
-        return "%s?changed_ids=[%s]&obj_type=%s" % (
+        return "%s?changed_ids=[%s]&obj_type=Position&source_id=%s" % (
             self.request.GET.get('next', self.success_url),
             self.changed_id,
-            self.obj_type)
+            self.source_id)
