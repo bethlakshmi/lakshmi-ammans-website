@@ -185,8 +185,9 @@ class TestPositionDetailFormset(TestCase):
                 detail.position.name))
         self.assertRedirects(
             response,
-            "%s?changed_ids=[%d]&obj_type=Source" % (
+            "%s?changed_ids=[%d]&obj_type=Source&source_id=%d" % (
                 reverse('source_list', urlconf='shastra_compedium.urls'),
+                source.id,
                 source.id))
 
     def test_post_w_next(self):
@@ -213,12 +214,46 @@ class TestPositionDetailFormset(TestCase):
             follow=True)
         self.assertRedirects(
             response,
-            "%s?changed_ids=[%d]&obj_type=Position" % (pos_list,
-                                                       detail.position.id))
+            "%s?changed_ids=[%d]&obj_type=Position&source_id=-1" % (
+                pos_list,
+                detail.position.id))
         self.assertContains(response, "List of Positions")
         self.assertContains(
             response,
             "%s position details were updated." % detail.position.name)
+
+    def test_refined_post_w_next(self):
+        detail = PositionDetailFactory()
+        source = SourceFactory()
+        pos_list = reverse('position_list', urlconf='shastra_compedium.urls')
+        response = self.client.post(
+            "%s?next=%s" % (reverse(
+                'position-detail-update-refined',
+                urlconf='shastra_compedium.urls',
+                args=[source.id, detail.position.id]), pos_list),
+            data={'form-0-sources': [source.pk],
+                  'form-0-usage': "Meaning",
+                  'form-0-position': detail.position.pk,
+                  'form-0-chapter': 1,
+                  'form-0-verse_start': 10,
+                  'form-0-verse_end': 20,
+                  'form-0-contents': "Meaning text",
+                  'form-0-id': detail.id,
+                  'form-TOTAL_FORMS': 1,
+                  'form-INITIAL_FORMS': 1,
+                  'form-MIN_NUM_FORMS': 0,
+                  'form-MAX_NUM_FORMS': 1000,
+                  'submit': True},
+            follow=True)
+        self.assertContains(
+            response,
+            "%s position details were updated." % detail.position.name)
+        self.assertRedirects(
+            response,
+            "%s?changed_ids=[%d]&obj_type=Position&source_id=%d" % (
+                pos_list,
+                detail.position.id,
+                source.id))
 
     def test_post_w_source_description_conflict(self):
         from shastra_compedium.forms.default_form_text import (
