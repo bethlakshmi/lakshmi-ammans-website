@@ -43,9 +43,11 @@ class PositionDetailFormSetView(LoginRequiredMixin,
             query = query.filter(position__id=self.kwargs['position_id'])
             self.changed_id = self.kwargs['position_id']
             self.obj_type = "Position"
-        elif 'source_id' in self.kwargs and 'category_id' in self.kwargs:
+        if 'source_id' in self.kwargs:
             query = query.filter(sources__id=self.kwargs['source_id'])
             self.changed_id = self.kwargs['source_id']
+            self.obj_type = "Source"
+        if 'category_id' in self.kwargs:
             self.obj_type = "Source"
             cat_id = self.kwargs['category_id']
             if len(cat_id) > 0:

@@ -76,6 +76,23 @@ class TestPositionDetailFormset(TestCase):
             edit_post_detail_messages['intro'])
         self.assertContains(response, detail.contents)
 
+    def test_get_by_source_position(self):
+        detail = PositionDetailFactory()
+        another_detail = PositionDetailFactory()
+        source = SourceFactory()
+        detail.sources.add(source)
+        another_detail.sources.add(source)
+        response = self.client.get(
+            reverse('position-detail-update-refined',
+                    urlconf='shastra_compedium.urls',
+                    args=[source.id, detail.position.id]),
+            follow=True)
+        self.assertContains(response, detail.contents)
+        self.assertContains(
+            response,
+            reverse('source_list', urlconf="shastra_compedium.urls"))
+        self.assertNotContains(response, another_detail.contents)
+
     def test_get_w_description(self):
         detail = PositionDetailFactory()
         source = SourceFactory()
