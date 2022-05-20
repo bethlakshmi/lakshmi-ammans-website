@@ -55,8 +55,8 @@ class TestPositionList(TestCase):
         self.assertNotContains(
             response,
             reverse("position-detail-update",
-                     urlconf="shastra_compedium.urls",
-                     args=[self.detail.position.id]))
+                    urlconf="shastra_compedium.urls",
+                    args=[self.detail.position.id]))
 
     def test_list_categories_all_the_things(self):
         another_detail = PositionDetailFactory(
@@ -118,8 +118,8 @@ class TestPositionList(TestCase):
         self.assertContains(
             response,
             reverse("position-detail-update",
-                     urlconf="shastra_compedium.urls",
-                     args=[self.detail.position.id]))
+                    urlconf="shastra_compedium.urls",
+                    args=[self.detail.position.id]))
         source_cell = (
             '\'%s\': \'<a class="lakshmi-text-success" href="#" data-toggle=' +
             '"modal" data-target="#Modal%s_%s" data-backdrop="true" ><i ' +
