@@ -7,6 +7,7 @@ from .generic_list import GenericList
 from .shastra_form_mixin import ShastraFormMixin
 from .upload_chapter import UploadChapter
 from .position_detail_formset_view import PositionDetailFormSetView
+from .source_to_image_formset_view import SourceToImageFormSetView
 from .make_category import (CategoryCreate, CategoryUpdate)
 from .make_category_detail import CategoryDetailUpdate
 from .make_dance_style import (DanceStyleCreate, DanceStyleUpdate)

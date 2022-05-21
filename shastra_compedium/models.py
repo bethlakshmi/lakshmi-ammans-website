@@ -194,7 +194,7 @@ class PositionDetail(Detail):
 
     class Meta:
         app_label = "shastra_compedium"
-        ordering = ['position', 'chapter', 'verse_start', 'verse_end']
+        ordering = ['position', 'chapter', 'verse_start', 'verse_end', 'id']
 
 
 class CategoryDetail(Detail):
