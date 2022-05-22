@@ -20,7 +20,7 @@ class SourceToImageFormSetView(LoginRequiredMixin,
     page_title = "Image to Position Assignments"
     view_title = "Edit Image to Position Assignments"
     success_url = reverse_lazy('source_list', urlconf="shastra_compedium.urls")
-    source_id = -1
+    changed_id = -1
     obj_type = "Source"
 
     def get_context_data(self, **kwargs):
@@ -40,8 +40,8 @@ class SourceToImageFormSetView(LoginRequiredMixin,
 
     def get_queryset(self):
         query = super(SourceToImageFormSetView, self).get_queryset()
-        self.source_id = self.kwargs['source_id']
-        query = query.filter(sources__id=self.source_id)
+        self.changed_id = self.kwargs['source_id']
+        query = query.filter(sources__id=self.changed_id)
         cat_id = self.kwargs['category_id']
         if len(cat_id) > 0:
             query = query.filter(position__category__id=cat_id)
@@ -63,7 +63,7 @@ class SourceToImageFormSetView(LoginRequiredMixin,
         return '{} position detail images were updated.'.format(name_list)
 
     def get_success_url(self):
-        return "%s?obj_type=%s&source_id=%s" % (
+        return "%s?obj_type=%s&changed_ids=[%s]" % (
             self.request.GET.get('next', self.success_url),
             self.obj_type,
-            self.source_id)
+            self.changed_id)

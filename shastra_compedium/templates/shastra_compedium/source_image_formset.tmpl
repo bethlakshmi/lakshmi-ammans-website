@@ -4,22 +4,23 @@
     {% csrf_token %}
 {{ formset.management_form }}
 
-  <table class="lakshmi-table table-striped">
+  <table class="lakshmi-table table-striped table">
     <thead class="lakshmi-table-header">
       <tr>
       <th>Position</th>
-      <th>Images</th>
+      <th>Depends On</th>
       </tr>
 
     </thead>
     <tbody>
       {% for item_form in formset %}
       <tr {% if item_form.errors %}class="lakshmi-table-error"{% endif %}>
-        <td>{{item_form.exampleimage_set.label}}</td>
-        <td>{{item_form.exampleimage_set}}
+        <td>{{item_form.exampleimage_set.label}}<br>
+            {{item_form.exampleimage_set}}
           {% if item_form.exampleimage_set.errors %}<br>
             <font class="lakshmi-form-error">{{ item_form.exampleimage_set.errors }}</font>
           {% endif %}</td>
+        <td>{{item_form.dependencies.label}}{{item_form.dependencies }}</td>
         </tr>
     {% for hidden in item_form.hidden_fields %}
     {{ hidden }}
