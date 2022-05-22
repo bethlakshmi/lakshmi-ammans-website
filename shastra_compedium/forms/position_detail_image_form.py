@@ -19,13 +19,15 @@ from dal import (
     forward
 )
 
+
 class ThumbnailImageField(ModelMultipleChoiceField):
     def label_from_instance(self, obj):
         options = {'size': (100, 100), 'crop': False}
         thumb_url = get_thumbnailer(obj.image).get_thumbnail(options).url
         other_links = "Filename: %s" % (obj.image.original_filename)
-        return mark_safe(
-            "<img src='%s' class='m-1' title='%s'/>" % (thumb_url, other_links))
+        return mark_safe("<img src='%s' class='m-1' title='%s'/>" % (
+            thumb_url,
+            other_links))
 
 
 class PositionDetailImageForm(ModelForm):
@@ -50,15 +52,15 @@ class PositionDetailImageForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(PositionDetailImageForm, self).__init__(*args, **kwargs)
 
-        # Here we fetch the currently related images into the field,     
-        # so that they will display in the form.  Limiting options to 
+        # Here we fetch the currently related images into the field,
+        # so that they will display in the form.  Limiting options to
         # matched positions.
         if self.instance.id:
             self.fields['exampleimage_set'
-                ].initial = self.instance.exampleimage_set.all(
+                        ].initial = self.instance.exampleimage_set.all(
                     ).values_list('id', flat=True)
             self.fields['exampleimage_set'
-                ].queryset = ExampleImage.objects.filter(
+                        ].queryset = ExampleImage.objects.filter(
                     position=self.instance.position)
             self.fields['exampleimage_set'].label = mark_safe(
                 "<b>%s - %s - %s</b><br>%s" % (
@@ -73,13 +75,14 @@ class PositionDetailImageForm(ModelForm):
                 for img in detail.exampleimage_set.all():
                     thumb_url = get_thumbnailer(img.image).get_thumbnail(
                         options).url
-                    other_links = "Filename: %s" % (img.image.original_filename)
-                    dep_label = "%s&nbsp;&nbsp;<img src='%s' title='%s'/>"% (
+                    other_links = "Filename: %s" % (
+                        img.image.original_filename)
+                    dep_label = "%s&nbsp;&nbsp;<img src='%s' title='%s'/>" % (
                         dep_label,
                         thumb_url,
                         other_links)
-                dep_label = "%s<br>%s"% (dep_label, detail.contents)
-            self.fields['dependencies'].label = mark_safe(dep_label) 
+                dep_label = "%s<br>%s" % (dep_label, detail.contents)
+            self.fields['dependencies'].label = mark_safe(dep_label)
 
     def save(self, *args, **kwargs):
         instance = super(PositionDetailImageForm, self).save(*args, **kwargs)
