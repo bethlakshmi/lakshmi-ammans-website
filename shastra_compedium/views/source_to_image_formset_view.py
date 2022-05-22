@@ -4,7 +4,7 @@ from shastra_compedium.models import (
     PositionDetail,
     UserMessage,
 )
-from shastra_compedium.site_text import edit_post_detail_messages
+from shastra_compedium.site_text import edit_pos_image_link_messages
 from shastra_compedium.forms import PositionDetailImageForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -16,7 +16,7 @@ class SourceToImageFormSetView(LoginRequiredMixin,
     form_class = PositionDetailImageForm
     factory_kwargs = {'extra': 0}
     template_name = 'shastra_compedium/source_image_formset.tmpl'
-    intro_message = edit_post_detail_messages['intro']
+    intro_message = edit_pos_image_link_messages['intro']
     page_title = "Image to Position Assignments"
     view_title = "Edit Image to Position Assignments"
     success_url = reverse_lazy('source_list', urlconf="shastra_compedium.urls")

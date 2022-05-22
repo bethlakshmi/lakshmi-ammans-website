@@ -51,6 +51,11 @@ make_position_messages = {
 edit_post_detail_messages = {
     'intro': 'Edit any of these position details and press "Submit".'
 }
+edit_pos_image_link_messages = {
+    'intro': '''The image choices shown are already tied to the given position.
+ To change the position of this detail, or to add new images, go back to the
+ list page and update Position Details or Upload Images.'''
+}
 user_messages = {
     'CHAPTER_BASICS_INTRO': {
         'summary': 'Introduction on first page of upload',

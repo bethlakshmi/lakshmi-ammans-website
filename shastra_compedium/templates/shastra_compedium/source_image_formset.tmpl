@@ -16,11 +16,19 @@
       {% for item_form in formset %}
       <tr {% if item_form.errors %}class="lakshmi-table-error"{% endif %}>
         <td>{{item_form.exampleimage_set.label}}<br>
-            {{item_form.exampleimage_set}}
+            {% for checkbox in item_form.exampleimage_set %}
+        <label class="form-check-label checkbox-label" id="{{ checkbox.id_for_label }}">
+          {{ checkbox.tag }}{{ checkbox.choice_label }}
+        </label>
+          {% endfor %}
           {% if item_form.exampleimage_set.errors %}<br>
             <font class="lakshmi-form-error">{{ item_form.exampleimage_set.errors }}</font>
           {% endif %}</td>
-        <td>{{item_form.dependencies.label}}{{item_form.dependencies }}</td>
+        <td>{{item_form.dependencies.label}}{{item_form.dependencies }}
+            {% if item_form.dependencies.errors %}<br>
+            <font class="lakshmi-form-error">{{ item_form.dependencies.errors }}</font>
+          {% endif %}
+        </td>
         </tr>
     {% for hidden in item_form.hidden_fields %}
     {{ hidden }}

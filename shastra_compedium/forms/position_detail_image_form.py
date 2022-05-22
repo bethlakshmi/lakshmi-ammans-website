@@ -25,7 +25,7 @@ class ThumbnailImageField(ModelMultipleChoiceField):
         thumb_url = get_thumbnailer(obj.image).get_thumbnail(options).url
         other_links = "Filename: %s" % (obj.image.original_filename)
         return mark_safe(
-            "<img src='%s' title='%s'/>" % (thumb_url, other_links))
+            "<img src='%s' class='m-1' title='%s'/>" % (thumb_url, other_links))
 
 
 class PositionDetailImageForm(ModelForm):
