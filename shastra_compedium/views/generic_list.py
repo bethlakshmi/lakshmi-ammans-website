@@ -28,6 +28,7 @@ class GenericList(View):
             'page_title': self.title,
             'items': self.get_list(),
             'changed_ids': self.changed_ids,
+            'source_id': self.source_id,
             'error_id': self.error_id,
             'path_list': [
                 ("Position List",
@@ -53,5 +54,6 @@ class GenericList(View):
     def get(self, request, *args, **kwargs):
         self.changed_ids = eval(request.GET.get('changed_ids', default="[]"))
         self.changed_obj = request.GET.get('obj_type', default="")
+        self.source_id = int(request.GET.get('source_id', default=-1))
         self.error_id = int(request.GET.get('error_id', default=-1))
         return render(request, self.template, self.get_context_dict())
