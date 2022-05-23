@@ -4,16 +4,12 @@ from django.forms import (
     ModelForm,
     ModelMultipleChoiceField,
 )
-from django.forms.widgets import CheckboxSelectMultiple
 from shastra_compedium.models import (
     ExampleImage,
     PositionDetail,
 )
 from django.utils.safestring import mark_safe
 from easy_thumbnails.files import get_thumbnailer
-from shastra_compedium.forms.default_form_text import item_image_help
-from django.utils.html import strip_tags
-from shastra_compedium.site_text import image_modal
 from dal import (
     autocomplete,
     forward
