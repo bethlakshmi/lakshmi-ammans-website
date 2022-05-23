@@ -61,10 +61,16 @@ class TestSourceToImageFormset(TestCase):
         dependancy.sources.add(self.source)
         self.example_image.details.add(self.detail)
         self.detail.dependencies.add(dependancy)
+        img1 = set_image()
+        d_example_image = ExampleImageFactory(
+            image=img1,
+            position=dependancy.position)
+        d_example_image.details.add(dependancy)
         response = self.client.get(reverse(
             self.view_name,
             urlconf='shastra_compedium.urls',
-            args=[self.source.id, self.detail.position.category.id]), follow=True)
+            args=[self.source.id,
+                  self.detail.position.category.id]), follow=True)
         assert_option_state(self,
                             response,
                             dependancy.pk,
@@ -76,7 +82,7 @@ class TestSourceToImageFormset(TestCase):
         self.assertContains(response,
                             self.example_image.image.original_filename)
         self.assertContains(response,
-                            self.example_image.image.original_filename)
+                            d_example_image.image.original_filename)
         self.assertContains(
             response,
             ('<input type="checkbox" name="form-0-exampleimage_set" ' +

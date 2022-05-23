@@ -41,12 +41,8 @@ class SourceToImageFormSetView(LoginRequiredMixin,
     def get_queryset(self):
         query = super(SourceToImageFormSetView, self).get_queryset()
         self.changed_id = self.kwargs['source_id']
-        query = query.filter(sources__id=self.changed_id)
-        cat_id = self.kwargs['category_id']
-        if len(cat_id) > 0:
-            query = query.filter(position__category__id=cat_id)
-        else:
-            query = query.filter(position__category__isnull=True)
+        query = query.filter(sources__id=self.changed_id,
+                             position__category__id=self.kwargs['category_id'])
         return query
 
     def get_success_message(self, formset):
