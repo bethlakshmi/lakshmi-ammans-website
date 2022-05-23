@@ -55,8 +55,8 @@ class TestPositionList(TestCase):
         self.assertNotContains(
             response,
             reverse("position-detail-update",
-                     urlconf="shastra_compedium.urls",
-                     args=[self.detail.position.id]))
+                    urlconf="shastra_compedium.urls",
+                    args=[self.detail.position.id]))
 
     def test_list_categories_all_the_things(self):
         another_detail = PositionDetailFactory(
@@ -118,8 +118,8 @@ class TestPositionList(TestCase):
         self.assertContains(
             response,
             reverse("position-detail-update",
-                     urlconf="shastra_compedium.urls",
-                     args=[self.detail.position.id]))
+                    urlconf="shastra_compedium.urls",
+                    args=[self.detail.position.id]))
         source_cell = (
             '\'%s\': \'<a class="lakshmi-text-success" href="#" data-toggle=' +
             '"modal" data-target="#Modal%s_%s" data-backdrop="true" ><i ' +
@@ -259,3 +259,19 @@ class TestPositionList(TestCase):
         thumb_url = get_thumbnailer(img1).get_thumbnail(self.options).url
         self.assertContains(response, thumb_url)
         self.assertNotContains(response, "No associated description")
+
+    def test_list_positions_w_refined_update(self):
+        response = self.client.get(
+            "%s?changed_ids=[%d]&obj_type=Position&source_id=%d" % (
+                self.url,
+                self.detail.position.id,
+                self.source.id))
+        self.assertContains(response, self.detail.position.name)
+        self.assertContains(
+            response,
+            reverse('position-detail-update-refined',
+                    urlconf='shastra_compedium.urls',
+                    args=[self.source.id, self.detail.position.id]))
+        self.assertContains(
+            response,
+            '<tr class="lakshmi-table-success"><td class="align-top"')
