@@ -164,8 +164,6 @@ class TestSourceToImageFormset(TestCase):
                   'form-MAX_NUM_FORMS': 1000,
                   'submit': True},
             follow=True)
-        print(response.content)
-        print(detail3.id)
         self.assertNotContains(response, "List of Sources")
         self.assertContains(
             response,
