@@ -32,12 +32,11 @@ class Shastra(Model):
     def __str__(self):
         return self.title
 
-
     def format_age(self, age):
         if age < 0:
             return "%d BCE" % abs(age)
         else:
-            return "%d CE" % age  
+            return "%d CE" % age
 
     def age_range(self):
         age_range = ""
@@ -50,7 +49,6 @@ class Shastra(Model):
             age_range = age_range + self.format_age(self.max_age)
 
         return age_range
-
 
     class Meta:
         app_label = "shastra_compedium"
@@ -110,13 +108,13 @@ class Position(Model):
 
     def independant_details_by_source(self):
         # returns only the details w/out description
-        # uses the format of source --> usage -> details 
-        #                           --> num_details 
+        # uses the format of source --> usage -> details
+        #                           --> num_details
         details_by_source = OrderedDict()
 
         for detail in self.details.filter(description__isnull=True).order_by(
                 "sources__shastra__min_age",
-                "sources__translator", 
+                "sources__translator",
                 "chapter",
                 "verse_start",
                 "pk"):
@@ -194,7 +192,7 @@ class PositionDetail(Detail):
 
     class Meta:
         app_label = "shastra_compedium"
-        ordering = ['position', 'chapter', 'verse_start', 'verse_end']
+        ordering = ['position', 'chapter', 'verse_start', 'verse_end', 'id']
 
 
 class CategoryDetail(Detail):
