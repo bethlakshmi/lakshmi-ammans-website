@@ -1,7 +1,9 @@
 from django.forms import (
     CheckboxSelectMultiple,
+    HiddenInput,
     ModelForm,
     ModelMultipleChoiceField,
+    MultipleHiddenInput,
 )
 from shastra_compedium.models import (
     ExampleImage,
@@ -35,14 +37,16 @@ class PositionDetailImageForm(ModelForm):
 
     class Meta:
         model = PositionDetail
-        fields = ['id', 'dependencies']
+        fields = ['id', 'dependencies', 'sources', 'position']
         widgets = {
             'dependencies': autocomplete.ModelSelect2Multiple(
                 attrs={'style': 'width: 100%'},
                 url='positiondetail-autocomplete',
                 forward=('sources',
                          'position',
-                         forward.Const('Posture Description', 'usage')))}
+                         forward.Const('Posture Description', 'usage'))),
+            'sources': MultipleHiddenInput(),
+            'position': HiddenInput()}
 
     def __init__(self, *args, **kwargs):
         super(PositionDetailImageForm, self).__init__(*args, **kwargs)
