@@ -82,3 +82,15 @@ class TestPositionDetailAutoComplete(TestCase):
             json.dumps({"sources": [source.pk], })))
         self.assertContains(response, str(self.detail))
         self.assertNotContains(response, str(self.detail2))
+
+    def test_list_positiondetail_w_source(self):
+        # this is what happens in position detail image edit w. 
+        # MultipleHiddenInput and one source.
+        source = SourceFactory()
+        self.detail.sources.add(source)
+        login_as(self.user, self)
+        response = self.client.get("%s?forward=%s" % (
+            reverse('positiondetail-autocomplete'),
+            json.dumps({"sources": source.pk, })))
+        self.assertContains(response, str(self.detail))
+        self.assertNotContains(response, str(self.detail2))

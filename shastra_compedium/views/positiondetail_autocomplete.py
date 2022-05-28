@@ -10,7 +10,11 @@ class PositionDetailAutocomplete(autocomplete.Select2QuerySetView):
         qs = PositionDetail.objects.all()
         sources = self.forwarded.get('sources')
         if sources:
-            qs = qs.filter(sources__pk__in=sources)
+            if isinstance(sources, list):
+                qs = qs.filter(sources__pk__in=sources)
+            # ugly but needed until refactor to remove many to many here
+            else:
+                qs = qs.filter(sources__pk__in=[sources])
 
         position = self.forwarded.get('position')
         if position:
