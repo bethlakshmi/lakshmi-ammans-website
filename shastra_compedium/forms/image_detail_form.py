@@ -17,7 +17,10 @@ from shastra_compedium.site_text import image_modal
 
 class DetailsChoiceField(ModelMultipleChoiceField):
     def label_from_instance(self, obj):
-        return mark_safe(strip_tags(obj.contents))
+        return mark_safe("%s: %s - %s" % (
+            obj.sources.first(),
+            obj.verses(),
+            strip_tags(obj.contents)))
 
 
 class ImageDetailForm(ModelForm):
