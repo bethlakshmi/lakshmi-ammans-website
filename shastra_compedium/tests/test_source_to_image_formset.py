@@ -96,7 +96,9 @@ class TestSourceToImageFormset(TestCase):
             position__category=self.detail.position.category)
         detail2.sources.add(self.source)
         detail3.sources.add(self.source)
-        dependancy = PositionDetailFactory(usage="Posture Description")
+        dependancy = PositionDetailFactory(
+            usage="Posture Description",
+            position=detail3.position)
         dependancy.sources.add(self.source)
         self.example_image.details.add(self.detail)
         self.detail.dependencies.add(dependancy)
@@ -111,12 +113,18 @@ class TestSourceToImageFormset(TestCase):
             data={'form-0-id': self.detail.id,
                   'form-0-exampleimage_set': [self.example_image.pk],
                   'form-0-dependencies': [],
+                  'form-0-position': self.detail.position.id,
+                  'form-0-sources': [self.source.pk],
                   'form-1-id': detail2.id,
                   'form-1-exampleimage_set': [],
-                  'form-1-dependencies': [dependancy.pk],
+                  'form-1-dependencies': [],
+                  'form-1-position': detail2.position.id,
+                  'form-1-sources': [self.source.pk],
                   'form-2-id': detail3.id,
                   'form-2-exampleimage_set': [d3_example_image.pk],
                   'form-2-dependencies': [dependancy.pk],
+                  'form-2-position': detail3.position.id,
+                  'form-2-sources': [self.source.pk],
                   'form-TOTAL_FORMS': 3,
                   'form-INITIAL_FORMS': 3,
                   'form-MIN_NUM_FORMS': 0,
@@ -155,9 +163,13 @@ class TestSourceToImageFormset(TestCase):
             data={'form-0-id': self.detail.id,
                   'form-0-exampleimage_set': [self.example_image.pk],
                   'form-0-dependencies': [],
+                  'form-0-position': self.detail.position.id,
+                  'form-0-sources': [self.source.pk],
                   'form-1-id': detail3.id,
                   'form-1-exampleimage_set': [self.example_image.pk],
                   'form-1-dependencies': [dependancy.pk],
+                  'form-1-position': detail3.position.id,
+                  'form-1-sources': [self.source.pk],
                   'form-TOTAL_FORMS': 2,
                   'form-INITIAL_FORMS': 2,
                   'form-MIN_NUM_FORMS': 0,
