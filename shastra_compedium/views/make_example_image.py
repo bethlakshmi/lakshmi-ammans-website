@@ -10,9 +10,16 @@ from shastra_compedium.forms import (CopyImageForm,
 from filer.models.imagemodels import Image
 
 
+class ExampleImageMixin(ShastraFormMixin):
+    def get_success_url(self):
+        return "%s?changed_ids=%s&obj_type=%s" % (
+            self.request.GET.get('next', self.success_url),
+            str([self.object.image.pk]),
+            self.object.__class__.__name__)
+
 class ExampleImageUpdate(LoginRequiredMixin,
                          UpdatePopupMixin,
-                         ShastraFormMixin,
+                         ExampleImageMixin,
                          UpdateView):
     model = ExampleImage
     template_name = 'shastra_compedium/modal_make_form.tmpl'
@@ -27,7 +34,7 @@ class ExampleImageUpdate(LoginRequiredMixin,
 
 class ExampleImageCreate(LoginRequiredMixin,
                          CreatePopupMixin,
-                         ShastraFormMixin,
+                         ExampleImageMixin,
                          CreateView):
     model = ExampleImage
     template_name = 'shastra_compedium/modal_make_form.tmpl'
@@ -46,7 +53,7 @@ class ExampleImageCreate(LoginRequiredMixin,
 
 class ExampleImageCopy(LoginRequiredMixin,
                        CreatePopupMixin,
-                       ShastraFormMixin,
+                       ExampleImageMixin,
                        CreateView):
     model = ExampleImage
     template_name = 'shastra_compedium/modal_make_form.tmpl'
