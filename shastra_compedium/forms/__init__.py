@@ -7,7 +7,7 @@ from .position_detail_image_form import PositionDetailImageForm
 from .position_detail_edit_form import PositionDetailEditForm
 from .position_form import PositionForm
 from .source_form import SourceForm
-from .image_form import ImageForm
+from .image_form import (CopyImageForm, ImageForm)
 from .image_upload_form import ImageUploadForm
 from .image_detail_form import ImageDetailForm
 from .image_associate_form import ImageAssociateForm

@@ -18,6 +18,7 @@ make_dance_style_messages = {
 }
 make_example_image_messages = {
     'create_success':  "A new example image has been created.  %s",
+    'copy_success':  "A new copied exampe image has been created.  %s",
     'edit_success':  '''The %s has been updated.''',
     'create_intro':  '''Use this form to create a new example image based
     on existing uploaded images.  Be sure to select at lease one - Main Image
@@ -25,6 +26,8 @@ make_example_image_messages = {
     the details will not be saved (with no notice).''',
     'edit_intro':  '''Use this form to update this example image.   Be sure
     to select at lease one - Main Image or at least one detail.''',
+    'copy_intro':  '''Use this form to create a new example using an existing
+    image from another example.''',
 }
 make_category_detail_messages = {
     'edit_success':  "The %s chapter has been updated.",

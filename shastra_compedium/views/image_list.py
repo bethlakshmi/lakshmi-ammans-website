@@ -14,7 +14,13 @@ class ImageList(GenericList):
         return context
 
     def get_list(self):
-        return {"exampleimages": ExampleImage.objects.all(),
+        example_dict = {}
+        for example in ExampleImage.objects.all():
+            if example.image in example_dict:
+                example_dict[example.image] += [example]
+            else:
+                example_dict[example.image] = [example]
+        return {"exampleimages": example_dict,
                 "images": Image.objects.filter(
                     folder__name="PositionImageUploads",
                     exampleimage__isnull=True)}

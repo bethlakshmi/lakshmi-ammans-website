@@ -28,8 +28,7 @@ class ThumbnailImageField(ModelChoiceField):
         return mark_safe(
             "<img src='%s' title='%s'/>" % (thumb_url, other_links))
 
-
-class ImageForm(ModelForm):
+class CopyImageForm(ModelForm):
     options = {'size': (150, 150), 'crop': False}
     required_css_class = 'required'
     error_css_class = 'error'
@@ -68,16 +67,34 @@ class ImageForm(ModelForm):
                 'description': item_image_help['default_dance_style']}
         )[0].description)
 
-    details = DetailsChoiceField(
-        queryset=PositionDetail.objects.all(),
-        widget=CheckboxSelectMultiple(attrs={'class': 'nobullet'}),
-        required=False)
-
     image = ThumbnailImageField(
         widget=RadioSelect(attrs={'class': 'nobullet'}),
         queryset=Image.objects.filter(folder__name="PositionImageUploads"),
         required=True,
         empty_label=None)
+
+    def __init__(self, *args, **kwargs):
+        super(CopyImageForm, self).__init__(*args, **kwargs)
+        if 'initial' in kwargs and 'image' in kwargs['initial']:
+            self.fields['image'].queryset = Image.objects.filter(
+                pk=kwargs.get('initial').get('image').pk)
+
+    class Meta:
+        model = ExampleImage
+        fields = [
+            'image',
+            'performer',
+            'dance_style',
+            'position',
+            'general']
+        labels = {'general': "Main Image?"}
+
+class ImageForm(CopyImageForm):
+
+    details = DetailsChoiceField(
+        queryset=PositionDetail.objects.all(),
+        widget=CheckboxSelectMultiple(attrs={'class': 'nobullet'}),
+        required=False)
 
     def is_valid(self):
         from shastra_compedium.models import UserMessage
