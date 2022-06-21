@@ -64,7 +64,7 @@ urlpatterns = [
     url(r'^image/add/(?P<image_id>\d+)$',
         ExampleImageCreate.as_view(),
         name='exampleimage-add'),
-    url(r'^image/copy/(?P<image_id>\d+)$',
+    url(r'^image/copy/(?P<example_id>\d+)$',
         ExampleImageCopy.as_view(),
         name='exampleimage-copy'),
     url(r'^position/add/(?P<order>\d+)/(?P<category>\d+)/$',

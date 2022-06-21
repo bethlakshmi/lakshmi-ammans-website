@@ -21,7 +21,7 @@ make_example_image_messages = {
     'copy_success':  "A new copied exampe image has been created.  %s",
     'edit_success':  '''The %s has been updated.''',
     'create_intro':  '''Use this form to create a new example image based
-    on existing uploaded images.  Be sure to select at lease one - Main Image
+    on existing uploaded images.  Be sure to select at least one - Main Image
     or at least one detail.  If the details do not match the chosen position,
     the details will not be saved (with no notice).''',
     'edit_intro':  '''Use this form to update this example image.   Be sure

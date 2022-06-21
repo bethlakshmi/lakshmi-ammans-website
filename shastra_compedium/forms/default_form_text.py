@@ -8,7 +8,7 @@ item_image_help = {
     'default_performer': "Choose the default performer shown in these " +
     "images.  This can be changed image by image on the next page.",
     'default_dance_style': "Choose the default dance style.  Note, this " +
-    "should be a style connected to the performer (if chosen), or it will" +
+    "should be a style connected to the performer (if chosen), or it will " +
     "cause an error.  The style can be changed on an image by image basis " +
     "on the next page.",
     'default_position': "If this position is changed, any details will be " +

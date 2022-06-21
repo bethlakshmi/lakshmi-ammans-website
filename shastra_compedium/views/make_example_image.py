@@ -5,8 +5,7 @@ from django.urls import reverse_lazy
 from shastra_compedium.site_text import make_example_image_messages
 from shastra_compedium.views import ShastraFormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
-from shastra_compedium.forms import (CopyImageForm,
-                                     ImageForm)
+from shastra_compedium.forms import ImageForm
 from filer.models.imagemodels import Image
 
 
@@ -63,12 +62,12 @@ class ExampleImageCopy(LoginRequiredMixin,
     view_title = 'Copy Image to a New Position'
     valid_message = make_example_image_messages['copy_success']
     intro_message = make_example_image_messages['copy_intro']
-    form_class = CopyImageForm
+    form_class = ImageForm
 
     def get_initial(self):
         initial = super().get_initial()
         initial_example_image = ExampleImage.objects.get(
-            pk=self.kwargs['image_id'])
+            pk=self.kwargs['example_id'])
         initial['image'] = initial_example_image.image
         initial['performer'] = initial_example_image.performer
         initial['dance_style'] = initial_example_image.dance_style
