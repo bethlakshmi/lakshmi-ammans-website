@@ -293,6 +293,7 @@ class ExampleImage(Example):
 
     class Meta:
         app_label = "shastra_compedium"
+        unique_together = [('image', 'position'), ]
 
 
 class ExampleVideo(Example):

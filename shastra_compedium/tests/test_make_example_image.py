@@ -22,18 +22,23 @@ class TestMakeExampleImage(TestCase):
 
     update_name = 'exampleimage-update'
     create_name = 'exampleimage-add'
+    copy_name = 'exampleimage-copy'
     options = {'size': (200, 200), 'crop': False}
 
     def setUp(self):
         self.client = Client()
         self.img1 = set_image()
+        self.img2 = set_image()
         self.object = ExampleImageFactory(image=self.img1)
         self.edit_url = reverse(self.update_name,
                                 args=[self.object.pk],
                                 urlconf='shastra_compedium.urls')
         self.create_url = reverse(self.create_name,
-                                  args=[self.img1.pk],
+                                  args=[self.img2.pk],
                                   urlconf='shastra_compedium.urls')
+        self.copy_url = reverse(self.copy_name,
+                                args=[self.object.pk],
+                                urlconf='shastra_compedium.urls')
         user = UserFactory()
         login_as(user, self)
 
@@ -92,7 +97,7 @@ class TestMakeExampleImage(TestCase):
             response,
             '%s?changed_ids=[%d]&obj_type=ExampleImage' % (
                 reverse('image_list', urlconf="shastra_compedium.urls"),
-                self.object.pk))
+                self.img1.pk))
 
     def test_keep_position(self):
         detail = PositionDetailFactory(position=self.object.position)
@@ -112,30 +117,32 @@ class TestMakeExampleImage(TestCase):
         self.assertContains(response,
                             make_example_image_messages['create_intro'])
         self.assertContains(response, "Main Image?")
-        thumb_url = get_thumbnailer(self.img1).get_thumbnail(self.options).url
+        thumb_url = get_thumbnailer(self.img2).get_thumbnail(self.options).url
         self.assertContains(response, thumb_url)
 
     def test_create_post(self):
         start = ExampleImage.objects.all().count()
-        last_pk = ExampleImage.objects.latest('pk').pk
+        data = self.example_image_data()
+        data['image'] = self.img2.pk
         response = self.client.post(self.create_url,
-                                    data=self.example_image_data(),
+                                    data=data,
                                     follow=True)
         self.assertContains(
             response,
             make_example_image_messages['create_success'] % (
-                "Image %s, for Position %s," % (self.img1,
+                "Image %s, for Position %s," % (self.img2,
                                                 self.object.position.name)))
         self.assertEqual(start+1, ExampleImage.objects.all().count())
         self.assertRedirects(
             response,
             '%s?changed_ids=[%d]&obj_type=ExampleImage' % (
                 reverse('image_list', urlconf="shastra_compedium.urls"),
-                last_pk+1))
+                self.img2.pk))
 
     def test_create_post_error(self):
         from shastra_compedium.forms.default_form_text import item_image_help
         data = self.example_image_data()
+        data['image'] = self.img2.pk
         data['general'] = False
         response = self.client.post(self.create_url,
                                     data=data,
@@ -143,6 +150,52 @@ class TestMakeExampleImage(TestCase):
         self.assertNotContains(
             response,
             make_example_image_messages['create_success'] % (
-                "Image %s, for Position %s," % (self.img1,
+                "Image %s, for Position %s," % (self.img2,
                                                 self.object.position)))
         self.assertContains(response, item_image_help['general_or_details'])
+
+    def test_copy_get(self):
+        response = self.client.get(self.copy_url)
+        self.assertContains(response, 'Copy Image to a New Position')
+        self.assertContains(response,
+                            make_example_image_messages['copy_intro'])
+        self.assertContains(response, "Main Image?")
+        thumb_url = get_thumbnailer(self.img1).get_thumbnail(self.options).url
+        self.assertContains(response, thumb_url)
+
+    def test_copy_post(self):
+        start = ExampleImage.objects.all().count()
+        new_position = PositionFactory()
+        data = {'image': self.img1.pk,
+                'performer': self.object.performer.pk,
+                'dance_style': self.object.dance_style.pk,
+                'position': new_position.pk,
+                'general': True,
+                'details': []}
+        response = self.client.post(self.copy_url,
+                                    data=data,
+                                    follow=True)
+        self.assertContains(
+            response,
+            make_example_image_messages['copy_success'] % (
+                "Image %s, for Position %s," % (self.img1, new_position.name)))
+        self.assertEqual(start+1, ExampleImage.objects.all().count())
+        self.assertRedirects(
+            response,
+            '%s?changed_ids=[%d]&obj_type=ExampleImage' % (
+                reverse('image_list', urlconf="shastra_compedium.urls"),
+                self.img1.pk))
+
+    def test_copy_post_error(self):
+        data = self.example_image_data()
+        response = self.client.post(self.copy_url,
+                                    data=data,
+                                    follow=True)
+        self.assertNotContains(
+            response,
+            make_example_image_messages['copy_success'] % (
+                "Image %s, for Position %s," % (self.img1,
+                                                self.object.position)))
+        self.assertContains(
+            response,
+            "Example image with this Image and Position already exists.")
