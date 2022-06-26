@@ -213,6 +213,22 @@ class CategoryDetail(Detail):
         ordering = ['category', 'chapter', 'verse_start', 'verse_end']
 
 
+class CombinationDetail(Detail):
+    positions = ManyToManyField('Position', blank=False)
+
+    def __str__(self):
+        return "%s - %s..." % (
+            self.verses(),
+            self.contents[3:28])
+
+    def detail_images(self):
+        return self.exampleimage_set.filter(general=False)
+
+    class Meta:
+        app_label = "shastra_compedium"
+        ordering = ['chapter', 'verse_start', 'verse_end', 'id']
+
+
 class Video(File):
     _icon = "video"
 

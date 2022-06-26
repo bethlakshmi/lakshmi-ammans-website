@@ -20,6 +20,22 @@ class PositionAdmin(admin.ModelAdmin):
         return obj.examplevideo_set.count()
 
 
+class CombinationDetailAdmin(admin.ModelAdmin):
+    list_display = ('id',
+                    'position_set',
+                    'verses',
+                    'usage',
+                    'created_date',
+                    'modified_date')
+    list_filter = ['positions', 'usage', 'created_date', 'modified_date']
+
+    def position_set(self, obj):
+        positions = ""
+        for position in object.positions.all():
+            positions = "%s, %s" % (position, positions)
+        return positions
+
+
 class PositionDetailAdmin(admin.ModelAdmin):
     list_display = ('id',
                     'position',
@@ -33,7 +49,6 @@ class PositionDetailAdmin(admin.ModelAdmin):
 
     def source_count(self, obj):
         return obj.sources.count()
-
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('id',
@@ -130,6 +145,7 @@ class ExampleImageAdmin(admin.ModelAdmin):
 
 admin.site.register(Position, PositionAdmin)
 admin.site.register(PositionDetail, PositionDetailAdmin)
+admin.site.register(CombinationDetail, CombinationDetailAdmin)
 admin.site.register(CategoryDetail, CategoryDetailAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Shastra, ShastraAdmin)
