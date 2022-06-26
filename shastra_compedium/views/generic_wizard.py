@@ -3,7 +3,7 @@ from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse_lazy
 from django.contrib import messages
 from shastra_compedium.forms import StepForm
 from shastra_compedium.models import UserMessage
@@ -30,11 +30,11 @@ class GenericWizard(View):
     ##############
     step = -1
     max = 1
+    return_url = reverse_lazy('position_list',
+                              urlconf="shastra_compedium.urls")
 
     def groundwork(self, request, args, kwargs):
         self.step = int(request.POST.get("step", -1))
-        self.return_url = reverse('position_list',
-                                  urlconf='shastra_compedium.urls')
 
     def make_context(self, request, valid=True):
         context = {

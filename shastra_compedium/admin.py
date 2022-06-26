@@ -22,18 +22,12 @@ class PositionAdmin(admin.ModelAdmin):
 
 class CombinationDetailAdmin(admin.ModelAdmin):
     list_display = ('id',
-                    'position_set',
                     'verses',
                     'usage',
                     'created_date',
-                    'modified_date')
+                    'modified_date',
+                    'contents')
     list_filter = ['positions', 'usage', 'created_date', 'modified_date']
-
-    def position_set(self, obj):
-        positions = ""
-        for position in object.positions.all():
-            positions = "%s, %s" % (position, positions)
-        return positions
 
 
 class PositionDetailAdmin(admin.ModelAdmin):

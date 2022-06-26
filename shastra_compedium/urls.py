@@ -27,6 +27,7 @@ from shastra_compedium.views import (
     SourceList,
     SourceUpdate,
     UploadChapter,
+    UploadCombination,
 )
 
 
@@ -37,6 +38,12 @@ urlpatterns = [
     url(r'^chapter/add/(?P<category_id>\d+)/$',
         UploadChapter.as_view(),
         name='chapter-additional'),
+    url(r'^chapter/addcombos/$',
+        UploadCombination.as_view(),
+        name='combinations-add'),
+    url(r'^chapter/addcombos/(?P<category_id>\d+)/$',
+        UploadCombination.as_view(),
+        name='combinations-additional'),
     url(r'^posdetail/editimages/(?P<source_id>\d+)/(?P<category_id>\d*)/?$',
         SourceToImageFormSetView.as_view(),
         name='position-detail-image-update'),
