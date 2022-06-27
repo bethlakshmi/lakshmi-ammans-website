@@ -1,10 +1,12 @@
 from shastra_compedium.models import (
     CategoryDetail,
+    CombinationDetail,
     PositionDetail,
     Shastra,
     Source,
 )
 from shastra_compedium.views import GenericList
+from django.db.models import Count
 
 
 class SourceList(GenericList):
@@ -33,6 +35,12 @@ class SourceList(GenericList):
         for cat_detail in CategoryDetail.objects.all().order_by(
                 'category__name'):
             for source in cat_detail.sources.all():
+                # assumption - if there are two details for a category, they
+                # both have the same chapter number.  If that's wrong, we'll
+                # be missing some # of combinations
+                combo_count = CombinationDetail.objects.filter(
+                    chapter=cat_detail.chapter,
+                    sources__in=[source]).count()
                 if source in source_dict:
                     if cat_detail.category in source_dict[source]:
                         source_dict[source][cat_detail.category][
@@ -40,11 +48,13 @@ class SourceList(GenericList):
                     else:
                         source_dict[source][cat_detail.category] = {
                             'positions': [],
-                            'details': [cat_detail]}
+                            'details': [cat_detail],
+                            'combos': combo_count}
                 else:
                     source_dict[source] = {
                         cat_detail.category: {'positions': [],
-                                              'details': [cat_detail]},
+                                              'details': [cat_detail],
+                                              'combos': combo_count},
                     }
         for pos in PositionDetail.objects.all():
             for source in pos.sources.all():
@@ -57,10 +67,15 @@ class SourceList(GenericList):
                         source_dict[source][pos.position.category][
                             'positions'] += [pos.position]
                 else:
+                    combo_count = CombinationDetail.objects.filter(
+                        chapter=pos.chapter,
+                        sources__in=[source]).count()
                     source_dict[source][pos.position.category] = {
                         'positions': [pos.position],
-                        'details': []}
+                        'details': [],
+                        'combos': combo_count}
         for source in Source.objects.filter(categorydetail=None,
                                             positiondetail=None):
             source_dict[source] = {'chapters': []}
+
         return source_dict
