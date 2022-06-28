@@ -24,5 +24,6 @@ from .make_position import (PositionCreate, PositionUpdate)
 from .image_list import ImageList
 from .position_list import PositionList
 from .source_list import SourceList
+from .combination_list import CombinationList
 from .bulk_image_upload import BulkImageUpload
 from .shastra_chapter_view import ShastraChapterView

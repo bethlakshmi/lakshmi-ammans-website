@@ -33,7 +33,6 @@ class CombinationDetailForm(ModelForm):
             'chapter': NumberInput(attrs={'style': 'width: 50px'}),
             'verse_start': NumberInput(attrs={'style': 'width: 50px'}),
             'verse_end': NumberInput(attrs={'style': 'width: 50px'}),
-            'usage': HiddenInput(),
             'sources': MultipleHiddenInput(),
             'positions': autocomplete.ModelSelect2Multiple(
                     url='position-autocomplete'),

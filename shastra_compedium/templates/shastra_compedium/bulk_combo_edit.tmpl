@@ -14,7 +14,7 @@
   <table class="lakshmi-table">
     <thead class="lakshmi-table-header">
       <tr>
-      <th>Positions<br>Ch:Start-End</th>
+      <th>Positions<br>Ch:Start-End<br>Usage</th>
       <th>Description</th>
       </tr>
 
@@ -22,7 +22,8 @@
     <tbody>
       {% for item_form in forms|slice:"1:" %}
       <tr {% if item_form.errors %}class="lakshmi-table-error"{% endif %}>
-        <td>{{item_form.positions}}<br>{{item_form.chapter}}:{{item_form.verse_start}}-{{item_form.verse_end}}
+        <td>{{item_form.positions}}<br>{{item_form.chapter}}:{{item_form.verse_start}}-{{item_form.verse_end}}<br>
+        {{item_form.usage}}
           {% if item_form.positions.errors %}<br>
           <font class="lakshmi-form-error">{{ item_form.positions.errors }}</font>
           {% endif %}<br>
@@ -32,6 +33,9 @@
             <font class="lakshmi-form-error">{{ item_form.verse_start.errors }}</font>
           {% endif %}{% if item_form.verse_end.errors %}<br>
             <font class="lakshmi-form-error">{{ item_form.verse_end.errors }}</font>
+          {% endif %}
+          {% if item_form.usage.errors %}<br>
+            <font class="lakshmi-form-error">{{ item_form.usage.errors }}</font>
           {% endif %}
           <font class="lakshmi-form-error">{{ item_form.non_field_errors }}<br>{{ item_form.errors }}</font></td>
           <td>{{item_form.contents}}

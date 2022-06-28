@@ -54,7 +54,7 @@ class UploadCombination(UploadChapter):
                 chapter_pos['chapter'] = self.chapter.chapter
                 chapter_pos['sources'] = self.chapter.sources.all(
                     ).values_list('pk', flat=True)
-                chapter_pos['usage'] = "Combination Meaning"
+                chapter_pos['usage'] = self.chapter.usage
                 self.chapter_positions += [chapter_pos]
         else:
             self.num_created = 0
