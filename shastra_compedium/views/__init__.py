@@ -21,6 +21,7 @@ from .performer_view import PerformerView
 from .make_source import (SourceCreate, SourceUpdate)
 from .make_shastra import (ShastraCreate, ShastraUpdate)
 from .make_position import (PositionCreate, PositionUpdate)
+from .make_combination import CombinationUpdate
 from .image_list import ImageList
 from .position_list import PositionList
 from .source_list import SourceList

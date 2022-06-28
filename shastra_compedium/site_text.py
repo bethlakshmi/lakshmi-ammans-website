@@ -51,6 +51,10 @@ make_position_messages = {
     'create_intro':  "Use this form to create a new position.",
     'edit_intro':  "Use this form to update this position.",
 }
+make_combination_messages = {
+    'edit_success':  "The %s combination detail has been updated.",
+    'edit_intro':  "Use this form to update a combination detail.",
+}
 edit_post_detail_messages = {
     'intro': 'Edit any of these position details and press "Submit".'
 }

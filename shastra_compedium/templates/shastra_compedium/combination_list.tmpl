@@ -14,10 +14,10 @@
       {
         'id': {{ combo.pk}},
         'usage': '{{ combo.usage }}',
-        'position': '{% for position in combo.positions.all %}{{ position.name }}&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:position-view' position.pk %}" title="Edit"><i class="fas fa-edit"></i></a><br>{% endfor %}',
+        'position': '{% for position in combo.positions.all %}{{ position.name }}&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:position-view' position.pk %}" title="View"><i class="fas fa-eye"></i></a><br>{% endfor %}',
         'source': '{% for source in combo.sources.all %}{{source}}<br>{% endfor %}',
         'contents': '{{ combo.contents|safe|escapejs}}',
-        'action': '{% if user.is_authenticated %}<a class="lakshmi-detail" href="" title="Edit"><i class="fas fa-edit"></i></a>{% endif %}',
+        'action': '{% if user.is_authenticated %}<a class="lakshmi-detail" href="{% url 'shastra_compedium:combination-update' combo.pk %}" title="Edit"><i class="fas fa-edit"></i></a>{% endif %}',
       },
   {% endfor %}
 {% endblock %}

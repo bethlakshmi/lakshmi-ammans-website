@@ -30,7 +30,7 @@ class UploadCombination(UploadChapter):
             'next_title': None},
     }
     detail_form = CombinationDetailForm
-    return_url = reverse_lazy('combination_list',
+    return_url = reverse_lazy('combo_list',
                               urlconf="shastra_compedium.urls")
 
     def finish_valid_form(self, request):
