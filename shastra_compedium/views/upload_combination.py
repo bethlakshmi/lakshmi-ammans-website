@@ -32,6 +32,7 @@ class UploadCombination(UploadChapter):
     detail_form = CombinationDetailForm
     return_url = reverse_lazy('combo_list',
                               urlconf="shastra_compedium.urls")
+    obj_type = "CombinationDetail"
 
     def finish_valid_form(self, request):
         self.changed_ids = []
@@ -61,7 +62,6 @@ class UploadCombination(UploadChapter):
             for form in self.forms[1:]:
                 if form.cleaned_data['positions']:
                     position_detail = form.save(commit=False)
-                    posture_pk = None
                     if len(form.cleaned_data['contents'].strip()) > 0:
                         position_detail = form.save()
                         self.num_created = self.num_created + 1

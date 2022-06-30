@@ -38,6 +38,7 @@ class UploadChapter(GenericWizard):
     header = None
     changed_ids = []
     detail_form = PositionDetailForm
+    obj_type = "Position"
 
     def groundwork(self, request, args, kwargs):
         redirect = super(UploadChapter, self).groundwork(request, args, kwargs)
@@ -110,9 +111,10 @@ class UploadChapter(GenericWizard):
                 request,
                 "Uploaded %s details." % (self.num_created))
         if len(self.changed_ids) > 0:
-            return_url = "%s?changed_ids=%s&obj_type=Position" % (
+            return_url = "%s?changed_ids=%s&obj_type=%s" % (
                 self.return_url,
-                str(self.changed_ids))
+                str(self.changed_ids),
+                self.obj_type)
         return return_url
 
     def make_context(self, request, valid=True):
