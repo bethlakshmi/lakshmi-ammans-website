@@ -1,7 +1,6 @@
 from django.forms import (
     CharField,
     ModelForm,
-    MultipleHiddenInput,
     NumberInput,
     Textarea,
 )
@@ -9,30 +8,29 @@ from shastra_compedium.models import CombinationDetail
 from dal import autocomplete
 
 
-class CombinationDetailForm(ModelForm):
+class CombinationDetailEditForm(ModelForm):
     required_css_class = 'required'
     error_css_class = 'error'
     contents = CharField(
         widget=Textarea(attrs={'class': 'admin-tiny-mce'}),
-        required=False,
+        required=True,
         initial=" ")
 
     class Meta:
         model = CombinationDetail
         fields = [
-            'positions',
             'sources',
             'chapter',
             'verse_start',
             'verse_end',
             'usage',
+            'positions',
             'contents',
             ]
         widgets = {
             'chapter': NumberInput(attrs={'style': 'width: 50px'}),
             'verse_start': NumberInput(attrs={'style': 'width: 50px'}),
             'verse_end': NumberInput(attrs={'style': 'width: 50px'}),
-            'sources': MultipleHiddenInput(),
             'positions': autocomplete.ModelSelect2Multiple(
                     url='position-autocomplete'),
             }

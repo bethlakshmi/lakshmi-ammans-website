@@ -3,6 +3,7 @@ from .chapter_form import (ChapterFormBasics, ChapterForm)
 from .chapter_detail_mapping import ChapterDetailMapping
 from .performer_form import PerformerForm
 from .combination_detail_form import CombinationDetailForm
+from .combination_detail_edit_form import CombinationDetailEditForm
 from .position_detail_form import PositionDetailForm
 from .position_detail_image_form import PositionDetailImageForm
 from .position_detail_edit_form import PositionDetailEditForm

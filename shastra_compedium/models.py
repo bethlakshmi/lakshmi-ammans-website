@@ -221,9 +221,6 @@ class CombinationDetail(Detail):
             self.verses(),
             self.contents[3:28])
 
-    def detail_images(self):
-        return self.exampleimage_set.filter(general=False)
-
     class Meta:
         app_label = "shastra_compedium"
         ordering = ['chapter', 'verse_start', 'verse_end', 'id']

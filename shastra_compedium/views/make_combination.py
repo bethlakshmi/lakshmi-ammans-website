@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from shastra_compedium.site_text import make_combination_messages
 from shastra_compedium.views import ShastraFormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
-from shastra_compedium.forms import CombinationDetailForm
+from shastra_compedium.forms import CombinationDetailEditForm
 
 
 class CombinationUpdate(LoginRequiredMixin,
@@ -20,4 +20,4 @@ class CombinationUpdate(LoginRequiredMixin,
     view_title = 'Update Combination'
     valid_message = make_combination_messages['edit_success']
     intro_message = make_combination_messages['edit_intro']
-    form_class = CombinationDetailForm
+    form_class = CombinationDetailEditForm
