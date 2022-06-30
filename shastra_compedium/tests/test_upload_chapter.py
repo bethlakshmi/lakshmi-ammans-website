@@ -183,7 +183,7 @@ class TestUploadChapter(TestCase):
             "%s?changed_ids=%s&obj_type=Position" % (
                 reverse("position_list", urlconf='shastra_compedium.urls'),
                 str([self.position.pk, self.position.pk])))
-        self.assertContains(response, "Uploaded 2 position details.")
+        self.assertContains(response, "Uploaded 2 details.")
         self.assertEqual(start + 2, PositionDetail.objects.all().count())
 
     def test_create_post_positions_to_existing_chapter(self):
@@ -200,7 +200,7 @@ class TestUploadChapter(TestCase):
             "%s?changed_ids=%s&obj_type=Position" % (
                 reverse("position_list", urlconf='shastra_compedium.urls'),
                 str([self.position.pk, self.position.pk])))
-        self.assertContains(response, "Uploaded 2 position details.")
+        self.assertContains(response, "Uploaded 2 details.")
         self.assertEqual(start + 2, PositionDetail.objects.all().count())
 
     def test_create_post_only_meaning(self):
@@ -215,7 +215,7 @@ class TestUploadChapter(TestCase):
             "%s?changed_ids=%s&obj_type=Position" % (
                 reverse("position_list", urlconf='shastra_compedium.urls'),
                 str([self.position.pk])))
-        self.assertContains(response, "Uploaded 1 position details.")
+        self.assertContains(response, "Uploaded 1 details.")
         self.assertEqual(start + 1, PositionDetail.objects.all().count())
 
     def test_create_post_positions_format_fail(self):
@@ -246,4 +246,4 @@ class TestUploadChapter(TestCase):
         self.assertRedirects(response, reverse(
             "position_list",
             urlconf='shastra_compedium.urls'))
-        self.assertContains(response, "Uploaded 0 position details.")
+        self.assertContains(response, "Uploaded 0 details.")

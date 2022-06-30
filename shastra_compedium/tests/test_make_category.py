@@ -86,7 +86,7 @@ class TestMakeCategory(TestCase):
         self.assertEqual(start, Category.objects.all().count())
         self.assertContains(
             response,
-            '<a href="%s" class="nav-link active">Source List</a>' % (
+            '<a href="%s" class="nav-link active">Sources</a>' % (
                 redirect_url),
             html=True)
 

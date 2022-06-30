@@ -34,7 +34,7 @@ class TestImageList(TestCase):
             '<i class="lakshmi-text-success far fa-check-square fa-2x"></i>')
         self.assertContains(
             response,
-            '<a href="%s" class="nav-link active">Image List</a>' % (
+            '<a href="%s" class="nav-link active">Images</a>' % (
                 self.url),
             html=True)
         self.assertNotContains(response, reverse(

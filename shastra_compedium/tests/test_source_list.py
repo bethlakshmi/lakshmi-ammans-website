@@ -37,7 +37,7 @@ class TestSourceList(TestCase):
             args=[self.source.pk]))
         self.assertContains(
             response,
-            '<a href="%s" class="nav-link active">Source List</a>' % (
+            '<a href="%s" class="nav-link active">Sources</a>' % (
                 self.url),
             html=True)
         self.assertNotContains(
@@ -62,7 +62,7 @@ class TestSourceList(TestCase):
             args=[self.source.pk]))
         self.assertContains(
             response,
-            '<a href="%s" class="nav-link active">Source List</a>' % (
+            '<a href="%s" class="nav-link active">Sources</a>' % (
                 self.url),
             html=True)
 
@@ -138,12 +138,17 @@ class TestSourceList(TestCase):
             ('<td class="align-top" class="lakshmi-table-success">10:1-100' +
              '&nbsp;&nbsp;<a class="lakshmi-detail" href="%s" ' +
              'title="Edit Chapter"><i class="fas fa-edit">' +
-             '</i></a><br><a class="btn lakshmi-btn-primary" href="%s" ' +
-             'title="More Upload">Add to Chapter</a></td>') % (
+             '</i></a><br><a class="btn lakshmi-btn-primary m-1" href="%s" ' +
+             'title="More Upload">Add to Chapter</a><br><a class="btn ' +
+             'lakshmi-btn-primary m-1" href="%s" title="Combination ' +
+             'Upload">Add Combinations</a></td>') % (
              reverse("categorydetail-update",
                      urlconf="shastra_compedium.urls",
                      args=[chapter.pk]),
              reverse("chapter-additional",
+                     urlconf="shastra_compedium.urls",
+                     args=[chapter.pk]),
+             reverse("combinations-additional",
                      urlconf="shastra_compedium.urls",
                      args=[chapter.pk])))
 
