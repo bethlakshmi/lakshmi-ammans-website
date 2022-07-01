@@ -14,7 +14,10 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='positiondetail',
-            options={'ordering': ['chapter', 'verse_start', 'verse_end', 'id']},
+            options={'ordering': ['chapter',
+                                  'verse_start',
+                                  'verse_end',
+                                  'id']},
         ),
         migrations.AlterUniqueTogether(
             name='exampleimage',
@@ -23,7 +26,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='CombinationDetail',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True,
+                                        serialize=False,
+                                        verbose_name='ID')),
                 ('usage', models.CharField(max_length=128)),
                 ('contents', models.TextField()),
                 ('created_date', models.DateTimeField(auto_now_add=True)),
@@ -31,8 +37,10 @@ class Migration(migrations.Migration):
                 ('chapter', models.IntegerField(blank=True, null=True)),
                 ('verse_start', models.IntegerField(blank=True, null=True)),
                 ('verse_end', models.IntegerField(blank=True, null=True)),
-                ('positions', models.ManyToManyField(to='shastra_compedium.Position')),
-                ('sources', models.ManyToManyField(to='shastra_compedium.Source')),
+                ('positions', models.ManyToManyField(
+                    to='shastra_compedium.Position')),
+                ('sources', models.ManyToManyField(
+                    to='shastra_compedium.Source')),
             ],
             options={
                 'ordering': ['chapter', 'verse_start', 'verse_end', 'id'],

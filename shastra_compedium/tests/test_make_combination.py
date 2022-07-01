@@ -36,7 +36,8 @@ class TestMakeCombination(TestCase):
                 'verse_end': 4,
                 'usage': 'Deep Meaning',
                 'sources': [source.pk],
-                'contents': '<p>Do stuff with other stuff</p>',}
+                'contents': '<p>Do stuff with other stuff</p>',
+                }
 
     def test_edit_get(self):
         response = self.client.get(self.edit_url)

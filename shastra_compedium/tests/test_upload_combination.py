@@ -124,6 +124,44 @@ class TestUploadChapter(TestCase):
             'style="width: 50px" id="id_1-verse_start">',
             html=True)
 
+    def test_create_post_basics_no_verse_num(self):
+        start = CategoryDetail.objects.all().count()
+        data = self.chapter_data()
+        data['position_text'] = "The Only Verse"
+        response = self.client.post(self.create_url,
+                                    data=data,
+                                    follow=True)
+        self.assertEqual(start + 1, CategoryDetail.objects.all().count())
+        self.assertContains(
+            response,
+            user_messages['COMBINATION_DETAIL_INTRO']['description'])
+        self.assertContains(
+            response,
+            ('<input type="hidden" name="0-sources" value="%d" ' +
+             'id="id_0-sources_0">') % self.source.pk,
+            html=True)
+        self.assertContains(
+            response,
+            '<textarea name="0-contents" cols="40" rows="10" class="' +
+            'admin-tiny-mce" id="id_0-contents">\nThe Only Verse</textarea>',
+            html=True)
+        print(response.content)
+        self.assertContains(
+            response,
+            '<input type="number" name="0-chapter" value="1" ' +
+            'style="width: 50px" id="id_0-chapter">',
+            html=True)
+        self.assertContains(
+            response,
+            '<input type="number" name="0-verse_start" ' +
+            'style="width: 50px" id="id_0-verse_start">',
+            html=True)
+        self.assertContains(
+            response,
+            '<input type="number" name="0-verse_end" ' +
+            'style="width: 50px" id="id_0-verse_end">',
+            html=True)
+
     def test_create_post_positions_success(self):
         start = CombinationDetail.objects.all().count()
         response = self.client.post(self.create_url,

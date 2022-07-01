@@ -44,6 +44,7 @@ class PositionDetailAdmin(admin.ModelAdmin):
     def source_count(self, obj):
         return obj.sources.count()
 
+
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('id',
                     'name',

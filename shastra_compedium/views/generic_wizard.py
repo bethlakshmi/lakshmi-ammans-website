@@ -26,7 +26,6 @@ class GenericWizard(View):
     #     - finish_valid_form - what to do when a form is deemed valid
     #     - finish - place to put any messaging and return a URL for how to
     #          return to a main spot
-    #     - redirect (only used with add) - a place to redirect to continue
     ##############
     step = -1
     max = 1
@@ -100,8 +99,6 @@ class GenericWizard(View):
             return HttpResponseRedirect(self.return_url)
 
         if 'next' in list(request.POST.keys()) or 'finish' in list(
-                request.POST.keys()) or 'add' in list(
-                request.POST.keys()) or 'redirect' in list(
                 request.POST.keys()):
             self.current_form_set = self.form_sets[self.step]
             if not self.current_form_set['the_form']:
@@ -122,11 +119,6 @@ class GenericWizard(View):
             self.finish_valid_form(request)
             if 'finish' in list(request.POST.keys()):
                 return HttpResponseRedirect(self.finish(request))
-            if 'add' in list(request.POST.keys()):
-                self.step = self.step - 1
-                self.current_form_set = self.form_sets[self.step]
-            if 'redirect' in list(request.POST.keys()):
-                return HttpResponseRedirect(self.redirect(request))
 
         else:
             msg = UserMessage.objects.get_or_create(
