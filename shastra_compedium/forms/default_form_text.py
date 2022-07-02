@@ -13,10 +13,15 @@ item_image_help = {
     "on the next page.",
     'default_position': "If this position is changed, any details will be " +
     "unlinked.",
+    'default_combination': "Combinations combine positions for a single " + 
+    "meaning.  They can be used as an alternative to positions & position " +
+    "details",
     'unattached_images': '''Images not linked to any item.''',
     'linked_images': '''Images linked to other items in the system.''',
     'new_images': "Upload 1 or many images from your computer.  Select " +
     "many images using CONTROL or SHIFT in the file browser.  Adding " +
     "images here will automatically link them to this item.",
+    'position_or_combo': "At least one Position or Combination item must" +
+    " be selected for this image.",
     'general_or_details': "At least one of the Main Image or specific " +
     "detail options must be selected."}

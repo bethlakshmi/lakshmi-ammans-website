@@ -2,9 +2,11 @@ from django.forms import (
     CheckboxSelectMultiple,
     ModelChoiceField,
     ModelForm,
+    ModelMultipleChoiceField,
 )
 from django.forms.widgets import RadioSelect
 from shastra_compedium.models import (
+    CombinationDetail,
     DanceStyle,
     ExampleImage,
     Performer,
@@ -36,7 +38,7 @@ class ImageForm(ModelForm):
 
     position = ModelChoiceField(
         queryset=Position.objects.all(),
-        required=True,
+        required=False,
         widget=autocomplete.ModelSelect2(url='position-autocomplete'),
         help_text=UserMessage.objects.get_or_create(
             view="ImageUploadForm",
@@ -44,6 +46,18 @@ class ImageForm(ModelForm):
             defaults={
                 'summary': "Default Position Help text",
                 'description': item_image_help['default_position']}
+            )[0].description)
+
+    combination = ModelMultipleChoiceField(
+        queryset=CombinationDetail.objects.all(),
+        required=False,
+        widget=autocomplete.ModelSelect2Multiple(url='combination-autocomplete'),
+        help_text=UserMessage.objects.get_or_create(
+            view="ImageUploadForm",
+            code="DEFAULT_COMBINATION",
+            defaults={
+                'summary': "Default Combination Help text",
+                'description': item_image_help['default_combination']}
             )[0].description)
 
     performer = ModelChoiceField(

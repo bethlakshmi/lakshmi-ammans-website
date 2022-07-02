@@ -132,10 +132,13 @@ class ExampleImageAdmin(admin.ModelAdmin):
         'position',
         'performer',
         'dance_style',
+        'combo_count',
         'created_date',
         'modified_date')
     search_fields = ['position__name', 'performer__name', 'dance_style__name']
     list_editable = ('position', 'performer', 'dance_style')
+    def combo_count(self, obj):
+        return obj.combinations.count()
 
 
 admin.site.register(Position, PositionAdmin)

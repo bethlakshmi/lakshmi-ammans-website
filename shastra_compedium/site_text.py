@@ -88,6 +88,11 @@ user_messages = {
         'description': '''Review each row to be sure the details have
     been parsed accurately.  Enter at least one position for each row.  Leaving
     positions or contents empty means the row will not be uploaded.'''},
+    'IMAGE_CONNECT_INTRO': {
+        'summary': 'Introduction on second page of upload for images',
+        'description': '''An image must be connected to at least one position
+    and/or combination detail.  Additional positions and combinations can be
+    added later on the image list page.'''},
     "BUTTON_CLICK_UNKNOWN": {
         'summary':  "Can't tell what button the user pressed to submit",
         'description': '''Something has gone wrong.  If this persists, please

@@ -274,8 +274,10 @@ class Performer(Model):
 
 
 class Example(Model):
-    position = ForeignKey(Position, on_delete=CASCADE)
-    details = ManyToManyField(PositionDetail)
+    position = ForeignKey(Position, on_delete=CASCADE, blank=True, null=True)
+    details = ManyToManyField(PositionDetail, blank=True)
+    combinations = ManyToManyField(CombinationDetail, blank=True, null=True)
+
     general = BooleanField(default=False)
     dance_style = ForeignKey(DanceStyle, on_delete=CASCADE)
     performer = ForeignKey(Performer,
@@ -292,6 +294,7 @@ class Example(Model):
 
     def save(self, *args, **kwargs):
         super(Example, self).save(*args, **kwargs)
+        # don't save positions details not connected to this position.
         for detail in self.details.exclude(position=self.position):
             self.details.remove(detail)
 

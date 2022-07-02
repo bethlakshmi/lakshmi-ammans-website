@@ -1,4 +1,5 @@
 from .category_autocomplete import CategoryAutocomplete
+from .combination_autocomplete import CombinationAutocomplete
 from .positiondetail_autocomplete import PositionDetailAutocomplete
 from .position_autocomplete import PositionAutocomplete
 from .position_view import PositionView
