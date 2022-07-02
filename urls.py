@@ -7,6 +7,7 @@ from shastra_compedium.views import (
     CombinationAutocomplete,
     PositionAutocomplete,
     PositionDetailAutocomplete,
+    PositionDetailExampleAutocomplete,
 )
 
 
@@ -26,6 +27,11 @@ urlpatterns = [
         r'^positiondetail-autocomplete/$',
         PositionDetailAutocomplete.as_view(),
         name='positiondetail-autocomplete',
+    ),
+    url(
+        r'^positiondetail-example-autocomplete/$',
+        PositionDetailExampleAutocomplete.as_view(),
+        name='positiondetail-example-autocomplete',
     ),
     url(
         r'^position-autocomplete/$',

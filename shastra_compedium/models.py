@@ -305,7 +305,11 @@ class ExampleImage(Example):
         null=True)
 
     def __str__(self):
-        return "Image %s, for Position %s," % (self.image, self.position.name)
+        if self.position is not None:
+            return "Image %s, for Position %s," % (self.image,
+                                                   self.position.name)
+        else:
+            return "Image %s, with Combination Details" % (self.image)
 
     class Meta:
         app_label = "shastra_compedium"

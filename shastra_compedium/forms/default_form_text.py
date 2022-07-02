@@ -23,5 +23,7 @@ item_image_help = {
     "images here will automatically link them to this item.",
     'position_or_combo': "At least one Position or Combination item must" +
     " be selected for this image.",
+    'pos_and_details': "In order to include details, this example must " +
+    "connect to a position.",
     'general_or_details': "At least one of the Main Image or specific " +
     "detail options must be selected."}
