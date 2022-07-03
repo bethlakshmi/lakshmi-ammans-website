@@ -37,7 +37,7 @@ class PositionDetailAutocomplete(autocomplete.Select2QuerySetView):
 
         if self.q:
             qs = qs.filter(Q(position__name__icontains=self.q) |
-                           Q(position__contents__icontains=self.q))
+                           Q(contents__icontains=self.q))
 
         return qs
 
