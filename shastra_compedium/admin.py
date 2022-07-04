@@ -137,6 +137,7 @@ class ExampleImageAdmin(admin.ModelAdmin):
         'modified_date')
     search_fields = ['position__name', 'performer__name', 'dance_style__name']
     list_editable = ('position', 'performer', 'dance_style')
+
     def combo_count(self, obj):
         return obj.combinations.count()
 

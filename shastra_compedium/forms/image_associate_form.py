@@ -41,7 +41,7 @@ class ImageAssociateForm(ModelForm):
                     view="BulkImageUpload",
                     code="POSITION_OR_COMBINATION_REQUIRED",
                     defaults={
-                        'summary': "Must pick position or combo detail or both",
+                        'summary': "Must pick position and/or combo detail",
                         'description': item_image_help['position_or_combo']
                         })[0].description
                 valid = False

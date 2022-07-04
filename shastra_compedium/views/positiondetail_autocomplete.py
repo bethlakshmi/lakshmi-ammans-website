@@ -41,8 +41,9 @@ class PositionDetailAutocomplete(autocomplete.Select2QuerySetView):
 
         return qs
 
+
 class PositionDetailExampleAutocomplete(PositionDetailAutocomplete):
-    # same search logic, but uses formatting for choices that work well with 
+    # same search logic, but uses formatting for choices that work well with
     # example image configurations
     def get_result_label(self, result):
         return format_html('%s - %s - %s' % (

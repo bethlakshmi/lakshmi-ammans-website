@@ -13,7 +13,7 @@ item_image_help = {
     "on the next page.",
     'default_position': "If this position is changed, any details will be " +
     "unlinked.",
-    'default_combination': "Combinations combine positions for a single " + 
+    'default_combination': "Combinations combine positions for a single " +
     "meaning.  They can be used as an alternative to positions & position " +
     "details",
     'unattached_images': '''Images not linked to any item.''',

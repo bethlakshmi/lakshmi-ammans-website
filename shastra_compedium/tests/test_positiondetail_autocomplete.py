@@ -93,7 +93,7 @@ class TestPositionDetailAutoComplete(TestCase):
         self.assertNotContains(response, str(self.detail2))
 
     def test_list_positiondetail_w_source(self):
-        # this is what happens in position detail image edit w. 
+        # this is what happens in position detail image edit w.
         # MultipleHiddenInput and one source.
         source = SourceFactory()
         self.detail.sources.add(source)

@@ -53,7 +53,8 @@ class ImageForm(ModelForm):
     combinations = ModelMultipleChoiceField(
         queryset=CombinationDetail.objects.all(),
         required=False,
-        widget=autocomplete.ModelSelect2Multiple(url='combination-autocomplete'),
+        widget=autocomplete.ModelSelect2Multiple(
+            url='combination-autocomplete'),
         help_text=UserMessage.objects.get_or_create(
             view="ImageUploadForm",
             code="DEFAULT_COMBINATION",
@@ -132,7 +133,7 @@ class ImageForm(ModelForm):
                         'summary': "Must pick a position to attach details",
                         'description': item_image_help['pos_and_details']
                         })[0].description
-                valid = False 
+                valid = False
         return valid
 
     def __init__(self, *args, **kwargs):

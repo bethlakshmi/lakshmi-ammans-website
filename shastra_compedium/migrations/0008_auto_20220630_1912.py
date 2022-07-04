@@ -14,31 +14,45 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='exampleimage',
             name='combinations',
-            field=models.ManyToManyField(blank=True, to='shastra_compedium.CombinationDetail'),
+            field=models.ManyToManyField(
+                blank=True,
+                to='shastra_compedium.CombinationDetail'),
         ),
         migrations.AddField(
             model_name='examplevideo',
             name='combinations',
-            field=models.ManyToManyField(blank=True, to='shastra_compedium.CombinationDetail'),
+            field=models.ManyToManyField(
+                blank=True,
+                to='shastra_compedium.CombinationDetail'),
         ),
         migrations.AlterField(
             model_name='exampleimage',
             name='details',
-            field=models.ManyToManyField(blank=True, to='shastra_compedium.PositionDetail'),
+            field=models.ManyToManyField(
+                blank=True,
+                to='shastra_compedium.PositionDetail'),
         ),
         migrations.AlterField(
             model_name='exampleimage',
             name='position',
-            field=models.ForeignKey(blank=True, on_delete=django.db.models.deletion.CASCADE, to='shastra_compedium.Position'),
+            field=models.ForeignKey(
+                blank=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to='shastra_compedium.Position'),
         ),
         migrations.AlterField(
             model_name='examplevideo',
             name='details',
-            field=models.ManyToManyField(blank=True, to='shastra_compedium.PositionDetail'),
+            field=models.ManyToManyField(
+                blank=True,
+                to='shastra_compedium.PositionDetail'),
         ),
         migrations.AlterField(
             model_name='examplevideo',
             name='position',
-            field=models.ForeignKey(blank=True, on_delete=django.db.models.deletion.CASCADE, to='shastra_compedium.Position'),
+            field=models.ForeignKey(
+                blank=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to='shastra_compedium.Position'),
         ),
     ]
