@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.test import Client
 from django.urls import reverse
 from shastra_compedium.tests.factories import (
+    CombinationDetailFactory,
     ExampleImageFactory,
     PositionDetailFactory,
     UserFactory
@@ -95,3 +96,16 @@ class TestImageList(TestCase):
         self.assertContains(
             response,
             '<i class="text-muted fas fa-times-circle fa-2x"></i>')
+
+    def test_combo_only(self):
+        combo = CombinationDetailFactory(
+            positions=[self.example_image.position],
+            usage="Meaning")
+        not_main_image = ExampleImageFactory(image=self.img1)
+        not_main_image.combinations.add(combo)
+        not_main_image.position = None
+        not_main_image.save()
+        response = self.client.get(self.url)
+        self.assertContains(response, combo.contents)
+        self.assertContains(response, not_main_image.image.url)
+        self.assertContains(response, 'Combo Detail Only')

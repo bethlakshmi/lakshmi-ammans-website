@@ -309,7 +309,7 @@ class ExampleImage(Example):
             return "Image %s, for Position %s," % (self.image,
                                                    self.position.name)
         else:
-            return "Image %s, with Combination Details" % (self.image)
+            return "Image %s, with Combination Details," % (self.image)
 
     class Meta:
         app_label = "shastra_compedium"

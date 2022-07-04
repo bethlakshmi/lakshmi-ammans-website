@@ -10,6 +10,7 @@ from shastra_compedium.tests.factories import (
 )
 from shastra_compedium.tests.functions import login_as
 import json
+from django.utils.html import strip_tags
 
 
 class TestPositionDetailAutoComplete(TestCase):
@@ -102,3 +103,16 @@ class TestPositionDetailAutoComplete(TestCase):
             json.dumps({"sources": source.pk, })))
         self.assertContains(response, str(self.detail))
         self.assertNotContains(response, str(self.detail2))
+
+    def test_list_positiondetailexample(self):
+        source = SourceFactory()
+        self.detail.sources.add(source)
+        login_as(self.user, self)
+        response = self.client.get("%s?forward=%s" % (
+            reverse('positiondetail-example-autocomplete'),
+            json.dumps({"sources": source.pk, })))
+        self.assertContains(response, '%s - %s - %s' % (
+            self.detail.sources.first().shastra.initials,
+            self.detail.verses(),
+            strip_tags(self.detail.contents[3:28])))
+        self.assertContains(response, self.detail.pk)
