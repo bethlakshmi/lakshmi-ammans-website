@@ -9,7 +9,7 @@ class CombinationAutocomplete(autocomplete.Select2QuerySetView):
         return format_html('%s - %s - %s' % (
             result.sources.first().shastra.initials,
             result.verses(),
-            strip_tags(result.contents[3:28])))
+            strip_tags(result.contents)[0:25]))
 
     def get_queryset(self):
         if not self.request.user.is_authenticated:
