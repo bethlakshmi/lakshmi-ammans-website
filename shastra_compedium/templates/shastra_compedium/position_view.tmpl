@@ -34,6 +34,7 @@
     </div></div></div>
 {% endfor %}
 </div></div></div>
+<h4>Descriptions and Meanings</h4>
 {% for source,verses in object.independant_details_by_source.items %}
   <div class="row lakshmi-source-header px-5 align-items-center">
     <div class="col-11">
@@ -57,7 +58,6 @@
           {% if forloop.first %}<b>Meaning:</b><br>{% endif %}
           <b>{{meaning.verses}}:</b>  {{meaning.contents|safe}}<br>{% empty %}<i>No associated meanings</i>{% endfor %}</div>
         <div class="col-5 col-sm-4 col-lg-2">{% include "shastra_compedium/dependency.tmpl" with dependencies=detail.dependencies.all %}<br>{% include "shastra_compedium/dependedon.tmpl" with dependedon=detail.positiondetail_set.all %}</div>
-
       </div> 
     {% endfor %}
     {% if verses.Meaning|length > 0 %}
@@ -70,5 +70,36 @@
         <div class="col-2">{% include "shastra_compedium/dependency.tmpl" with dependencies=detail.dependencies.all %}<br>{% include "shastra_compedium/dependedon.tmpl" with dependedon=detail.positiondetail_set.all %}</div>
       </div>
     {% endif %}
+{% endfor %}
+<hr>
+<h4>Related Combinations</h4>
+{% for source, combo_list in object.combinations_by_source.items %}
+  <div class="row lakshmi-source-header px-5 align-items-center">
+    <div class="col-11">
+        <a id="combo_{{source.pk}}_{{object.pk}}"></a>
+        <b>{{source.shastra.age_range}}</b><br>
+        {{ source.title }} ({{source.shastra.initials}}) - {{source.translator}}</div>
+    <div class="col-1 text-right"><a class="btn btn-secondary" href="{% url 'shastra_compedium:shastrachapter-view' source.shastra.pk object.category.pk %}" title="Show all {{object.category.name}} in {{source.shastra}}"><i class="fas fa-link"></i></a></div>
+  </div>
+  {% for combo in combo_list %}
+      <div class="row px-5">
+        <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+          {% for image in combo.exampleimage_set.all %}
+          {% if forloop.first %}<b>Image:</b><br>{% endif %}
+          <div class="col-12 my-2 p-0">{% include "shastra_compedium/image_350.tmpl" %}</div>
+          {% empty %}<i>No associated images</i>{% endfor %}
+        </div>
+        <div class="col-6 col-md-8 col-lg-3 col-xl-4">{% if combo.contents|safe|length > 0 %}<b>Contents:<br>
+          {{combo.verses}}</b>  {{combo.contents|safe}}
+          {% else %}<i>No description available</i>{% endif %}</div>
+        <div class="col-12 col-sm-4 col-lg-6">
+          {% for pos, images in combo.positions_w_images.items %}
+          <a href="{% url 'shastra_compedium:position-view' pos.pk %}#{{source.pk}}_{{pos.pk}}"><b>{{ pos.name }}</b><br>
+            {% for image in images %}
+            <img src="{% thumbnail image.image 150x150 crop=scale%}">
+           {% empty %}<i>No associated images</i>{% endfor %}</a><br>{% endfor %}
+        </div>
+      </div> 
+  {% endfor %}
 {% endfor %}
 {% endblock content %}

@@ -133,6 +133,23 @@ class Position(Model):
                     'num_details'] + 1
         return details_by_source
 
+    def combinations_by_source(self):
+        details_by_source = OrderedDict()
+
+        for detail in self.combinationdetail_set.all().order_by(
+                "sources__shastra__min_age",
+                "sources__translator",
+                "chapter",
+                "verse_start",
+                "pk"):
+            for source in detail.sources.all():
+                usage = detail.usage.replace(" ", "")
+                if source not in details_by_source:
+                    details_by_source[source] = [detail]
+                else:
+                    details_by_source[source] += [detail]
+        return details_by_source
+
     class Meta:
         app_label = "shastra_compedium"
         unique_together = [('category', 'order'), ('name', 'category')]
@@ -220,6 +237,17 @@ class CombinationDetail(Detail):
         return "%s - %s..." % (
             self.verses(),
             self.contents[3:28])
+
+    def positions_w_images(self):
+        pos_dict = {}
+        for pos in self.positions.all():
+            pos_dict[pos] = []
+        for example in ExampleImage.objects.filter(
+                position__in=self.positions.all(),
+                details__sources__in=self.sources.all()).order_by(
+                'position').distinct():
+            pos_dict[example.position] += [example]
+        return pos_dict
 
     class Meta:
         app_label = "shastra_compedium"
