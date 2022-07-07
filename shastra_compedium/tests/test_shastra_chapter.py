@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.test import Client
 from shastra_compedium.tests.factories import (
     CategoryDetailFactory,
+    CombinationDetailFactory,
     ExampleImageFactory,
     PositionDetailFactory,
     SourceFactory,
@@ -25,7 +26,8 @@ class TestShastraChapter(TestCase):
     def setUp(self):
         self.client = Client()
         self.source = SourceFactory()
-        self.chapter_detail = CategoryDetailFactory()
+        self.chapter_detail = CategoryDetailFactory(chapter=4)
+        self.chapter_detail.sources.add(self.source)
         self.view_url = reverse(self.view_name,
                                 args=[self.source.shastra.pk,
                                       self.chapter_detail.category.pk],
@@ -105,3 +107,29 @@ class TestShastraChapter(TestCase):
         response = self.client.get(self.view_url)
         thumb_url = get_thumbnailer(img1).get_thumbnail(self.options).url
         self.assertContains(response, thumb_url)
+
+    def test_combination(self):
+        another_detail = PositionDetailFactory(
+            usage="Posture Description",
+            position__category=self.chapter_detail.category)
+        combo1 = CombinationDetailFactory(
+            positions=[another_detail.position],
+            chapter=self.chapter_detail.chapter)
+        combo2 = CombinationDetailFactory(
+            positions=[another_detail.position],
+            chapter=self.chapter_detail.chapter)
+        combo1.sources.add(self.source)
+        combo2.sources.add(self.source)
+        another_detail.sources.add(self.source)
+        img1 = set_image()
+        example_image = ExampleImageFactory(
+            image=img1)
+        example_image.combinations.add(combo1)
+        response = self.client.get(self.view_url)
+        thumb_url = get_thumbnailer(img1).get_thumbnail(self.options).url
+        self.assertContains(response, thumb_url)
+        self.assertContains(response, combo1.contents)
+        self.assertContains(response, combo2.contents)
+        thumb_url = get_thumbnailer(img1).get_thumbnail(self.options).url
+        self.assertContains(response, thumb_url)
+        self.assertContains(response, "No associated images")

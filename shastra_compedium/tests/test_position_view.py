@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.test import Client
 from shastra_compedium.tests.factories import (
+    CombinationDetailFactory,
     ExampleImageFactory,
     PositionDetailFactory,
     PositionFactory,
@@ -70,6 +71,31 @@ class TestViewPosition(TestCase):
             "performer-view",
             args=[self.example_image.performer.pk],
             urlconf='shastra_compedium.urls'))
+
+    def test_combinations(self):
+        self.source = SourceFactory()
+        another_pos = PositionFactory()
+        combo1 = CombinationDetailFactory(positions=[self.object, another_pos])
+        combo2 = CombinationDetailFactory(positions=[self.object])
+        combo1.sources.add(self.source)
+        combo2.sources.add(self.source)
+        img1 = set_image()
+        self.example_image = ExampleImageFactory(
+            image=img1)
+        self.example_image.combinations.add(combo1)
+        response = self.client.get(self.view_url)
+        self.assertContains(response, self.object.name)
+        self.assertContains(response, combo1.contents)
+        self.assertContains(response, combo2.contents)
+        self.assertContains(response, '<a id="combo_%d_%d"></a>' % (
+            self.source.pk,
+            self.object.pk))
+        thumb_url = get_thumbnailer(img1).get_thumbnail(self.options).url
+        self.assertContains(response, thumb_url)
+        self.assertContains(response, "No associated images")
+        self.assertContains(response, "#%d_%d" % (
+            self.source.pk,
+            another_pos.pk))
 
     def test_posture_and_meaning(self):
         self.source = SourceFactory()
