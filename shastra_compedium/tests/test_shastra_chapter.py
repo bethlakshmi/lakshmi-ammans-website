@@ -133,3 +133,28 @@ class TestShastraChapter(TestCase):
         thumb_url = get_thumbnailer(img1).get_thumbnail(self.options).url
         self.assertContains(response, thumb_url)
         self.assertContains(response, "No associated images")
+
+
+    def test_combination_w_position_image(self):
+        another_detail = PositionDetailFactory(
+            usage="Posture Description",
+            position__category=self.chapter_detail.category)
+        another_detail.sources.add(self.source)
+        img1 = set_image()
+        example_image = ExampleImageFactory(
+            image=img1,
+            general=True,
+            position=another_detail.position)
+        combo1 = CombinationDetailFactory(
+            positions=[another_detail.position],
+            chapter=self.chapter_detail.chapter)
+        combo1.sources.add(self.source)
+        example_image.details.add(another_detail)
+
+        response = self.client.get(self.view_url)
+        self.assertContains(response, "%s#%d_%d" % (
+            reverse("position-view",
+                    urlconf='shastra_compedium.urls',
+                    args=[another_detail.position.pk]),
+            self.source.pk,
+            another_detail.position.pk))
