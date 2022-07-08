@@ -48,8 +48,8 @@ class TestViewPosition(TestCase):
 
     def test_edit_wrong_position(self):
         response = self.client.get(reverse(self.view_name,
-                                args=[self.object.pk+100],
-                                urlconf='shastra_compedium.urls'))
+                                   args=[self.object.pk+100],
+                                   urlconf='shastra_compedium.urls'))
         self.assertEqual(404, response.status_code)
 
     def test_view_many_things(self):

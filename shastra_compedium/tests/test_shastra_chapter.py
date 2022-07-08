@@ -134,7 +134,6 @@ class TestShastraChapter(TestCase):
         self.assertContains(response, thumb_url)
         self.assertContains(response, "No associated images")
 
-
     def test_combination_w_position_image(self):
         another_detail = PositionDetailFactory(
             usage="Posture Description",
