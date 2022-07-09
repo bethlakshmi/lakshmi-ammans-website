@@ -239,7 +239,6 @@ class TestViewPosition(TestCase):
         dependancy.dependencies.add(another_detail)
         another_meaning.sources.add(self.source)
         response = self.client.get(self.view_url)
-        print(response.content)
         self.assertContains(response, "<b>Mentioned by:</b>")
         self.assertContains(response, "%s#%d_%d" % (
             reverse(self.view_name,

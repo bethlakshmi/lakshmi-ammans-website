@@ -54,7 +54,6 @@ class TestPositionDetailAutoComplete(TestCase):
         response = self.client.get("%s?forward=%s" % (
             reverse('positiondetail-autocomplete'),
             json.dumps({'usage': self.detail.usage, })))
-        print(response.content)
         self.assertContains(response, str(self.detail))
         self.assertNotContains(response, str(self.detail2))
 

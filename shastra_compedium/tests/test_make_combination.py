@@ -50,7 +50,6 @@ class TestMakeCombination(TestCase):
         response = self.client.post(self.edit_url,
                                     data=self.combination_data(),
                                     follow=True)
-        print(response.content)
         self.assertContains(
             response,
             make_combination_messages['edit_success'] % (

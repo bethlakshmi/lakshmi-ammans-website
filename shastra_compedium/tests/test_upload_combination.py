@@ -145,7 +145,6 @@ class TestUploadChapter(TestCase):
             '<textarea name="0-contents" cols="40" rows="10" class="' +
             'admin-tiny-mce" id="id_0-contents">\nThe Only Verse</textarea>',
             html=True)
-        print(response.content)
         self.assertContains(
             response,
             '<input type="number" name="0-chapter" value="1" ' +
@@ -167,7 +166,6 @@ class TestUploadChapter(TestCase):
         response = self.client.post(self.create_url,
                                     data=self.position_data(),
                                     follow=True)
-        print(response.content)
         last_pk = CombinationDetail.objects.latest('pk').pk
         self.assertRedirects(
             response,
@@ -186,7 +184,6 @@ class TestUploadChapter(TestCase):
         response = self.client.post(self.create_url,
                                     data=self.position_data(),
                                     follow=True)
-        print(response.content)
         last_pk = CombinationDetail.objects.latest('pk').pk
         self.assertRedirects(
             response,

@@ -139,7 +139,6 @@ class TestBulkImageUpload(TestCase):
                   'association_count': 2,
                   'finish': 'Finish'},
             follow=True)
-        print(response.content)
         example1 = ExampleImage.objects.get(image=img1)
         example2 = ExampleImage.objects.get(image=img2)
         self.assertContains(
