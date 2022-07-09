@@ -110,5 +110,7 @@ class TestImageList(TestCase):
         self.assertContains(response, combo.contents)
         self.assertContains(response, not_main_image.image.url)
         self.assertContains(response, 'Combo Detail Only')
-        self.assertContains(response, "'combo': '<i class=" +
+        self.assertContains(
+            response,
+            "'combo': '<i class=" +
             '"lakshmi-text-success far fa-check-square fa-2x"' + "></i><br>'")
