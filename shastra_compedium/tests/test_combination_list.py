@@ -3,6 +3,7 @@ from django.test import Client
 from django.urls import reverse
 from shastra_compedium.tests.factories import (
     CombinationDetailFactory,
+    ExampleImageFactory,
     SourceFactory,
     UserFactory
 )
@@ -38,8 +39,14 @@ class TestImageList(TestCase):
             "combination-update",
             args=[self.combo.pk],
             urlconf="shastra_compedium.urls"))
+        self.assertContains(
+            response,
+            '<i class="text-muted fas fa-times-circle fa-2x"></i>')
 
     def test_list_w_login(self):
+        self.img1 = set_image(folder_name="PositionImageUploads")
+        self.example_image = ExampleImageFactory(image=self.img1)
+        self.example_image.combinations.add(self.combo)
         login_as(self.user, self)
         response = self.client.get(self.url)
         self.assertContains(response, self.combo.contents)
@@ -51,6 +58,10 @@ class TestImageList(TestCase):
             "combination-update",
             args=[self.combo.pk],
             urlconf="shastra_compedium.urls"))
+        self.assertContains(response, self.img1.url)
+        self.assertContains(
+            response,
+            '<i class="lakshmi-text-success far fa-check-square fa-2x"></i>')
 
     def test_list_empty(self):
         contents = self.combo.contents
