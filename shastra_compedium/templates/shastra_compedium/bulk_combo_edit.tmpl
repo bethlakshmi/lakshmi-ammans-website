@@ -1,0 +1,53 @@
+{% extends 'shastra_compedium/generic_wizard.tmpl' %}
+{% block special_handling_form %}
+<p>{{ instructions | safe }}</p>
+ <font class="lakshmi-form-error">
+  {% if forms.0.errors %}
+    There is an error on the form.
+    {{ forms.0.errors }}
+  {% endif %}
+  {{ forms.0.non_field_errors }}</font>
+    {% csrf_token %}
+    {% for hidden in forms.0.hidden_fields %}
+    {{ hidden }}
+    {% endfor %}
+  <table class="lakshmi-table">
+    <thead class="lakshmi-table-header">
+      <tr>
+      <th>Positions<br>Ch:Start-End<br>Usage</th>
+      <th>Description</th>
+      </tr>
+
+    </thead>
+    <tbody>
+      {% for item_form in forms|slice:"1:" %}
+      <tr {% if item_form.errors %}class="lakshmi-table-error"{% endif %}>
+        <td>{{item_form.positions}}<br>{{item_form.chapter}}:{{item_form.verse_start}}-{{item_form.verse_end}}<br>
+        {{item_form.usage}}
+          {% if item_form.positions.errors %}<br>
+          <font class="lakshmi-form-error">{{ item_form.positions.errors }}</font>
+          {% endif %}<br>
+          {% if item_form.chapter.errors %}<br>
+            <font class="lakshmi-form-error">{{ item_form.chapter.errors }}</font>
+          {% endif %}{% if item_form.verse_start.errors %}<br>
+            <font class="lakshmi-form-error">{{ item_form.verse_start.errors }}</font>
+          {% endif %}{% if item_form.verse_end.errors %}<br>
+            <font class="lakshmi-form-error">{{ item_form.verse_end.errors }}</font>
+          {% endif %}
+          {% if item_form.usage.errors %}<br>
+            <font class="lakshmi-form-error">{{ item_form.usage.errors }}</font>
+          {% endif %}
+          <font class="lakshmi-form-error">{{ item_form.non_field_errors }}<br>{{ item_form.errors }}</font></td>
+          <td>{{item_form.contents}}
+          {% if item_form.contents.errors %}<br>
+            <font class="lakshmi-form-error">{{ item_form.contents.errors }}</font>
+          {% endif %}</td>
+        </tr>
+    {% for hidden in item_form.hidden_fields %}
+    {{ hidden }}
+    {% endfor %}
+        {% endfor %}
+    </tbody>
+  </table>
+  <br>
+{% endblock %}

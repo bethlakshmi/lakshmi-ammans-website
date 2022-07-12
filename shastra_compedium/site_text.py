@@ -51,6 +51,10 @@ make_position_messages = {
     'create_intro':  "Use this form to create a new position.",
     'edit_intro':  "Use this form to update this position.",
 }
+make_combination_messages = {
+    'edit_success':  "The %s combination detail has been updated.",
+    'edit_intro':  "Use this form to update a combination detail.",
+}
 edit_post_detail_messages = {
     'intro': 'Edit any of these position details and press "Submit".'
 }
@@ -67,13 +71,28 @@ user_messages = {
     should be at the start of a detail, and should be in Arabic numerals as
     either # or #-#.  To separate the posture from the meaning, put a "(Uses)"
     in the format "posture (Uses) meaning".  For text pertaining to the
-    chapter - paste it in the
-    'contents' field below.'''},
+    chapter - paste it in the 'contents' field below.'''},
     'CHAPTER_DETAIL_INTRO': {
         'summary': 'Introduction on second page of upload',
         'description': '''Review each row to be sure the details have
     been parsed accurately.  Enter a position name for each row.  Leaving a
     position empty means the row will not be uploaded.'''},
+    'COMBINATION_BASICS_INTRO': {
+        'summary': 'Introduction on first page of upload for combos',
+        'description': '''Use this form to upload text for a chapter.
+    Each detail should be separated by a '|||'.  This form is specifically
+    for chapters that have combinations of postures attached to a given
+    meaning.  For Description/Meaning format verses, see Upload Chapter.'''},
+    'COMBINATION_DETAIL_INTRO': {
+        'summary': 'Introduction on second page of upload for combos',
+        'description': '''Review each row to be sure the details have
+    been parsed accurately.  Enter at least one position for each row.  Leaving
+    positions or contents empty means the row will not be uploaded.'''},
+    'IMAGE_CONNECT_INTRO': {
+        'summary': 'Introduction on second page of upload for images',
+        'description': '''An image must be connected to at least one position
+    and/or combination detail.  Additional positions and combinations can be
+    added later on the image list page.'''},
     "BUTTON_CLICK_UNKNOWN": {
         'summary':  "Can't tell what button the user pressed to submit",
         'description': '''Something has gone wrong.  If this persists, please

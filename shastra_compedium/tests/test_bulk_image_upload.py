@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.test import Client
 from django.urls import reverse
 from shastra_compedium.tests.factories import (
+    CombinationDetailFactory,
     DanceStyleFactory,
     PerformerFactory,
     PositionFactory,
@@ -110,7 +111,7 @@ class TestBulkImageUpload(TestCase):
                   'default_dance_style': style.pk,
                   'finish': 'Finish'},
             follow=True)
-        self.assertContains(response, "Uploaded 2 images.")
+        self.assertContains(response, "Finished 2 images in the last stage.")
         self.assertRedirects(
             response,
             reverse("image_list", urlconf="shastra_compedium.urls"))
@@ -119,6 +120,7 @@ class TestBulkImageUpload(TestCase):
         img1 = set_image()
         img2 = set_image()
         position = PositionFactory()
+        combo = CombinationDetailFactory()
         style = DanceStyleFactory()
         performer = PerformerFactory()
         login_as(self.user, self)
@@ -127,7 +129,8 @@ class TestBulkImageUpload(TestCase):
             data={'0-image': img1.pk,
                   '1-image': img2.pk,
                   '0-position': position.pk,
-                  '1-position': position.pk,
+                  '1-position': "",
+                  '1-combinations': [combo.pk],
                   '0-performer': performer.pk,
                   '1-performer': performer.pk,
                   '0-dance_style': style.pk,
@@ -140,12 +143,13 @@ class TestBulkImageUpload(TestCase):
         example2 = ExampleImage.objects.get(image=img2)
         self.assertContains(
             response,
-            "Uploaded 2 images.")
+            "Finished 2 images in the last stage.")
         self.assertRedirects(
             response,
             "%s?changed_ids=%s&obj_type=ExampleImage" % (
                 reverse("image_list", urlconf="shastra_compedium.urls"),
                 str([example1.pk, example2.pk])))
+        self.assertContains(response, combo.contents)
 
     def test_post_attachments_bad_item(self):
         # This is legit if a user selects something that is then deleted
@@ -159,15 +163,36 @@ class TestBulkImageUpload(TestCase):
             self.url,
             data={'0-image': img1.pk,
                   '0-position': position.pk+1,
-                  '0-perforner': performer.pk,
+                  '0-performer': performer.pk,
                   '0-dance_style': style.pk,
                   'step': 1,
-                  'association_count': 2,
+                  'association_count': 1,
                   'finish': 'Finish'},
             follow=True)
         self.assertContains(
             response,
             "That choice is not one of the available choices.")
+
+    def test_post_attachments_no_pos_or_combo(self):
+        from shastra_compedium.forms.default_form_text import item_image_help
+        # Need at least 1 - position or combo
+        img1 = set_image()
+        position = PositionFactory()
+        style = DanceStyleFactory()
+        performer = PerformerFactory()
+        login_as(self.user, self)
+        response = self.client.post(
+            self.url,
+            data={'0-image': img1.pk,
+                  '0-performer': performer.pk,
+                  '0-dance_style': style.pk,
+                  'step': 1,
+                  'association_count': 1,
+                  'finish': 'Finish'},
+            follow=True)
+        self.assertContains(
+            response,
+            item_image_help['position_or_combo'])
 
     def test_post_bad_meta_data(self):
         img1 = set_image()
@@ -205,10 +230,10 @@ class TestBulkImageUpload(TestCase):
             self.url,
             data={'0-image': img1.pk+100,
                   '0-position': position.pk,
-                  '0-perforner': performer.pk,
+                  '0-performer': performer.pk,
                   '0-dance_style': style.pk,
                   'step': 1,
-                  'association_count': 2,
+                  'association_count': 1,
                   'finish': 'Finish'},
             follow=True)
         self.assertContains(response, "There is an error on the form.", 1)
@@ -223,17 +248,21 @@ class TestBulkImageUpload(TestCase):
             self.url,
             data={'0-image': img1.pk,
                   '0-position': "",
-                  '0-perforner': performer.pk,
+                  '0-performer': performer.pk,
                   '0-dance_style': style.pk,
                   'step': 1,
-                  'association_count': 2,
+                  'association_count': 1,
                   'finish': 'Finish'},
             follow=True)
         self.assertContains(response, "There is an error on the form.", 1)
 
     def test_post_attachments_and_continue(self):
+        # only the images with positions get moved on to configure position
+        # details.  The images with combinations only get saved, but not
+        # setup in this form.
         img1 = set_image()
         img2 = set_image()
+        combo = CombinationDetailFactory()
         position = PositionFactory()
         style = DanceStyleFactory()
         performer = PerformerFactory()
@@ -244,9 +273,10 @@ class TestBulkImageUpload(TestCase):
             data={'0-image': img1.pk,
                   '1-image': img2.pk,
                   '0-position': position.pk,
-                  '1-position': position.pk,
-                  '0-perforner': performer.pk,
-                  '1-perforner': performer.pk,
+                  '1-position': "",
+                  '1-combinations': [combo.pk],
+                  '0-performer': performer.pk,
+                  '1-performer': performer.pk,
                   '0-dance_style': style.pk,
                   '1-dance_style': style.pk,
                   'step': 1,
@@ -263,6 +293,48 @@ class TestBulkImageUpload(TestCase):
         self.assertContains(response, "Set Specific Position Details")
         self.assertContains(response, image_label)
         self.assertContains(response, detail1.contents)
+        self.assertNotContains(response, img2.url)
+        self.assertContains(response, "Saved 1 combination detail images.")
+
+    def test_post_combination_only_and_continue(self):
+        # only the images with positions get moved on to configure position
+        # details.  The images with combinations only get saved, but not
+        # setup in this form.
+        img1 = set_image()
+        img2 = set_image()
+        combo = CombinationDetailFactory()
+        position = PositionFactory()
+        style = DanceStyleFactory()
+        performer = PerformerFactory()
+        detail1 = PositionDetailFactory(position=position)
+        login_as(self.user, self)
+        response = self.client.post(
+            self.url,
+            data={'0-image': img1.pk,
+                  '1-image': img2.pk,
+                  '0-position': "",
+                  '1-position': "",
+                  '0-combinations': [combo.pk],
+                  '1-combinations': [combo.pk],
+                  '0-performer': performer.pk,
+                  '1-performer': performer.pk,
+                  '0-dance_style': style.pk,
+                  '1-dance_style': style.pk,
+                  'step': 1,
+                  'association_count': 2,
+                  'next': 'Save & Continue >>'},
+            follow=True)
+        example1 = ExampleImage.objects.get(image=img1)
+        example2 = ExampleImage.objects.get(image=img2)
+        self.assertContains(
+            response,
+            "Finished 2 images in the last stage.")
+        self.assertRedirects(
+            response,
+            "%s?changed_ids=%s&obj_type=ExampleImage" % (
+                reverse("image_list", urlconf="shastra_compedium.urls"),
+                str([example1.pk, example2.pk])))
+        self.assertContains(response, combo.contents)
 
     def test_pick_details(self):
         img1 = set_image()
@@ -283,7 +355,7 @@ class TestBulkImageUpload(TestCase):
                   'association_count': 1,
                   'finish': 'Finish'},
             follow=True)
-        self.assertContains(response, "Uploaded 1 images.")
+        self.assertContains(response, "Finished 1 images in the last stage.")
         result = ExampleImage.objects.get(pk=example_image.pk)
         self.assertTrue(detail1 in result.details.all())
         self.assertTrue(result.general)

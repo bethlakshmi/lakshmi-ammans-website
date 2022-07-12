@@ -3,10 +3,13 @@ from django.test import Client
 from django.urls import reverse
 from shastra_compedium.tests.factories import (
     CategoryFactory,
+    CombinationDetailFactory,
     PositionFactory,
+    SourceFactory,
     UserFactory,
 )
 from shastra_compedium.tests.functions import login_as
+from django.utils.html import strip_tags
 
 
 class TestAutoComplete(TestCase):
@@ -28,7 +31,7 @@ class TestAutoComplete(TestCase):
         self.assertNotContains(response, position.name)
         self.assertNotContains(response, position.pk)
 
-    def test_list_positions_w_search_critieria(self):
+    def test_list_positions_w_search_criteria(self):
         position = PositionFactory()
         position2 = PositionFactory()
         login_as(self.user, self)
@@ -62,3 +65,31 @@ class TestAutoComplete(TestCase):
         self.assertContains(response, category.name)
         self.assertContains(response, category.pk)
         self.assertNotContains(response, category2.name)
+
+    def test_list_combinations(self):
+        obj = CombinationDetailFactory()
+        obj.sources.add(SourceFactory())
+        login_as(self.user, self)
+        response = self.client.get(reverse('combination-autocomplete'))
+        self.assertContains(response, strip_tags(obj.contents)[0:25])
+        self.assertContains(response, obj.pk)
+
+    def test_no_access_combinations(self):
+        obj = CombinationDetailFactory()
+        obj.sources.add(SourceFactory())
+        response = self.client.get(reverse('combination-autocomplete'))
+        self.assertNotContains(response, strip_tags(obj.contents)[0:25])
+        self.assertNotContains(response, obj.pk)
+
+    def test_list_combinations_w_search_critieria(self):
+        obj = CombinationDetailFactory(contents="special stuff")
+        obj2 = CombinationDetailFactory()
+        obj.sources.add(SourceFactory())
+        obj2.sources.add(SourceFactory())
+        login_as(self.user, self)
+        response = self.client.get("%s?q=%s" % (
+            reverse('combination-autocomplete'),
+            "special"))
+        self.assertContains(response, strip_tags(obj.contents)[0:25])
+        self.assertContains(response, obj.pk)
+        self.assertNotContains(response, strip_tags(obj2.contents)[0:25])

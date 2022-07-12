@@ -10,7 +10,8 @@
   <table class="lakshmi-table">
     <thead>
       <tr><th>Picture</th>
-          <th><font class="lakshmi-form-required">*</font>Position</th>
+          <th>Position</th>
+          <th>Combination</th>
           <th>Performer</th>
           <th><font class="lakshmi-form-required">*</font>Dance Style</th></tr>
     </thead>
@@ -24,11 +25,14 @@
               <font class="lakshmi-form-error">{{ field.errors }}</font>
               {% endif %}
             {% endfor%}
+            {% for error in form.non_field_errors %}
+              <font class="lakshmi-form-error">{{ error }}</font>
+            {% endfor %}
         </td>
       {% for field in form.visible_fields %}
         <td>{{ field }}
         {% if field.errors %}
-           <font class="lakshmi-form-error">{{ field.errors }}</font>
+           <br><font class="lakshmi-form-error">{{ field.errors }}</font>
         {% endif %}
         </td>{% endfor %}
       </tr>
@@ -36,7 +40,8 @@
     </tbody>
     <tfoot>
       <tr><th>Picture</th>
-          <th><font class="lakshmi-form-required">*</font>Position</th>
+          <th>Position</th>
+          <th>Combination</th>
           <th>Performer</th>
           <th><font class="lakshmi-form-required">*</font>Dance Style</th></tr>
     </tfoot>

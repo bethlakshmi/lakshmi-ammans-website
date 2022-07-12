@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.test import Client
 from django.urls import reverse
 from shastra_compedium.tests.factories import (
+    CombinationDetailFactory,
     ExampleImageFactory,
     PositionDetailFactory,
     UserFactory
@@ -34,7 +35,7 @@ class TestImageList(TestCase):
             '<i class="lakshmi-text-success far fa-check-square fa-2x"></i>')
         self.assertContains(
             response,
-            '<a href="%s" class="nav-link active">Image List</a>' % (
+            '<a href="%s" class="nav-link active">Images</a>' % (
                 self.url),
             html=True)
         self.assertNotContains(response, reverse(
@@ -72,6 +73,16 @@ class TestImageList(TestCase):
             urlconf="shastra_compedium.urls",
             args=[self.example_image.pk]))
 
+    def test_changed_ids(self):
+        login_as(self.user, self)
+        response = self.client.get(
+            "%s?changed_ids=[%s]&obj_type=ExampleImage" % (
+                self.url,
+                str(self.example_image.pk)))
+        self.assertContains(
+            response,
+            "if ([%d].includes(row.id))" % self.example_image.image.pk)
+
     def test_list_empty(self):
         ex_url = reverse(
             "exampleimage-update",
@@ -95,3 +106,21 @@ class TestImageList(TestCase):
         self.assertContains(
             response,
             '<i class="text-muted fas fa-times-circle fa-2x"></i>')
+
+    def test_combo_only(self):
+        combo = CombinationDetailFactory(
+            positions=[self.example_image.position],
+            usage="Meaning")
+        self.combo_img = set_image(folder_name="PositionImageUploads")
+        not_main_image = ExampleImageFactory(image=self.combo_img)
+        not_main_image.combinations.add(combo)
+        not_main_image.position = None
+        not_main_image.save()
+        response = self.client.get(self.url)
+        self.assertContains(response, combo.contents)
+        self.assertContains(response, not_main_image.image.url)
+        self.assertContains(response, 'Combo Detail Only')
+        self.assertContains(
+            response,
+            "'combo': '<i class=" +
+            '"lakshmi-text-success far fa-check-square fa-2x"' + "></i><br>'")

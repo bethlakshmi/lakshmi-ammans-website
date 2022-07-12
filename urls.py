@@ -4,8 +4,10 @@ from aldryn_django.utils import i18n_patterns
 import aldryn_addons.urls
 from shastra_compedium.views import (
     CategoryAutocomplete,
+    CombinationAutocomplete,
     PositionAutocomplete,
     PositionDetailAutocomplete,
+    PositionDetailExampleAutocomplete,
 )
 
 
@@ -17,9 +19,19 @@ urlpatterns = [
         name='category-autocomplete',
     ),
     url(
+        r'^combination-autocomplete/$',
+        CombinationAutocomplete.as_view(),
+        name='combination-autocomplete',
+    ),
+    url(
         r'^positiondetail-autocomplete/$',
         PositionDetailAutocomplete.as_view(),
         name='positiondetail-autocomplete',
+    ),
+    url(
+        r'^positiondetail-example-autocomplete/$',
+        PositionDetailExampleAutocomplete.as_view(),
+        name='positiondetail-example-autocomplete',
     ),
     url(
         r'^position-autocomplete/$',

@@ -1,5 +1,8 @@
 from dal import autocomplete
 from shastra_compedium.models import PositionDetail
+from django.utils.html import strip_tags
+from django.utils.html import format_html
+from django.db.models import Q
 
 
 class PositionDetailAutocomplete(autocomplete.Select2QuerySetView):
@@ -33,6 +36,17 @@ class PositionDetailAutocomplete(autocomplete.Select2QuerySetView):
             qs = qs.filter(usage=usage)
 
         if self.q:
-            qs = qs.filter(position__name__icontains=self.q)
+            qs = qs.filter(Q(position__name__icontains=self.q) |
+                           Q(contents__icontains=self.q))
 
         return qs
+
+
+class PositionDetailExampleAutocomplete(PositionDetailAutocomplete):
+    # same search logic, but uses formatting for choices that work well with
+    # example image configurations
+    def get_result_label(self, result):
+        return format_html('%s - %s - %s' % (
+            result.sources.first().shastra.initials,
+            result.verses(),
+            strip_tags(result.contents[3:28])))

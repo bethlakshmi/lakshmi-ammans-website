@@ -133,6 +133,23 @@ class Position(Model):
                     'num_details'] + 1
         return details_by_source
 
+    def combinations_by_source(self):
+        details_by_source = OrderedDict()
+
+        for detail in self.combinationdetail_set.all().order_by(
+                "sources__shastra__min_age",
+                "sources__translator",
+                "chapter",
+                "verse_start",
+                "pk"):
+            for source in detail.sources.all():
+                usage = detail.usage.replace(" ", "")
+                if source not in details_by_source:
+                    details_by_source[source] = [detail]
+                else:
+                    details_by_source[source] += [detail]
+        return details_by_source
+
     class Meta:
         app_label = "shastra_compedium"
         unique_together = [('category', 'order'), ('name', 'category')]
@@ -213,6 +230,30 @@ class CategoryDetail(Detail):
         ordering = ['category', 'chapter', 'verse_start', 'verse_end']
 
 
+class CombinationDetail(Detail):
+    positions = ManyToManyField('Position', blank=False)
+
+    def __str__(self):
+        return "%s - %s..." % (
+            self.verses(),
+            self.contents[3:28])
+
+    def positions_w_images(self):
+        pos_dict = {}
+        for pos in self.positions.all():
+            pos_dict[pos] = []
+        for example in ExampleImage.objects.filter(
+                position__in=self.positions.all(),
+                details__sources__in=self.sources.all()).order_by(
+                'position').distinct():
+            pos_dict[example.position] += [example]
+        return pos_dict
+
+    class Meta:
+        app_label = "shastra_compedium"
+        ordering = ['chapter', 'verse_start', 'verse_end', 'id']
+
+
 class Video(File):
     _icon = "video"
 
@@ -261,8 +302,10 @@ class Performer(Model):
 
 
 class Example(Model):
-    position = ForeignKey(Position, on_delete=CASCADE)
-    details = ManyToManyField(PositionDetail)
+    position = ForeignKey(Position, on_delete=CASCADE, blank=True, null=True)
+    details = ManyToManyField(PositionDetail, blank=True)
+    combinations = ManyToManyField(CombinationDetail, blank=True, null=True)
+
     general = BooleanField(default=False)
     dance_style = ForeignKey(DanceStyle, on_delete=CASCADE)
     performer = ForeignKey(Performer,
@@ -279,6 +322,7 @@ class Example(Model):
 
     def save(self, *args, **kwargs):
         super(Example, self).save(*args, **kwargs)
+        # don't save positions details not connected to this position.
         for detail in self.details.exclude(position=self.position):
             self.details.remove(detail)
 
@@ -289,7 +333,11 @@ class ExampleImage(Example):
         null=True)
 
     def __str__(self):
-        return "Image %s, for Position %s," % (self.image, self.position.name)
+        if self.position is not None:
+            return "Image %s, for Position %s," % (self.image,
+                                                   self.position.name)
+        else:
+            return "Image %s, with Combination Details," % (self.image)
 
     class Meta:
         app_label = "shastra_compedium"

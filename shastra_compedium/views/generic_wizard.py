@@ -3,7 +3,7 @@ from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse_lazy
 from django.contrib import messages
 from shastra_compedium.forms import StepForm
 from shastra_compedium.models import UserMessage
@@ -23,18 +23,18 @@ class GenericWizard(View):
     #     - create setup_forms - which can make any form in the set, the first
     #          form can be  made via either get or post, all forms after that
     #          are submitted as posts.
-    #     - finish_valid_form - what to do when a form is deemed valid
+    #     - finish_valid_form - what to do when a form is deemed valid, return
+    #          True if you want to finish (out of sequence)
     #     - finish - place to put any messaging and return a URL for how to
     #          return to a main spot
-    #     - redirect (only used with add) - a place to redirect to continue
     ##############
     step = -1
     max = 1
+    return_url = reverse_lazy('position_list',
+                              urlconf="shastra_compedium.urls")
 
     def groundwork(self, request, args, kwargs):
         self.step = int(request.POST.get("step", -1))
-        self.return_url = reverse('position_list',
-                                  urlconf='shastra_compedium.urls')
 
     def make_context(self, request, valid=True):
         context = {
@@ -100,8 +100,6 @@ class GenericWizard(View):
             return HttpResponseRedirect(self.return_url)
 
         if 'next' in list(request.POST.keys()) or 'finish' in list(
-                request.POST.keys()) or 'add' in list(
-                request.POST.keys()) or 'redirect' in list(
                 request.POST.keys()):
             self.current_form_set = self.form_sets[self.step]
             if not self.current_form_set['the_form']:
@@ -119,14 +117,10 @@ class GenericWizard(View):
                 self.current_form_set = self.form_sets[self.step]
                 context = self.make_context(request, valid=False)
                 return render(request, self.template, context)
-            self.finish_valid_form(request)
-            if 'finish' in list(request.POST.keys()):
+            is_finished = self.finish_valid_form(request)
+            if 'finish' in list(request.POST.keys()) or (
+                    is_finished is not None and is_finished):
                 return HttpResponseRedirect(self.finish(request))
-            if 'add' in list(request.POST.keys()):
-                self.step = self.step - 1
-                self.current_form_set = self.form_sets[self.step]
-            if 'redirect' in list(request.POST.keys()):
-                return HttpResponseRedirect(self.redirect(request))
 
         else:
             msg = UserMessage.objects.get_or_create(

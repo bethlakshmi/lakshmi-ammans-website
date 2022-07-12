@@ -10,6 +10,7 @@ from shastra_compedium.tests.factories import (
 )
 from shastra_compedium.tests.functions import login_as
 import json
+from django.utils.html import strip_tags
 
 
 class TestPositionDetailAutoComplete(TestCase):
@@ -17,7 +18,7 @@ class TestPositionDetailAutoComplete(TestCase):
     def setUp(self):
         self.client = Client()
         self.user = UserFactory()
-        self.detail = PositionDetailFactory()
+        self.detail = PositionDetailFactory(contents="special contents")
         self.detail2 = PositionDetailFactory()
 
     def test_list_positiondetail(self):
@@ -31,11 +32,19 @@ class TestPositionDetailAutoComplete(TestCase):
         self.assertNotContains(response, str(self.detail))
         self.assertNotContains(response, self.detail.pk)
 
-    def test_list_positiondetails_w_search_critieria(self):
+    def test_list_positiondetails_w_search_position(self):
         login_as(self.user, self)
         response = self.client.get("%s?q=%s" % (
             reverse('positiondetail-autocomplete'),
             self.detail.position.name))
+        self.assertContains(response, str(self.detail))
+        self.assertContains(response, self.detail.pk)
+        self.assertNotContains(response, str(self.detail2))
+
+    def test_list_positiondetails_w_search_contents(self):
+        login_as(self.user, self)
+        response = self.client.get("%s?q=special" % (
+            reverse('positiondetail-autocomplete')))
         self.assertContains(response, str(self.detail))
         self.assertContains(response, self.detail.pk)
         self.assertNotContains(response, str(self.detail2))
@@ -45,7 +54,6 @@ class TestPositionDetailAutoComplete(TestCase):
         response = self.client.get("%s?forward=%s" % (
             reverse('positiondetail-autocomplete'),
             json.dumps({'usage': self.detail.usage, })))
-        print(response.content)
         self.assertContains(response, str(self.detail))
         self.assertNotContains(response, str(self.detail2))
 
@@ -84,7 +92,7 @@ class TestPositionDetailAutoComplete(TestCase):
         self.assertNotContains(response, str(self.detail2))
 
     def test_list_positiondetail_w_source(self):
-        # this is what happens in position detail image edit w. 
+        # this is what happens in position detail image edit w.
         # MultipleHiddenInput and one source.
         source = SourceFactory()
         self.detail.sources.add(source)
@@ -94,3 +102,16 @@ class TestPositionDetailAutoComplete(TestCase):
             json.dumps({"sources": source.pk, })))
         self.assertContains(response, str(self.detail))
         self.assertNotContains(response, str(self.detail2))
+
+    def test_list_positiondetailexample(self):
+        source = SourceFactory()
+        self.detail.sources.add(source)
+        login_as(self.user, self)
+        response = self.client.get("%s?forward=%s" % (
+            reverse('positiondetail-example-autocomplete'),
+            json.dumps({"sources": source.pk, })))
+        self.assertContains(response, '%s - %s - %s' % (
+            self.detail.sources.first().shastra.initials,
+            self.detail.verses(),
+            strip_tags(self.detail.contents[3:28])))
+        self.assertContains(response, self.detail.pk)

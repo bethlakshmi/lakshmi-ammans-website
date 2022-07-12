@@ -12,6 +12,7 @@ from factory.django import (
 from shastra_compedium.models import (
     Category,
     CategoryDetail,
+    CombinationDetail,
     DanceStyle,
     ExampleImage,
     Performer,
@@ -99,6 +100,25 @@ class CategoryDetailFactory(DjangoModelFactory):
     category = SubFactory(CategoryFactory)
     usage = Sequence(lambda n: 'Usage %d' % n)
     contents = Sequence(lambda n: 'Contents %d' % n)
+
+
+class CombinationDetailFactory(DjangoModelFactory):
+    class Meta:
+        model = CombinationDetail
+    usage = Sequence(lambda n: 'Usage %d' % n)
+    contents = Sequence(lambda n: 'Contents %d' % n)
+
+    @factory.post_generation
+    def positions(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            # A list of groups were passed in, use them
+            for position in extracted:
+                self.positions.add(position)
+        else:
+            self.positions.add(PositionFactory())
 
 
 class PositionDetailFactory(DjangoModelFactory):

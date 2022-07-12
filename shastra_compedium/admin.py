@@ -20,6 +20,16 @@ class PositionAdmin(admin.ModelAdmin):
         return obj.examplevideo_set.count()
 
 
+class CombinationDetailAdmin(admin.ModelAdmin):
+    list_display = ('id',
+                    'verses',
+                    'usage',
+                    'created_date',
+                    'modified_date',
+                    'contents')
+    list_filter = ['positions', 'usage', 'created_date', 'modified_date']
+
+
 class PositionDetailAdmin(admin.ModelAdmin):
     list_display = ('id',
                     'position',
@@ -122,14 +132,19 @@ class ExampleImageAdmin(admin.ModelAdmin):
         'position',
         'performer',
         'dance_style',
+        'combo_count',
         'created_date',
         'modified_date')
     search_fields = ['position__name', 'performer__name', 'dance_style__name']
     list_editable = ('position', 'performer', 'dance_style')
 
+    def combo_count(self, obj):
+        return obj.combinations.count()
+
 
 admin.site.register(Position, PositionAdmin)
 admin.site.register(PositionDetail, PositionDetailAdmin)
+admin.site.register(CombinationDetail, CombinationDetailAdmin)
 admin.site.register(CategoryDetail, CategoryDetailAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Shastra, ShastraAdmin)

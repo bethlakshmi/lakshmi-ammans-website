@@ -31,11 +31,13 @@ class GenericList(View):
             'source_id': self.source_id,
             'error_id': self.error_id,
             'path_list': [
-                ("Position List",
+                ("Positions",
                  reverse('position_list', urlconf='shastra_compedium.urls')),
-                ("Source List",
+                ("Combinations",
+                 reverse('combo_list', urlconf='shastra_compedium.urls')),
+                ("Sources",
                  reverse('source_list', urlconf='shastra_compedium.urls')),
-                ("Image List",
+                ("Images",
                  reverse('image_list', urlconf='shastra_compedium.urls'))]
             }
         if self.__class__.__name__ in user_messages:

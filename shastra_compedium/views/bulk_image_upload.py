@@ -13,6 +13,7 @@ from easy_thumbnails.files import get_thumbnailer
 from django.forms import modelformset_factory
 from django.urls import reverse
 from shastra_compedium.site_text import image_modal
+from filer.models.imagemodels import Image
 
 
 class BulkImageUpload(GenericWizard):
@@ -30,7 +31,8 @@ class BulkImageUpload(GenericWizard):
         0: {
             'the_form':  ImageUploadForm,
             'next_form': ImageAssociateForm,
-            'next_title': second_title},
+            'next_title': second_title,
+            'instruction_key': "IMAGE_CONNECT_INTRO"},
         1: {
             'the_form':  ImageAssociateForm,
             'next_form': ImageDetailForm,
@@ -53,10 +55,27 @@ class BulkImageUpload(GenericWizard):
                 files,
                 request.user)
         elif self.forms[0].__class__.__name__ == "ImageAssociateForm":
+            combo_images = []
             for form in self.forms:
-                if form.__class__.__name__ == "ImageAssociateForm" and (
-                        form.cleaned_data['position']):
-                    self.changed_ids += [form.save().pk]
+                if form.__class__.__name__ == "ImageAssociateForm":
+                    # if it continues, track only the examples with a position
+                    # if it finishes, track all new images
+                    pk = form.save().pk
+                    if form.cleaned_data['position'] or (
+                            'finish' in list(request.POST.keys())):
+                        self.changed_ids += [pk]
+                    else:
+                        combo_images += [pk]
+            if len(self.changed_ids) == 0:
+                # don't move on if no positions to associate w details
+                self.changed_ids = combo_images
+                return True
+            else:
+                if len(combo_images) > 0:
+                    messages.success(
+                        request,
+                        "Saved %d combination detail images." % len(
+                            combo_images))
         else:
             self.forms.save()
             self.num_files = self.forms.total_form_count()
@@ -67,7 +86,7 @@ class BulkImageUpload(GenericWizard):
         return_url = reverse('image_list', urlconf='shastra_compedium.urls')
         messages.success(
             request,
-            "Uploaded %d images." % (
+            "Finished %d images in the last stage." % (
                 self.num_files))
         if len(self.changed_ids) > 0:
             return_url = "%s?changed_ids=%s&obj_type=ExampleImage" % (
@@ -91,6 +110,10 @@ class BulkImageUpload(GenericWizard):
                                             label_suffix='')
                     if association_form.is_valid():
                         image = association_form.cleaned_data['image']
+                    else:
+                        image = Image.objects.filter(
+                            pk=request.POST["%d-image" % i]).first()
+                    if image is not None:
                         thumb_url = get_thumbnailer(image).get_thumbnail(
                             self.options).url
                         association_form.fields['position'].label = mark_safe(

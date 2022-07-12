@@ -1,6 +1,7 @@
 from shastra_compedium.views import GenericList
 from shastra_compedium.models import ExampleImage
 from filer.models.imagemodels import Image
+from django.utils.safestring import mark_safe
 
 
 class ImageList(GenericList):
@@ -11,6 +12,13 @@ class ImageList(GenericList):
         context = super(ImageList, self).get_context_dict()
         if self.changed_obj != "ExampleImage":
             context['changed_ids'] = []
+        else:
+            changed_ids = []
+            for i in ExampleImage.objects.filter(
+                    pk__in=self.changed_ids).values_list('image__pk',
+                                                         flat=True):
+                changed_ids += [i]
+            context['changed_ids'] = changed_ids
         return context
 
     def get_list(self):

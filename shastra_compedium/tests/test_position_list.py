@@ -40,7 +40,7 @@ class TestPositionList(TestCase):
             args=[self.detail.position.pk]))
         self.assertContains(
             response,
-            '<a href="%s" class="nav-link active">Position List</a>' % (
+            '<a href="%s" class="nav-link active">Positions</a>' % (
                 self.url),
             html=True)
         self.assertNotContains(

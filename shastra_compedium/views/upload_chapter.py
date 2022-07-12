@@ -37,6 +37,8 @@ class UploadChapter(GenericWizard):
     }
     header = None
     changed_ids = []
+    detail_form = PositionDetailForm
+    obj_type = "Position"
 
     def groundwork(self, request, args, kwargs):
         redirect = super(UploadChapter, self).groundwork(request, args, kwargs)
@@ -107,11 +109,12 @@ class UploadChapter(GenericWizard):
         else:
             messages.success(
                 request,
-                "Uploaded %s position details." % (self.num_created))
+                "Uploaded %s details." % (self.num_created))
         if len(self.changed_ids) > 0:
-            return_url = "%s?changed_ids=%s&obj_type=Position" % (
+            return_url = "%s?changed_ids=%s&obj_type=%s" % (
                 self.return_url,
-                str(self.changed_ids))
+                str(self.changed_ids),
+                self.obj_type)
         return return_url
 
     def make_context(self, request, valid=True):
@@ -132,8 +135,7 @@ class UploadChapter(GenericWizard):
                 forms = [ChapterDetailMapping(request.POST)]
                 i = 0
                 while i < num_rows:
-                    forms += [PositionDetailForm(request.POST,
-                                                 prefix=str(i))]
+                    forms += [self.detail_form(request.POST, prefix=str(i))]
                     i = i + 1
                 return forms
         else:
@@ -145,11 +147,14 @@ class UploadChapter(GenericWizard):
                     'num_rows': len(self.chapter_positions)})]
                 i = 0
                 for position in self.chapter_positions:
-                    form = PositionDetailForm(prefix=str(i), initial=position)
-                    form.fields['position'].widget.add_related_url = reverse(
-                        'position-add',
-                        urlconf='shastra_compedium.urls',
-                        args=[i*5, self.chapter.category.pk])
-                    forms += [form]
+                    form = self.detail_form(prefix=str(i), initial=position)
+                    forms += [self.detail_form_config(form, i)]
                     i = i + 1
                 return forms
+
+    def detail_form_config(self, form, i):
+        form.fields['position'].widget.add_related_url = reverse(
+            'position-add',
+            urlconf='shastra_compedium.urls',
+            args=[i*5, self.chapter.category.pk])
+        return form
