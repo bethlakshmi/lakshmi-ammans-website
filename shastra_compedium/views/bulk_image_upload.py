@@ -74,7 +74,8 @@ class BulkImageUpload(GenericWizard):
                 if len(combo_images) > 0:
                     messages.success(
                         request,
-                        "Saved %d combination detail images." % combo_images)
+                        "Saved %d combination detail images." % len(
+                            combo_images))
         else:
             self.forms.save()
             self.num_files = self.forms.total_form_count()

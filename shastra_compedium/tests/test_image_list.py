@@ -73,6 +73,16 @@ class TestImageList(TestCase):
             urlconf="shastra_compedium.urls",
             args=[self.example_image.pk]))
 
+    def test_changed_ids(self):
+        login_as(self.user, self)
+        response = self.client.get(
+            "%s?changed_ids=[%s]&obj_type=ExampleImage" % (
+                self.url,
+                str(self.example_image.pk)))
+        self.assertContains(
+            response,
+            "if ([%d].includes(row.id))" % self.example_image.image.pk)
+
     def test_list_empty(self):
         ex_url = reverse(
             "exampleimage-update",

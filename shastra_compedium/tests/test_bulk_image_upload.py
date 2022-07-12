@@ -230,7 +230,7 @@ class TestBulkImageUpload(TestCase):
             self.url,
             data={'0-image': img1.pk+100,
                   '0-position': position.pk,
-                  '0-perforner': performer.pk,
+                  '0-performer': performer.pk,
                   '0-dance_style': style.pk,
                   'step': 1,
                   'association_count': 1,
@@ -248,7 +248,7 @@ class TestBulkImageUpload(TestCase):
             self.url,
             data={'0-image': img1.pk,
                   '0-position': "",
-                  '0-perforner': performer.pk,
+                  '0-performer': performer.pk,
                   '0-dance_style': style.pk,
                   'step': 1,
                   'association_count': 1,
@@ -275,8 +275,8 @@ class TestBulkImageUpload(TestCase):
                   '0-position': position.pk,
                   '1-position': "",
                   '1-combinations': [combo.pk],
-                  '0-perforner': performer.pk,
-                  '1-perforner': performer.pk,
+                  '0-performer': performer.pk,
+                  '1-performer': performer.pk,
                   '0-dance_style': style.pk,
                   '1-dance_style': style.pk,
                   'step': 1,
@@ -295,6 +295,46 @@ class TestBulkImageUpload(TestCase):
         self.assertContains(response, detail1.contents)
         self.assertNotContains(response, img2.url)
         self.assertContains(response, "Saved 1 combination detail images.")
+
+    def test_post_combination_only_and_continue(self):
+        # only the images with positions get moved on to configure position
+        # details.  The images with combinations only get saved, but not
+        # setup in this form.
+        img1 = set_image()
+        img2 = set_image()
+        combo = CombinationDetailFactory()
+        position = PositionFactory()
+        style = DanceStyleFactory()
+        performer = PerformerFactory()
+        detail1 = PositionDetailFactory(position=position)
+        login_as(self.user, self)
+        response = self.client.post(
+            self.url,
+            data={'0-image': img1.pk,
+                  '1-image': img2.pk,
+                  '0-position': "",
+                  '1-position': "",
+                  '0-combinations': [combo.pk],
+                  '1-combinations': [combo.pk],
+                  '0-performer': performer.pk,
+                  '1-performer': performer.pk,
+                  '0-dance_style': style.pk,
+                  '1-dance_style': style.pk,
+                  'step': 1,
+                  'association_count': 2,
+                  'next': 'Save & Continue >>'},
+            follow=True)
+        example1 = ExampleImage.objects.get(image=img1)
+        example2 = ExampleImage.objects.get(image=img2)
+        self.assertContains(
+            response,
+            "Finished 2 images in the last stage.")
+        self.assertRedirects(
+            response,
+            "%s?changed_ids=%s&obj_type=ExampleImage" % (
+                reverse("image_list", urlconf="shastra_compedium.urls"),
+                str([example1.pk, example2.pk])))
+        self.assertContains(response, combo.contents)
 
     def test_pick_details(self):
         img1 = set_image()
