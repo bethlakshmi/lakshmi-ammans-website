@@ -55,7 +55,7 @@ class BulkImageUpload(GenericWizard):
                 files,
                 request.user)
         elif self.forms[0].__class__.__name__ == "ImageAssociateForm":
-            combo_images = 0
+            combo_images = []
             for form in self.forms:
                 if form.__class__.__name__ == "ImageAssociateForm":
                     # if it continues, track only the examples with a position
@@ -65,12 +65,16 @@ class BulkImageUpload(GenericWizard):
                             'finish' in list(request.POST.keys())):
                         self.changed_ids += [pk]
                     else:
-                        combo_images = combo_images + 1
-            if combo_images > 0:
-                messages.success(
-                    request,
-                    "Saved %d combination detail images." % combo_images)
-
+                        combo_images += [pk]
+            if len(self.changed_ids) == 0:
+                # don't move on if no positions to associate w details
+                self.changed_ids = combo_images
+                return True
+            else:
+                if len(combo_images) > 0:
+                    messages.success(
+                        request,
+                        "Saved %d combination detail images." % combo_images)
         else:
             self.forms.save()
             self.num_files = self.forms.total_form_count()

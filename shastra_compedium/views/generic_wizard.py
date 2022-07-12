@@ -23,7 +23,8 @@ class GenericWizard(View):
     #     - create setup_forms - which can make any form in the set, the first
     #          form can be  made via either get or post, all forms after that
     #          are submitted as posts.
-    #     - finish_valid_form - what to do when a form is deemed valid
+    #     - finish_valid_form - what to do when a form is deemed valid, return
+    #          True if you want to finish (out of sequence)
     #     - finish - place to put any messaging and return a URL for how to
     #          return to a main spot
     ##############
@@ -116,8 +117,9 @@ class GenericWizard(View):
                 self.current_form_set = self.form_sets[self.step]
                 context = self.make_context(request, valid=False)
                 return render(request, self.template, context)
-            self.finish_valid_form(request)
-            if 'finish' in list(request.POST.keys()):
+            is_finished = self.finish_valid_form(request)
+            if 'finish' in list(request.POST.keys()) or (
+                    is_finished is not None and is_finished):
                 return HttpResponseRedirect(self.finish(request))
 
         else:
