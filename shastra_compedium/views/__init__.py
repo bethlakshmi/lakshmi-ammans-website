@@ -4,6 +4,7 @@ from .positiondetail_autocomplete import (
     PositionDetailAutocomplete,
     PositionDetailExampleAutocomplete,
 )
+from .subject_autocomplete import SubjectAutocomplete
 from .position_autocomplete import PositionAutocomplete
 from .position_view import PositionView
 from .generic_wizard import GenericWizard
@@ -21,6 +22,7 @@ from .make_example_image import (ExampleImageCopy,
                                  ExampleImageCreate,
                                  ExampleImageUpdate)
 from .make_performer import (PerformerCreate, PerformerUpdate)
+from .make_subject import (SubjectCreate, SubjectUpdate)
 from .performer_view import PerformerView
 from .make_source import (SourceCreate, SourceUpdate)
 from .make_shastra import (ShastraCreate, ShastraUpdate)

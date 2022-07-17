@@ -230,13 +230,36 @@ class CategoryDetail(Detail):
         ordering = ['category', 'chapter', 'verse_start', 'verse_end']
 
 
+class Subject(Model):
+    name = CharField(max_length=128)
+    category = ForeignKey(Category,
+                          on_delete=CASCADE)
+    def __str__(self):
+        return "%s, %s" % (self.name, self.category.name)
+
+    class Meta:
+        app_label = "shastra_compedium"
+        ordering = ['name', 'category']
+        unique_together = [('name', 'category'), ]
+
+
 class CombinationDetail(Detail):
     positions = ManyToManyField('Position', blank=False)
+    subject = ForeignKey(Subject,
+                         on_delete=CASCADE,
+                         related_name='details',
+                         null=True)
 
     def __str__(self):
-        return "%s - %s..." % (
-            self.verses(),
-            self.contents[3:28])
+        if subject is not None:
+            return "%s - %s - %s..." % (
+                self.subject.name,
+                self.verses(),
+                self.contents[3:28])
+        else:
+            return "%s - %s..." % (
+                self.verses(),
+                self.contents[3:28])
 
     def positions_w_images(self):
         pos_dict = {}

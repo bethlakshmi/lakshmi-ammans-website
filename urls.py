@@ -8,6 +8,7 @@ from shastra_compedium.views import (
     PositionAutocomplete,
     PositionDetailAutocomplete,
     PositionDetailExampleAutocomplete,
+    SubjectAutocomplete,
 )
 
 
@@ -37,6 +38,11 @@ urlpatterns = [
         r'^position-autocomplete/$',
         PositionAutocomplete.as_view(),
         name='position-autocomplete',
+    ),
+    url(
+        r'^subject-autocomplete/$',
+        SubjectAutocomplete.as_view(),
+        name='subject-autocomplete',
     ),
     url(r'^', include('shastra_compedium.urls')),
 ] + aldryn_addons.urls.patterns() + i18n_patterns(
