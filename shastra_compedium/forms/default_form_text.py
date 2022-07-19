@@ -13,6 +13,8 @@ item_image_help = {
     "on the next page.",
     'default_position': "If this position is changed, any details will be " +
     "unlinked.",
+    'default_subject': "If this subject is changed, any combinatinos will " +
+    "be unlinked.",
     'default_combination': "Combinations combine positions for a single " +
     "meaning.  They can be used as an alternative to positions & position " +
     "details",
@@ -21,9 +23,17 @@ item_image_help = {
     'new_images': "Upload 1 or many images from your computer.  Select " +
     "many images using CONTROL or SHIFT in the file browser.  Adding " +
     "images here will automatically link them to this item.",
-    'position_or_combo': "At least one Position or Combination item must" +
+    'position_or_subject': "At least one Position or Subject item must" +
     " be selected for this image.",
     'pos_and_details': "In order to include details, this example must " +
     "connect to a position.",
+    'pos_detail_mismatch': "The details must describe the selected position." +
+    "  Caused by",
+    'subject_and_combos': "In order to include combinations, this example " +
+    "must connect to a subject.",
+    'subj_comb_mismatch': "The combinations must describe the selected " +
+    "subject.  Caused by",
     'general_or_details': "At least one of the Main Image or specific " +
-    "detail options must be selected."}
+    "detail options must be selected.",
+    'general_or_combos': "At least one of the Main Image or specific " +
+    "combinations must be selected."}

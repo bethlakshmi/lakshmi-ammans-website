@@ -12,6 +12,7 @@ from shastra_compedium.models import (
     Performer,
     Position,
     PositionDetail,
+    Subject,
     UserMessage,
 )
 from filer.models import Image
@@ -48,6 +49,18 @@ class ImageForm(ModelForm):
             defaults={
                 'summary': "Default Position Help text",
                 'description': item_image_help['default_position']}
+            )[0].description)
+
+    subject = ModelChoiceField(
+        queryset=Subject.objects.all(),
+        required=False,
+        widget=autocomplete.ModelSelect2(url='subject-autocomplete'),
+        help_text=UserMessage.objects.get_or_create(
+            view="ImageUploadForm",
+            code="DEFAULT_SUBJECT",
+            defaults={
+                'summary': "Default Subject Help text",
+                'description': item_image_help['default_subject']}
             )[0].description)
 
     combinations = ModelMultipleChoiceField(
@@ -99,41 +112,58 @@ class ImageForm(ModelForm):
         empty_label=None)
 
     def is_valid(self):
-        from shastra_compedium.models import UserMessage
         valid = super(ImageForm, self).is_valid()
 
         if valid:
             if (not self.cleaned_data['position']) and (
-                    not self.cleaned_data['combinations']):
-                self._errors['position'] = UserMessage.objects.get_or_create(
-                    view="ImageForm",
-                    code="POSITION_OR_COMBINATION_REQUIRED",
-                    defaults={
-                        'summary': "Must pick position and/or combo detail",
-                        'description': item_image_help['position_or_combo']
-                        })[0].description
+                    not self.cleaned_data['subject']):
+                self._errors['position'] = item_image_help[
+                    'position_or_subject']
                 valid = False
-            if self.cleaned_data['position'] and (
-                    not self.cleaned_data['general']) and (
-                    not self.cleaned_data['details']):
-                self._errors['details'] = UserMessage.objects.get_or_create(
-                    view="ImageForm",
-                    code="GENERAL_OR_DETAILS_REQUIRED",
-                    defaults={
-                        'summary': "Must pick general or details or both",
-                        'description': item_image_help['general_or_details']
-                        })[0].description
-                valid = False
+
+            # Position vs. detail checks
             if self.cleaned_data['position'] is None and (
                     self.cleaned_data['details']):
-                self._errors['position'] = UserMessage.objects.get_or_create(
-                    view="ImageForm",
-                    code="DETAILS_REQUIRE_POSITION",
-                    defaults={
-                        'summary': "Must pick a position to attach details",
-                        'description': item_image_help['pos_and_details']
-                        })[0].description
+                self._errors['position'] = item_image_help['pos_and_details']
                 valid = False
+            elif self.cleaned_data['position'] is not None:
+                if not self.cleaned_data['general'] and (
+                        not self.cleaned_data['details']):
+                    self._errors['details'] = item_image_help[
+                       'general_or_details']
+                    valid = False
+                else:
+                    for detail in self.cleaned_data['details']:
+                        if detail.position != self.cleaned_data['position']:
+                            if 'details' not in self._errors:
+                                self._errors['details'] = item_image_help[
+                                   'pos_detail_mismatch']
+                            self._errors['details'] = "%s - %s." % (
+                                self._errors['details'],
+                                str(detail))
+                            valid = False
+
+            # Subject vs. combo checks
+            if self.cleaned_data['subject'] is None and (
+                    self.cleaned_data['combinations']):
+                self._errors['subject'] = item_image_help['subject_and_combos']
+                valid = False
+            elif self.cleaned_data['subject'] is not None:
+                if not self.cleaned_data['general'] and (
+                        not self.cleaned_data['combinations']):
+                    self._errors['combinations'] = item_image_help[
+                       'general_or_combos']
+                    valid = False
+                else:
+                    for detail in self.cleaned_data['combinations']:
+                        if detail.subject != self.cleaned_data['subject']:
+                            if 'combinations' not in self._errors:
+                                self._errors['combinations'] = item_image_help[
+                                   'subj_comb_mismatch']
+                            self._errors['combinations'] = "%s - %s." % (
+                                self._errors['combinations'],
+                                str(detail))
+                            valid = False
         return valid
 
     def __init__(self, *args, **kwargs):
@@ -141,8 +171,7 @@ class ImageForm(ModelForm):
         if 'instance' in kwargs and kwargs.get('instance') is not None:
             self.fields['image'].queryset = Image.objects.filter(
                 pk=kwargs.get('instance').image.pk)
-            self.fields['details'].queryset = PositionDetail.objects.filter(
-                    position=kwargs.get('instance').position)
+
         elif 'initial' in kwargs and 'image' in kwargs['initial']:
             self.fields['image'].queryset = Image.objects.filter(
                 pk=kwargs.get('initial').get('image').pk)
@@ -155,6 +184,7 @@ class ImageForm(ModelForm):
             'dance_style',
             'combinations',
             'position',
+            'subject',
             'general',
             'details']
         labels = {'general': "Main Image?"}
