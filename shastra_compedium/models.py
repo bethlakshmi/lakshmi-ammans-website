@@ -251,7 +251,7 @@ class CombinationDetail(Detail):
                          null=True)
 
     def __str__(self):
-        if subject is not None:
+        if self.subject is not None:
             return "%s - %s - %s..." % (
                 self.subject.name,
                 self.verses(),
@@ -326,6 +326,7 @@ class Performer(Model):
 
 class Example(Model):
     position = ForeignKey(Position, on_delete=CASCADE, blank=True, null=True)
+    subject = ForeignKey(Subject, on_delete=CASCADE, blank=True, null=True)
     details = ManyToManyField(PositionDetail, blank=True)
     combinations = ManyToManyField(CombinationDetail, blank=True, null=True)
 
@@ -342,12 +343,6 @@ class Example(Model):
     class Meta:
         abstract = True
         app_label = "shastra_compedium"
-
-    def save(self, *args, **kwargs):
-        super(Example, self).save(*args, **kwargs)
-        # don't save positions details not connected to this position.
-        for detail in self.details.exclude(position=self.position):
-            self.details.remove(detail)
 
 
 class ExampleImage(Example):
