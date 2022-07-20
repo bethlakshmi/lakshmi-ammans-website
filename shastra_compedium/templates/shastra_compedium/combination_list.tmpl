@@ -2,30 +2,50 @@
 {% load thumbnail %}
 {% block table_header %}
     <tr>
-          <th data-field="usage" data-sortable="true">Usage</th>
-          <th data-field="has_image" data-sortable="true">Image?</th>
-          <th data-field="position" data-sortable="true">Positions</th>
-          <th data-field="source" data-sortable="true">Source</th>
-          <th data-field="contents" data-sortable="true">Contents</th>
+          <th data-field="name" data-sortable="true">Name</th>
+          <th data-field="category" data-sortable="true">Category</th>
+          <th data-field="summary" data-sortable="true">Cat Summary</th>
+          <th data-field="num_combo" data-sortable="true"># Combos</th>
+          <th data-field="num_images" data-sortable="true"># Images</th>
+          <th data-field="num_sources" data-sortable="true"># Sources</th>
           <th data-field="action">Action</th>
       </tr>
 {% endblock %}
 {% block item_data %}
-  {% for combo in items.combinations %}
+  {% for subject, data_set in items.combinations.items %}
+    {% if subject == "NONE" %}
       {
-        'id': {{ combo.pk}},
-        'usage': '{{ combo.usage }}',
-        'has_image': '{% if combo.exampleimage_set.count > 0 %}<i class="lakshmi-text-success far fa-check-square fa-2x"></i>{% else %}<i class="text-muted fas fa-times-circle fa-2x"></i>{% endif %}',
-        'position': '{% for position in combo.positions.all %}{{ position.name }}&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:position-view' position.pk %}" title="View"><i class="fas fa-eye"></i></a><br>{% endfor %}',
-        'source': '{% for source in combo.sources.all %}{{source}}<br>{% endfor %}',
-        'contents': '{{ combo.contents|safe|escapejs}}',
-        'images': '{% include "shastra_compedium/image_overlay.tmpl" with images=combo.exampleimage_set.all extra="col-6 col-sm-4 col-lg-3" %}',
-        'action': '{% if user.is_authenticated %}<a class="lakshmi-detail" href="{% url 'shastra_compedium:combination-update' combo.pk %}" title="Edit"><i class="fas fa-edit"></i></a>{% endif %}',
+        'id': 0,
+        'name': 'NONE',
+        'category': 'NONE',
+        'summary': 'Need to Assign',
+        'source': 'put sources here',
+        'num_combo': '{{ data_set.combos|length }}',
+        'num_images': '{{ data_set.images|length }}',
+        'num_sources': '{{ data_set.sources|length }}',
+        {% include "shastra_compedium/combo_subtable.tmpl" %}
+        'action': 'N/A',
       },
+    {% else %}
+      {
+        'id': {{ subject.pk}},
+        'name': '{{ subject.name }}',
+        'category': '{{ subject.category.name }}',
+        'summary': '{{ subject.category.summary }}',
+        'source': 'put sources here',
+        'num_combo': '{{ data_set.combos|length }}',
+        'num_images': '{{ data_set.images|length }}',
+        'num_sources': '{{ data_set.sources|length }}',
+        {% include "shastra_compedium/combo_subtable.tmpl" %}
+        'action': '<a class="lakshmi-detail" href="{% url 'shastra_compedium:subject-update' subject.pk %}" title="Edit"><i class="fas fa-edit"></i></a>',
+      },
+    {% endif %}
   {% endfor %}
 {% endblock %}
 {% block details %}
     var html = []
-    html.push('<div class="row">' + row.images +'</div>')
+    html.push('<div class="row">')
+    html.push('<div class="col-12"><table class="table lakshmi-table"><thead class="thead-dark"><tr><th>ID</th><th>Verses</th><th>Details</th><th>Action</th></tr></thead><tbody>' + row.combinations + '</tbody></table></div>')
+    html.push('</div>')
     return html.join('')
 {% endblock %}
