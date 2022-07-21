@@ -1,4 +1,5 @@
 {% extends 'shastra_compedium/generic_wizard.tmpl' %}
+{% load thumbnail %}
 {% block special_handling_form %}
 <p>{{ instructions | safe }}</p>
  <font class="lakshmi-form-error">
@@ -16,13 +17,27 @@
     <tbody>
       {% for form in forms %}
       <tr {% if form.errors %}class="lakshmi-table-error"{% endif %}>
-        <td style="width: 200px" class="align-top p-3">{{ form.details.label }}
-          {% for field in form.hidden_fields %}{{ field }}{% endfor%}
-          <br>{{form.general}}&nbsp;&nbsp;{{form.general.label}}</td>
-        <td class="p-3">
+        <td style="width: 200px" class="align-top p-3">
+          <a href='#' data-toggle='modal' data-target='#Modal_{{form.instance.image.pk}}' data-backdrop='true'>
+            <img src='{% thumbnail form.instance.image 200x200 crop=scale%}' title='{{form.instance.image}}'/></a>
+          <div class='modal' id='Modal_{{form.instance.image.pk}}' role='dialog'>
+            <div class='modal-dialog modal-dialog-centered modal-md'>
+              <div class='modal-content modal-body'>
+                <img src='{{form.instance.image.url}}'/></div></div></div>
+          {% for field in form.hidden_fields %}{{ field }}{% endfor %}
+          <br>{{form.general}}&nbsp;&nbsp;{{form.general.label}}<br><br>
+        </td>
+        <td class="p-3 align-top">
+        {% if form.details.is_visible %}<b>{{ form.details.label }}</b><br>
         {{form.details}}
           {% if form.details.errors %}
             <font class="lakshmi-form-error">{{ form.details.errors }}</font>
+          {% endif %}
+        <br>{% endif %}
+        <b>{{ form.combinations.label }}</b><br>
+        {{form.combinations}}
+          {% if form.combinations.errors %}
+            <font class="lakshmi-form-error">{{ form.combinations.errors }}</font>
           {% endif %}
         </td>
       </tr>

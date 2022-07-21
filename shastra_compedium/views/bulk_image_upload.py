@@ -55,27 +55,10 @@ class BulkImageUpload(GenericWizard):
                 files,
                 request.user)
         elif self.forms[0].__class__.__name__ == "ImageAssociateForm":
-            combo_images = []
             for form in self.forms:
                 if form.__class__.__name__ == "ImageAssociateForm":
-                    # if it continues, track only the examples with a position
-                    # if it finishes, track all new images
                     pk = form.save().pk
-                    if form.cleaned_data['position'] or (
-                            'finish' in list(request.POST.keys())):
-                        self.changed_ids += [pk]
-                    else:
-                        combo_images += [pk]
-            if len(self.changed_ids) == 0:
-                # don't move on if no positions to associate w details
-                self.changed_ids = combo_images
-                return True
-            else:
-                if len(combo_images) > 0:
-                    messages.success(
-                        request,
-                        "Saved %d combination detail images." % len(
-                            combo_images))
+                    self.changed_ids += [pk]
         else:
             self.forms.save()
             self.num_files = self.forms.total_form_count()
@@ -86,8 +69,7 @@ class BulkImageUpload(GenericWizard):
         return_url = reverse('image_list', urlconf='shastra_compedium.urls')
         messages.success(
             request,
-            "Finished %d images in the last stage." % (
-                self.num_files))
+            "Uploaded %d images." % (self.num_files))
         if len(self.changed_ids) > 0:
             return_url = "%s?changed_ids=%s&obj_type=ExampleImage" % (
                 return_url,

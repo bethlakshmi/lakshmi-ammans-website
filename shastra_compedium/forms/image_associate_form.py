@@ -8,6 +8,7 @@ from shastra_compedium.models import (
     CombinationDetail,
     ExampleImage,
     Position,
+    Subject,
 )
 from dal import autocomplete
 from filer.models.imagemodels import Image
@@ -24,11 +25,11 @@ class ImageAssociateForm(ModelForm):
         required=False,
         widget=autocomplete.ModelSelect2(url='position-autocomplete'))
 
-    combinations = ModelMultipleChoiceField(
-        queryset=CombinationDetail.objects.all(),
+    subject = ModelChoiceField(
+        queryset=Subject.objects.all(),
         required=False,
-        widget=autocomplete.ModelSelect2Multiple(
-            url='combination-autocomplete'))
+        widget=autocomplete.ModelSelect2(
+            url='subject-autocomplete'))
 
     def is_valid(self):
         from shastra_compedium.models import UserMessage
@@ -36,13 +37,13 @@ class ImageAssociateForm(ModelForm):
 
         if valid:
             if (not self.cleaned_data['position']) and (
-                    not self.cleaned_data['combinations']):
+                    not self.cleaned_data['subject']):
                 self._errors['position'] = UserMessage.objects.get_or_create(
                     view="BulkImageUpload",
-                    code="POSITION_OR_COMBINATION_REQUIRED",
+                    code="POSITION_OR_SUBJECT_REQUIRED",
                     defaults={
-                        'summary': "Must pick position and/or combo detail",
-                        'description': item_image_help['position_or_combo']
+                        'summary': "Must pick position and/or subject",
+                        'description': item_image_help['position_or_subject']
                         })[0].description
                 valid = False
         return valid
@@ -52,6 +53,6 @@ class ImageAssociateForm(ModelForm):
         fields = [
             'image',
             'position',
-            'combinations',
+            'subject',
             'performer',
             'dance_style']

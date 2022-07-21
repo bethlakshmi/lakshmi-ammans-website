@@ -3,8 +3,10 @@ from django.forms import (
     HiddenInput,
     ModelForm,
     ModelMultipleChoiceField,
+    MultipleHiddenInput,
 )
 from shastra_compedium.models import (
+    CombinationDetail,
     ExampleImage,
     PositionDetail,
 )
@@ -12,7 +14,6 @@ from django.utils.safestring import mark_safe
 from easy_thumbnails.files import get_thumbnailer
 from shastra_compedium.forms.default_form_text import item_image_help
 from django.utils.html import strip_tags
-from shastra_compedium.site_text import image_modal
 
 
 class DetailsChoiceField(ModelMultipleChoiceField):
@@ -29,6 +30,10 @@ class ImageDetailForm(ModelForm):
     error_css_class = 'error'
     details = DetailsChoiceField(
         queryset=PositionDetail.objects.all(),
+        widget=CheckboxSelectMultiple(attrs={'class': 'nobullet'}),
+        required=False)
+    combinations = DetailsChoiceField(
+        queryset=CombinationDetail.objects.all(),
         widget=CheckboxSelectMultiple(attrs={'class': 'nobullet'}),
         required=False)
 
@@ -53,21 +58,25 @@ class ImageDetailForm(ModelForm):
         super(ImageDetailForm, self).__init__(*args, **kwargs)
         if 'instance' in kwargs:
             instance = kwargs.get('instance')
-            self.fields['details'].queryset = PositionDetail.objects.filter(
+            if instance.position:
+                self.fields['details'].queryset = PositionDetail.objects.filter(
                     position=instance.position)
-            thumb_url = get_thumbnailer(instance.image).get_thumbnail(
-                self.options).url
-            self.fields['details'].label = mark_safe(
-                image_modal % (instance.image.pk,
-                               thumb_url,
-                               instance.image,
-                               instance.image.pk,
-                               instance.image.url))
+            else:
+                self.fields['details'].queryset = instance.details.all()
+                self.fields['details'].widget = MultipleHiddenInput()
+
+            if instance.subject:
+                self.fields['combinations'].queryset = CombinationDetail.objects.filter(
+                    subject=instance.subject)
+            else:
+                self.fields['combinations'].queryset = instance.details.all()
+                self.fields['combinations'].widget = MultipleHiddenInput()
 
     class Meta:
         model = ExampleImage
         fields = [
             'id',
             'general',
-            'details']
-        labels = {'general': "Main Image?"}
+            'details',
+            'combinations']
+        labels = {'general': "Main Image for both position and subject"}
