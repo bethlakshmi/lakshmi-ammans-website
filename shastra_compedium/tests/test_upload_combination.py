@@ -6,6 +6,7 @@ from shastra_compedium.tests.factories import (
     CategoryDetailFactory,
     PositionFactory,
     SourceFactory,
+    SubjectFactory,
     UserFactory,
 )
 from shastra_compedium.site_text import user_messages
@@ -16,7 +17,7 @@ from shastra_compedium.models import (
 )
 
 
-class TestUploadChapter(TestCase):
+class TestUploadCombinations(TestCase):
     '''Tests for source create & update'''
 
     add_name = 'combinations-add'
@@ -45,9 +46,11 @@ class TestUploadChapter(TestCase):
     def position_data(self):
         self.source = SourceFactory()
         self.position = PositionFactory()
+        self.subject = SubjectFactory()
         return {'0-sources': [self.source.pk],
                 '0-usage': "Meaning",
                 '0-positions': [self.position.pk],
+                '0-subject': self.subject.pk,
                 '0-chapter': 1,
                 '0-verse_start': 10,
                 '0-verse_end': 20,
@@ -161,7 +164,7 @@ class TestUploadChapter(TestCase):
             'style="width: 50px" id="id_0-verse_end">',
             html=True)
 
-    def test_create_post_positions_success(self):
+    def test_create_post_combos_success(self):
         start = CombinationDetail.objects.all().count()
         response = self.client.post(self.create_url,
                                     data=self.position_data(),
@@ -175,7 +178,7 @@ class TestUploadChapter(TestCase):
         self.assertContains(response, "Uploaded 1 details.")
         self.assertEqual(start + 1, CombinationDetail.objects.all().count())
 
-    def test_create_post_positions_to_existing_chapter(self):
+    def test_create_post_combos_to_existing_chapter(self):
         chapter = CategoryDetailFactory()
         self.create_url = reverse('combinations-additional',
                                   urlconf='shastra_compedium.urls',
@@ -193,7 +196,7 @@ class TestUploadChapter(TestCase):
         self.assertContains(response, "Uploaded 1 details.")
         self.assertEqual(start + 1, CombinationDetail.objects.all().count())
 
-    def test_create_post_positions_success_without_upload(self):
+    def test_create_post_combos_success_without_upload(self):
         data = self.position_data()
         data['0-positions'] = []
         data['1-sources'] = [self.source.pk]

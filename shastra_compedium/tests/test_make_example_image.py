@@ -6,6 +6,7 @@ from shastra_compedium.tests.factories import (
     ExampleImageFactory,
     PositionFactory,
     PositionDetailFactory,
+    SubjectFactory,
     UserFactory,
 )
 from shastra_compedium.site_text import make_example_image_messages
@@ -51,6 +52,16 @@ class TestMakeExampleImage(TestCase):
                 'general': True,
                 'details': []}
 
+    def example_image_data_combo(self):
+        self.subject = SubjectFactory()
+        self.combo = CombinationDetailFactory(subject=self.subject)
+        return {'image': self.img1.pk,
+                'performer': self.object.performer.pk,
+                'dance_style': self.object.dance_style.pk,
+                'subject': self.subject.pk,
+                'general': True,
+                'combinations': [self.combo.pk]}
+
     def test_edit_get(self):
         response = self.client.get(self.edit_url)
         self.assertContains(response, "Update Example Image")
@@ -84,7 +95,23 @@ class TestMakeExampleImage(TestCase):
         thumb_url = get_thumbnailer(self.img1).get_thumbnail(self.options).url
         self.assertContains(response, thumb_url)
 
-    def test_change_position(self):
+    def test_edit_error_combo(self):
+        from shastra_compedium.forms.default_form_text import item_image_help
+        data = self.example_image_data_combo()
+        data['general'] = False
+        data['combinations'] = []
+        response = self.client.post(self.edit_url, data=data, follow=True)
+        self.assertNotContains(
+            response,
+            make_example_image_messages['edit_success'] % str(self.object))
+        self.assertContains(response, item_image_help['general_or_combos'])
+        self.assertContains(response,
+                            make_example_image_messages['edit_intro'])
+        thumb_url = get_thumbnailer(self.img1).get_thumbnail(self.options).url
+        self.assertContains(response, thumb_url)
+
+    def test_position_detail_mismatch(self):
+        from shastra_compedium.forms.default_form_text import item_image_help
         new_position = PositionFactory()
         detail = PositionDetailFactory(position=self.object.position)
         self.object.details.add(detail)
@@ -92,6 +119,25 @@ class TestMakeExampleImage(TestCase):
         data['details'] = [detail.pk]
         data['position'] = new_position.pk
         self.assertEqual(detail.exampleimage_set.all().count(), 1)
+        response = self.client.post(self.edit_url, data=data, follow=True)
+        self.assertContains(response, self.object.image)
+        self.assertContains(response, item_image_help['pos_detail_mismatch'])
+
+    def test_subject_combo_mismatch(self):
+        from shastra_compedium.forms.default_form_text import item_image_help
+        new_subject = SubjectFactory()
+        data = self.example_image_data_combo()
+        data['subject'] = new_subject.pk
+        response = self.client.post(self.edit_url, data=data, follow=True)
+        self.assertContains(response, self.object.image)
+        self.assertContains(response, item_image_help['subj_comb_mismatch'])
+
+    def test_change_position(self):
+        new_position = PositionFactory()
+        detail = PositionDetailFactory(position=new_position)
+        data = self.example_image_data()
+        data['details'] = [detail.pk]
+        data['position'] = new_position.pk
         response = self.client.post(self.edit_url, data=data, follow=True)
         self.assertContains(response, self.object.image)
         self.assertRedirects(
@@ -142,11 +188,8 @@ class TestMakeExampleImage(TestCase):
 
     def test_create_combo_only(self):
         start = ExampleImage.objects.all().count()
-        data = self.example_image_data()
-        combo = CombinationDetailFactory()
+        data = self.example_image_data_combo()
         data['image'] = self.img2.pk
-        data['position'] = ""
-        data['combinations'] = [combo.pk]
         response = self.client.post(self.create_url,
                                     data=data,
                                     follow=True)
@@ -177,6 +220,22 @@ class TestMakeExampleImage(TestCase):
                 "Image %s, for Position %s," % (self.img2,
                                                 self.object.position)))
         self.assertContains(response, item_image_help['pos_and_details'])
+
+    def test_create_post_error_combo(self):
+        from shastra_compedium.forms.default_form_text import item_image_help
+        detail = PositionDetailFactory(position=self.object.position)
+        data = self.example_image_data_combo()
+        data['image'] = self.img2.pk
+        data['subject'] = ""
+        response = self.client.post(self.create_url,
+                                    data=data,
+                                    follow=True)
+        self.assertNotContains(
+            response,
+            make_example_image_messages['create_success'] % (
+                "Image %s, for Position %s," % (self.img2,
+                                                self.object.position)))
+        self.assertContains(response, item_image_help['subject_and_combos'])
 
     def test_copy_get(self):
         response = self.client.get(self.copy_url)
@@ -210,7 +269,7 @@ class TestMakeExampleImage(TestCase):
                 reverse('image_list', urlconf="shastra_compedium.urls"),
                 self.img1.pk))
 
-    def test_copy_no_pos_no_combo(self):
+    def test_copy_no_pos_no_subject(self):
         from shastra_compedium.forms.default_form_text import item_image_help
         start = ExampleImage.objects.all().count()
         new_position = PositionFactory()
@@ -218,7 +277,7 @@ class TestMakeExampleImage(TestCase):
                 'performer': self.object.performer.pk,
                 'dance_style': self.object.dance_style.pk,
                 'position': "",
-                'combinations': [],
+                'subject': "",
                 'general': True,
                 'details': []}
         response = self.client.post(self.copy_url,
@@ -226,7 +285,7 @@ class TestMakeExampleImage(TestCase):
                                     follow=True)
         self.assertContains(
             response,
-            item_image_help['position_or_combo'])
+            item_image_help['position_or_subject'])
 
     def test_copy_post_error(self):
         data = self.example_image_data()

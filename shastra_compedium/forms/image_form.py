@@ -122,11 +122,7 @@ class ImageForm(ModelForm):
                 valid = False
 
             # Position vs. detail checks
-            if self.cleaned_data['position'] is None and (
-                    self.cleaned_data['details']):
-                self._errors['position'] = item_image_help['pos_and_details']
-                valid = False
-            elif self.cleaned_data['position'] is not None:
+            if self.cleaned_data['position'] is not None:
                 if not self.cleaned_data['general'] and (
                         not self.cleaned_data['details']):
                     self._errors['details'] = item_image_help[
@@ -142,13 +138,12 @@ class ImageForm(ModelForm):
                                 self._errors['details'],
                                 str(detail))
                             valid = False
+            elif self.cleaned_data['details']:
+                self._errors['position'] = item_image_help['pos_and_details']
+                valid = False
 
             # Subject vs. combo checks
-            if self.cleaned_data['subject'] is None and (
-                    self.cleaned_data['combinations']):
-                self._errors['subject'] = item_image_help['subject_and_combos']
-                valid = False
-            elif self.cleaned_data['subject'] is not None:
+            if self.cleaned_data['subject'] is not None:
                 if not self.cleaned_data['general'] and (
                         not self.cleaned_data['combinations']):
                     self._errors['combinations'] = item_image_help[
@@ -164,6 +159,10 @@ class ImageForm(ModelForm):
                                 self._errors['combinations'],
                                 str(detail))
                             valid = False
+            elif self.cleaned_data['combinations']:
+                self._errors['subject'] = item_image_help['subject_and_combos']
+                valid = False
+
         return valid
 
     def __init__(self, *args, **kwargs):
