@@ -359,7 +359,7 @@ class ExampleImage(Example):
 
     class Meta:
         app_label = "shastra_compedium"
-        unique_together = [('image', 'position'), ]
+        unique_together = [('image', 'position'), ('subject', 'image')]
 
 
 class ExampleVideo(Example):
