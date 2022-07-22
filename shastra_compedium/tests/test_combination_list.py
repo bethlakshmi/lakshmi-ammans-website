@@ -38,15 +38,24 @@ class TestCombinationList(TestCase):
             "combination-update",
             args=[self.combo.pk],
             urlconf="shastra_compedium.urls"))
-        self.assertContains(
-            response,
-            '<i class="text-muted fas fa-times-circle fa-2x"></i>')
         self.assertContains(response, self.combo.subject.name)
+        self.assertNotContains(response, reverse(
+            "subject-update",
+            args=[self.combo.subject.pk],
+            urlconf="shastra_compedium.urls"))
 
     def test_list_w_login(self):
         self.img1 = set_image(folder_name="PositionImageUploads")
-        self.example_image = ExampleImageFactory(image=self.img1)
+        self.example_image = ExampleImageFactory(
+            image=self.img1,
+            subject=self.combo.subject,
+            general=False)
         self.example_image.combinations.add(self.combo)
+        self.img2 = set_image(folder_name="PositionImageUploads")
+        self.example_image = ExampleImageFactory(
+            image=self.img2,
+            subject=self.combo.subject,
+            general=True)
         login_as(self.user, self)
         response = self.client.get(self.url)
         self.assertContains(response, self.combo.contents)
@@ -59,9 +68,11 @@ class TestCombinationList(TestCase):
             args=[self.combo.pk],
             urlconf="shastra_compedium.urls"))
         self.assertContains(response, self.img1.url)
-        self.assertContains(
-            response,
-            '<i class="lakshmi-text-success far fa-check-square fa-2x"></i>')
+        self.assertContains(response, self.img2.url)
+        self.assertContains(response, reverse(
+            "subject-update",
+            args=[self.combo.subject.pk],
+            urlconf="shastra_compedium.urls"))
 
     def test_list_empty(self):
         contents = self.combo.contents

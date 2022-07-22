@@ -6,10 +6,12 @@ from shastra_compedium.tests.factories import (
     CombinationDetailFactory,
     PositionFactory,
     SourceFactory,
+    SubjectFactory,
     UserFactory,
 )
 from shastra_compedium.tests.functions import login_as
 from django.utils.html import strip_tags
+import json
 
 
 class TestAutoComplete(TestCase):
@@ -93,3 +95,40 @@ class TestAutoComplete(TestCase):
         self.assertContains(response, strip_tags(obj.contents)[0:25])
         self.assertContains(response, obj.pk)
         self.assertNotContains(response, strip_tags(obj2.contents)[0:25])
+
+    def test_list_combination_w_subject(self):
+        obj = CombinationDetailFactory(contents="special stuff")
+        obj2 = CombinationDetailFactory()
+        obj.sources.add(SourceFactory())
+        obj2.sources.add(SourceFactory())
+        login_as(self.user, self)
+        response = self.client.get("%s?forward=%s" % (
+            reverse('combination-autocomplete'),
+            json.dumps({"subject_only": obj.subject.id, })))
+        self.assertContains(response, strip_tags(obj.contents)[0:25])
+        self.assertContains(response, obj.pk)
+        self.assertNotContains(response, strip_tags(obj2.contents)[0:25])
+
+    def test_list_subjects(self):
+        obj = SubjectFactory()
+        login_as(self.user, self)
+        response = self.client.get(reverse('subject-autocomplete'))
+        self.assertContains(response, obj.name)
+        self.assertContains(response, obj.pk)
+
+    def test_no_access_subjects(self):
+        obj = SubjectFactory()
+        response = self.client.get(reverse('subject-autocomplete'))
+        self.assertNotContains(response, obj.name)
+        self.assertNotContains(response, obj.pk)
+
+    def test_list_subjects_w_search(self):
+        obj = SubjectFactory(name="special stuff")
+        obj2 = SubjectFactory()
+        login_as(self.user, self)
+        response = self.client.get("%s?q=%s" % (
+            reverse('subject-autocomplete'),
+            "special"))
+        self.assertContains(response, obj.name)
+        self.assertContains(response, obj.pk)
+        self.assertNotContains(response, obj2.name)

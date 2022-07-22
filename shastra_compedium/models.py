@@ -272,6 +272,9 @@ class CombinationDetail(Detail):
             pos_dict[example.position] += [example]
         return pos_dict
 
+    def detail_images(self):
+        return self.exampleimage_set.filter(general=False)
+
     class Meta:
         app_label = "shastra_compedium"
         ordering = ['chapter', 'verse_start', 'verse_end', 'id']
