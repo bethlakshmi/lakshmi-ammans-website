@@ -58,17 +58,20 @@
   </div>
   {% for combo in combo_list %}
     <div class="row px-5">
-      <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+        <div class="col-12 col-lg-2 col-xl-2">
+          <h5>{{combo.subject}}</h5>
+        </div>
+        <div class="col-6 col-md-4 col-lg-3 col-xl-2">
         {% for image in combo.exampleimage_set.all %}
           {% if forloop.first %}<b>Image:</b><br>{% endif %}
           <div class="col-12 my-2 p-0">{% include "shastra_compedium/image_350.tmpl" %}</div>
         {% empty %}<i>No associated images</i>{% endfor %}
       </div>
-      <div class="col-6 col-md-8 col-lg-3 col-xl-4">{% if combo.contents|safe|length > 0 %}
+      <div class="col-6 col-md-8 col-lg-4 col-xl-4">{% if combo.contents|safe|length > 0 %}
         <b>Contents:<br>
           {{combo.verses}}</b>  {{combo.contents|safe}}
           {% else %}<i>No description available</i>{% endif %}</div>
-        <div class="col-12 col-sm-4 col-lg-6">
+      <div class="col-12 col-sm-4 col-lg-3 col-xl-4">
           {% for pos, images in combo.positions_w_images.items %}
           <a href="{% url 'shastra_compedium:position-view' pos.pk %}#{{source.pk}}_{{pos.pk}}"><b>{{ pos.name }}</b><br>
             {% for image in images %}
