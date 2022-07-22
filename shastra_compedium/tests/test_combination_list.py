@@ -5,6 +5,7 @@ from shastra_compedium.tests.factories import (
     CombinationDetailFactory,
     ExampleImageFactory,
     SourceFactory,
+    SubjectFactory,
     UserFactory
 )
 from shastra_compedium.models import CombinationDetail
@@ -26,6 +27,7 @@ class TestCombinationList(TestCase):
         self.url = reverse(self.view_name, urlconf="shastra_compedium.urls")
 
     def test_list_basic_no_login(self):
+        combo2 = CombinationDetailFactory(subject=self.combo.subject)
         response = self.client.get(self.url)
         self.assertContains(response, self.combo.positions.first().name)
         self.assertContains(response, self.combo.sources.first().title)
@@ -39,6 +41,8 @@ class TestCombinationList(TestCase):
             args=[self.combo.pk],
             urlconf="shastra_compedium.urls"))
         self.assertContains(response, self.combo.subject.name)
+        self.assertContains(response, self.combo.contents)
+        self.assertContains(response, combo2.contents)
         self.assertNotContains(response, reverse(
             "subject-update",
             args=[self.combo.subject.pk],
@@ -51,11 +55,7 @@ class TestCombinationList(TestCase):
             subject=self.combo.subject,
             general=False)
         self.example_image.combinations.add(self.combo)
-        self.img2 = set_image(folder_name="PositionImageUploads")
-        self.example_image = ExampleImageFactory(
-            image=self.img2,
-            subject=self.combo.subject,
-            general=True)
+
         login_as(self.user, self)
         response = self.client.get(self.url)
         self.assertContains(response, self.combo.contents)
@@ -68,11 +68,21 @@ class TestCombinationList(TestCase):
             args=[self.combo.pk],
             urlconf="shastra_compedium.urls"))
         self.assertContains(response, self.img1.url)
-        self.assertContains(response, self.img2.url)
         self.assertContains(response, reverse(
             "subject-update",
             args=[self.combo.subject.pk],
             urlconf="shastra_compedium.urls"))
+
+    def test_list_w_main_image(self):
+        spare_subject = SubjectFactory()
+        self.img1 = set_image(folder_name="PositionImageUploads")
+        self.example_image = ExampleImageFactory(
+            image=self.img1,
+            subject=spare_subject,
+            general=True)
+        response = self.client.get(self.url)
+        self.assertContains(response, self.combo.contents)
+        self.assertContains(response, self.img1.url)
 
     def test_list_empty(self):
         contents = self.combo.contents

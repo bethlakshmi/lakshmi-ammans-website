@@ -257,6 +257,7 @@ class CombinationDetail(Detail):
                 self.verses(),
                 self.contents[3:28])
         else:
+            raise Exception("got it 3")
             return "%s - %s..." % (
                 self.verses(),
                 self.contents[3:28])
