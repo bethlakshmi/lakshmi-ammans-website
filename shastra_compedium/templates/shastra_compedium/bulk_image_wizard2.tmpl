@@ -25,20 +25,18 @@
               <div class='modal-content modal-body'>
                 <img src='{{form.instance.image.url}}'/></div></div></div>
           {% for field in form.hidden_fields %}{{ field }}{% endfor %}
-          <br>{{form.general}}&nbsp;&nbsp;{{form.general.label}}<br><br>
+          <br>{{form.general}}&nbsp;&nbsp;{{form.general.label}}<br>
+          {% if form.general.errors %}
+            <font class="lakshmi-form-error">{{ form.general.errors }}</font>
+          {% endif %}<br>
         </td>
         <td class="p-3 align-top">
-        {% if form.details.is_visible %}<b>{{ form.details.label }}</b><br>
-        {{form.details}}
-          {% if form.details.errors %}
-            <font class="lakshmi-form-error">{{ form.details.errors }}</font>
+        {% for field in form.visible_fields %}{% if field != form.general %}<b>{{ field.label }}</b><br>
+        {{field}}
+          {% if field.errors %}
+            <font class="lakshmi-form-error">{{ field.errors }}</font>
           {% endif %}
-        <br>{% endif %}
-        <b>{{ form.combinations.label }}</b><br>
-        {{form.combinations}}
-          {% if form.combinations.errors %}
-            <font class="lakshmi-form-error">{{ form.combinations.errors }}</font>
-          {% endif %}
+        <br>{% endif %}{% endfor %}
         </td>
       </tr>
     {% endfor %}

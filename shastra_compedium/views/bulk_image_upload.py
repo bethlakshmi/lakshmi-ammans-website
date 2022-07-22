@@ -22,7 +22,7 @@ class BulkImageUpload(GenericWizard):
     page_title = 'Image Upload'
     first_title = 'Select Images to Upload'
     second_title = 'Connect Images to Positions'
-    third_title = 'Set Specific Position Details'
+    third_title = 'Set Specific Details'
     form_sets = {
         -1: {
             'the_form':  None,

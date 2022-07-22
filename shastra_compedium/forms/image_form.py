@@ -67,7 +67,8 @@ class ImageForm(ModelForm):
         queryset=CombinationDetail.objects.all(),
         required=False,
         widget=autocomplete.ModelSelect2Multiple(
-            url='combination-autocomplete'),
+            url='combination-autocomplete',
+            forward=(forward.Field('subject', 'subject_only'), )),
         help_text=UserMessage.objects.get_or_create(
             view="ImageUploadForm",
             code="DEFAULT_COMBINATION",

@@ -15,7 +15,7 @@ from shastra_compedium.tests.functions import (
 from filer.models.imagemodels import Image
 
 
-class TestImageList(TestCase):
+class TestCombinationList(TestCase):
     view_name = "combo_list"
 
     def setUp(self):
@@ -28,7 +28,6 @@ class TestImageList(TestCase):
     def test_list_basic_no_login(self):
         response = self.client.get(self.url)
         self.assertContains(response, self.combo.positions.first().name)
-        self.assertContains(response, self.combo.usage)
         self.assertContains(response, self.combo.sources.first().title)
         self.assertContains(response, self.combo.contents)
         self.assertContains(response, reverse(
@@ -42,6 +41,7 @@ class TestImageList(TestCase):
         self.assertContains(
             response,
             '<i class="text-muted fas fa-times-circle fa-2x"></i>')
+        self.assertContains(response, self.combo.subject.name)
 
     def test_list_w_login(self):
         self.img1 = set_image(folder_name="PositionImageUploads")

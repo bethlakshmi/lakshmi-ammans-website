@@ -38,19 +38,16 @@ class ImageDetailForm(ModelForm):
         required=False)
 
     def is_valid(self):
-        from shastra_compedium.models import UserMessage
         valid = super(ImageDetailForm, self).is_valid()
 
         if valid:
-            if (not self.cleaned_data['general']) and (
-                    not self.cleaned_data['details']):
-                self._errors['details'] = UserMessage.objects.get_or_create(
-                    view="ImageDetailSet",
-                    code="GENERAL_OR_DETAILS_REQUIRED",
-                    defaults={
-                        'summary': "Must pick general or details or both",
-                        'description': item_image_help['general_or_details']
-                        })[0].description
+            no_details = (not self.cleaned_data['details'] or (
+                self.cleaned_data['details'].count()) == 0)
+            no_combos = (not self.cleaned_data['combinations'] or (
+                self.cleaned_data['combinations'].count()) == 0)
+
+            if (not self.cleaned_data['general']) and no_details and no_combos:
+                self._errors['general'] = item_image_help['general_or_details']
                 valid = False
         return valid
 
