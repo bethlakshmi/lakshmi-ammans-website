@@ -25,6 +25,7 @@ class SubjectAdmin(admin.ModelAdmin):
     list_filter = ['category']
     list_editable = ('name', 'category')
 
+
 class CombinationDetailAdmin(admin.ModelAdmin):
     list_display = ('id',
                     'verses',

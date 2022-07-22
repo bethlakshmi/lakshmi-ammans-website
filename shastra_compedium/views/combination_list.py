@@ -16,7 +16,7 @@ class CombinationList(GenericList):
         return context
 
     def get_list(self):
-        subject_dict  = {}
+        subject_dict = {}
         for detail in CombinationDetail.objects.all():
             key = "NONE"
 

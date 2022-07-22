@@ -323,7 +323,6 @@ class TestBulkImageUpload(TestCase):
         self.assertContains(response, combo.contents, 2)
         self.assertContains(response, img2.url)
 
-
     def test_pick_details(self):
         img1 = set_image()
         example_image = ExampleImageFactory(image=img1)

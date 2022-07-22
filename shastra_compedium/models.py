@@ -234,6 +234,7 @@ class Subject(Model):
     name = CharField(max_length=128)
     category = ForeignKey(Category,
                           on_delete=CASCADE)
+
     def __str__(self):
         return "%s, %s" % (self.name, self.category.name)
 
@@ -257,7 +258,6 @@ class CombinationDetail(Detail):
                 self.verses(),
                 self.contents[3:28])
         else:
-            raise Exception("got it 3")
             return "%s - %s..." % (
                 self.verses(),
                 self.contents[3:28])

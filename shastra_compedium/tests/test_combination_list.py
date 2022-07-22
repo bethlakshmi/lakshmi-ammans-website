@@ -55,7 +55,11 @@ class TestCombinationList(TestCase):
             subject=self.combo.subject,
             general=False)
         self.example_image.combinations.add(self.combo)
-
+        self.img2 = set_image(folder_name="PositionImageUploads")
+        self.example_image = ExampleImageFactory(
+            image=self.img2,
+            subject=self.combo.subject,
+            general=True)
         login_as(self.user, self)
         response = self.client.get(self.url)
         self.assertContains(response, self.combo.contents)
@@ -68,6 +72,7 @@ class TestCombinationList(TestCase):
             args=[self.combo.pk],
             urlconf="shastra_compedium.urls"))
         self.assertContains(response, self.img1.url)
+        self.assertContains(response, self.img2.url)
         self.assertContains(response, reverse(
             "subject-update",
             args=[self.combo.subject.pk],

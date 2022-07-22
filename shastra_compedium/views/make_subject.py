@@ -11,9 +11,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class SubjectCreate(LoginRequiredMixin,
-                     CreatePopupMixin,
-                     ShastraFormMixin,
-                     CreateView):
+                    CreatePopupMixin,
+                    ShastraFormMixin,
+                    CreateView):
     model = Subject
     template_name = 'shastra_compedium/modal_make_form.tmpl'
     success_url = reverse_lazy('combo_list',
@@ -26,9 +26,9 @@ class SubjectCreate(LoginRequiredMixin,
 
 
 class SubjectUpdate(LoginRequiredMixin,
-                     UpdatePopupMixin,
-                     ShastraFormMixin,
-                     UpdateView):
+                    UpdatePopupMixin,
+                    ShastraFormMixin,
+                    UpdateView):
     model = Subject
     template_name = 'shastra_compedium/modal_make_form.tmpl'
     success_url = reverse_lazy('combo_list',

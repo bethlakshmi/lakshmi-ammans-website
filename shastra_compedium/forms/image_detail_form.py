@@ -5,11 +5,9 @@ from django.forms import (
     ModelMultipleChoiceField,
     MultipleHiddenInput,
 )
-from shastra_compedium.models import (
-    CombinationDetail,
-    ExampleImage,
-    PositionDetail,
-)
+from shastra_compedium.models import CombinationDetail as Combo
+from shastra_compedium.models import ExampleImage
+from shastra_compedium.models import PositionDetail as PosDetail
 from django.utils.safestring import mark_safe
 from easy_thumbnails.files import get_thumbnailer
 from shastra_compedium.forms.default_form_text import item_image_help
@@ -29,11 +27,11 @@ class ImageDetailForm(ModelForm):
     required_css_class = 'required'
     error_css_class = 'error'
     details = DetailsChoiceField(
-        queryset=PositionDetail.objects.all(),
+        queryset=PosDetail.objects.all(),
         widget=CheckboxSelectMultiple(attrs={'class': 'nobullet'}),
         required=False)
     combinations = DetailsChoiceField(
-        queryset=CombinationDetail.objects.all(),
+        queryset=Combo.objects.all(),
         widget=CheckboxSelectMultiple(attrs={'class': 'nobullet'}),
         required=False)
 
@@ -56,14 +54,14 @@ class ImageDetailForm(ModelForm):
         if 'instance' in kwargs:
             instance = kwargs.get('instance')
             if instance.position:
-                self.fields['details'].queryset = PositionDetail.objects.filter(
+                self.fields['details'].queryset = PosDetail.objects.filter(
                     position=instance.position)
             else:
                 self.fields['details'].queryset = instance.details.all()
                 self.fields['details'].widget = MultipleHiddenInput()
 
             if instance.subject:
-                self.fields['combinations'].queryset = CombinationDetail.objects.filter(
+                self.fields['combinations'].queryset = Combo.objects.filter(
                     subject=instance.subject)
             else:
                 self.fields['combinations'].queryset = instance.details.all()

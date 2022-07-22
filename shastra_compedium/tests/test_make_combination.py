@@ -55,8 +55,8 @@ class TestMakeCombination(TestCase):
                                     follow=True)
         self.assertContains(
             response,
-            make_combination_messages['edit_success'] % (self.subject.name +
-                " - 2:3-4 - Do stuff with other stuff..."))
+            make_combination_messages['edit_success'] % (
+                self.subject.name + " - 2:3-4 - Do stuff with other stuff..."))
         self.assertEqual(start, CombinationDetail.objects.all().count())
 
     def test_edit_bad_data(self):
