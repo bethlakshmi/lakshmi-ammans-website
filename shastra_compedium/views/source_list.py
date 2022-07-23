@@ -82,7 +82,8 @@ class SourceList(GenericList):
                     source_dict[source][category]['combos'] + 1)
 
         for source in Source.objects.filter(categorydetail=None,
-                                            positiondetail=None):
+                                            positiondetail=None,
+                                            combinationdetail=None):
             source_dict[source] = {'chapters': []}
 
         return source_dict

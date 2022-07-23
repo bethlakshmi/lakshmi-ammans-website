@@ -3,6 +3,7 @@ from django.test import Client
 from django.urls import reverse
 from shastra_compedium.tests.factories import (
     CategoryDetailFactory,
+    CombinationDetailFactory,
     PositionDetailFactory,
     ShastraFactory,
     SourceFactory,
@@ -206,7 +207,12 @@ class TestSourceList(TestCase):
         chapter = CategoryDetailFactory(category=self.detail.position.category)
         chapter.sources.add(self.source)
         another_shastra = ShastraFactory()
-
+        combo = CombinationDetailFactory(
+            subject__category=self.detail.position.category)
+        combo.sources.add(self.source)
+        combo2 = CombinationDetailFactory(
+            subject__category=self.detail.position.category)
+        combo2.sources.add(self.source)
         login_as(self.user, self)
         response = self.client.get(self.url)
         self.assertContains(response, "'id': %d" % self.source.pk)
@@ -265,6 +271,27 @@ class TestSourceList(TestCase):
              "categorydetail-update",
              urlconf="shastra_compedium.urls",
              args=[chapter.pk]))
+        self.assertContains(response, "1/2")
+
+    def test_list_combo_none(self):
+        combo = CombinationDetailFactory(subject=None)
+        combo.sources.add(self.source)
+
+        login_as(self.user, self)
+        response = self.client.get(self.url)
+        self.assertContains(response, "No Category Details")
+        self.assertContains(response, "0/1")
+
+    def test_list_combo_weird_source(self):
+        combo = CombinationDetailFactory()
+        weird = SourceFactory(title="weird source")
+        combo.sources.add(weird)
+
+        login_as(self.user, self)
+        response = self.client.get(self.url)
+        self.assertContains(response, weird.title)
+        self.assertContains(response, combo.subject.category.name)
+        self.assertContains(response, "0/1")
 
     def test_list_empty(self):
         from shastra_compedium.site_text import user_messages
