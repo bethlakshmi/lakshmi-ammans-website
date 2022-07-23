@@ -37,9 +37,12 @@ class ShastraChapterView(View):
         category = get_object_or_404(Category, pk=self.category_pk)
         details = OrderedDict()
         empty_source_dict = OrderedDict()
+        combination_dict = OrderedDict()
         categorydetails = CategoryDetail.objects.filter(
             sources__shastra=shastra,
             category=category)
+        source_dict = {}
+
         for detail in PositionDetail.objects.filter(
                 sources__shastra=shastra,
                 position__category=category).order_by(
@@ -56,15 +59,18 @@ class ShastraChapterView(View):
             # put the detail in the right place
             for source in detail.sources.filter(shastra=shastra):
                 details[detail.position][source] += [detail]
-        combination_dict = OrderedDict()
+
         for combo in CombinationDetail.objects.filter(
                 sources__shastra=shastra,
-                chapter__in=categorydetails.values_list('chapter', flat=True)
+                subject__category=category
                 ).order_by("sources__translator", "chapter", "verse_start"):
-            if combo.sources.first() not in combination_dict:
-                combination_dict[combo.sources.first()] = [combo]
-            else:
-                combination_dict[combo.sources.first()] += [combo]
+            if combo.subject not in combination_dict:
+                combination_dict[combo.subject] = {}
+                for source in shastra.sources.all():
+                    combination_dict[combo.subject][source] = []
+            for source in combo.sources.filter(shastra=shastra):
+                combination_dict[combo.subject][source] += [combo]
+
 
         context = {
             'shastra': shastra,
