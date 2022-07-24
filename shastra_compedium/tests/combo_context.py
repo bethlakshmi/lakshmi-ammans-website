@@ -53,3 +53,4 @@ class CombinationContext:
                 position=self.first_position,
                 general=False)
             self.example_pos_image.details.add(self.pos_detail)
+        return self.pos_detail

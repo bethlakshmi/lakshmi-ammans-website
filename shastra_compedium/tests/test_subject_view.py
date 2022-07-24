@@ -72,7 +72,11 @@ class TestViewSubject(TestCase):
         self.assertContains(response, self.context.img2.url)
 
     def test_pos_detail_images(self):
-        self.context.set_dependancies()
+        # setting up 2 details, to use both sides of dict/key setup clause in
+        # details_by_source
+        pos_detail1 = self.context.set_dependancies()
+        first_url = self.context.pos_img.url
+        pos_detail2 = self.context.set_dependancies()
         response = self.client.get(self.view_url)
         self.assertContains(response, "<b>Based upon:</b>")
         self.assertContains(response, "%s#%d_%d" % (
@@ -85,6 +89,7 @@ class TestViewSubject(TestCase):
             self.options2).url
         self.assertContains(response, thumb_url)
         self.assertContains(response, self.context.first_position.name)
+        self.assertContains(response, first_url)
 
     def test_no_positions(self):
         context = CombinationContext()
