@@ -2,18 +2,16 @@ from django.test import TestCase
 from django.test import Client
 from django.urls import reverse
 from shastra_compedium.tests.factories import (
-    CombinationDetailFactory,
     ExampleImageFactory,
-    SourceFactory,
     SubjectFactory,
     UserFactory
 )
+from shastra_compedium.tests.combo_context import CombinationContext
 from shastra_compedium.models import CombinationDetail
 from shastra_compedium.tests.functions import (
     login_as,
     set_image
 )
-from filer.models.imagemodels import Image
 
 
 class TestCombinationList(TestCase):
@@ -22,12 +20,12 @@ class TestCombinationList(TestCase):
     def setUp(self):
         self.client = Client()
         self.user = UserFactory()
-        self.combo = CombinationDetailFactory()
-        self.combo.sources.add(SourceFactory())
+        self.context = CombinationContext()
+        self.combo = self.context.combo
         self.url = reverse(self.view_name, urlconf="shastra_compedium.urls")
 
     def test_list_basic_no_login(self):
-        combo2 = CombinationDetailFactory(subject=self.combo.subject)
+        combo2 = CombinationContext(subject=self.combo.subject).combo
         response = self.client.get(self.url)
         self.assertContains(response, self.combo.positions.first().name)
         self.assertContains(response, self.combo.sources.first().title)
@@ -49,17 +47,7 @@ class TestCombinationList(TestCase):
             urlconf="shastra_compedium.urls"))
 
     def test_list_w_login(self):
-        self.img1 = set_image(folder_name="PositionImageUploads")
-        self.example_image = ExampleImageFactory(
-            image=self.img1,
-            subject=self.combo.subject,
-            general=False)
-        self.example_image.combinations.add(self.combo)
-        self.img2 = set_image(folder_name="PositionImageUploads")
-        self.example_image = ExampleImageFactory(
-            image=self.img2,
-            subject=self.combo.subject,
-            general=True)
+        self.context.set_images()
         login_as(self.user, self)
         response = self.client.get(self.url)
         self.assertContains(response, self.combo.contents)
@@ -71,8 +59,8 @@ class TestCombinationList(TestCase):
             "combination-update",
             args=[self.combo.pk],
             urlconf="shastra_compedium.urls"))
-        self.assertContains(response, self.img1.url)
-        self.assertContains(response, self.img2.url)
+        self.assertContains(response, self.context.img1.url)
+        self.assertContains(response, self.context.img2.url)
         self.assertContains(response, reverse(
             "subject-update",
             args=[self.combo.subject.pk],

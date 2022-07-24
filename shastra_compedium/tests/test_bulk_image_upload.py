@@ -379,10 +379,9 @@ class TestBulkImageUpload(TestCase):
 
     def test_pick_combos(self):
         img1 = set_image()
-        example_image = ExampleImageFactory(image=img1)
         detail1 = CombinationDetailFactory()
-        example_image.subject = detail1.subject
-        example_image.save()
+        example_image = ExampleImageFactory(image=img1,
+                                            subject=detail1.subject)
 
         login_as(self.user, self)
         response = self.client.post(

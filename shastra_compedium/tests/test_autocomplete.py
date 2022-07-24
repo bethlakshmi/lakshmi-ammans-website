@@ -3,12 +3,11 @@ from django.test import Client
 from django.urls import reverse
 from shastra_compedium.tests.factories import (
     CategoryFactory,
-    CombinationDetailFactory,
     PositionFactory,
-    SourceFactory,
     SubjectFactory,
     UserFactory,
 )
+from shastra_compedium.tests.combo_context import CombinationContext
 from shastra_compedium.tests.functions import login_as
 from django.utils.html import strip_tags
 import json
@@ -69,25 +68,21 @@ class TestAutoComplete(TestCase):
         self.assertNotContains(response, category2.name)
 
     def test_list_combinations(self):
-        obj = CombinationDetailFactory()
-        obj.sources.add(SourceFactory())
+        obj = CombinationContext().combo
         login_as(self.user, self)
         response = self.client.get(reverse('combination-autocomplete'))
         self.assertContains(response, strip_tags(obj.contents)[0:25])
         self.assertContains(response, obj.pk)
 
     def test_no_access_combinations(self):
-        obj = CombinationDetailFactory()
-        obj.sources.add(SourceFactory())
+        obj = CombinationContext().combo
         response = self.client.get(reverse('combination-autocomplete'))
         self.assertNotContains(response, strip_tags(obj.contents)[0:25])
         self.assertNotContains(response, obj.pk)
 
     def test_list_combinations_w_search_critieria(self):
-        obj = CombinationDetailFactory(contents="special stuff")
-        obj2 = CombinationDetailFactory()
-        obj.sources.add(SourceFactory())
-        obj2.sources.add(SourceFactory())
+        obj = CombinationContext(contents="special stuff").combo
+        obj2 = CombinationContext().combo
         login_as(self.user, self)
         response = self.client.get("%s?q=%s" % (
             reverse('combination-autocomplete'),
@@ -97,10 +92,8 @@ class TestAutoComplete(TestCase):
         self.assertNotContains(response, strip_tags(obj2.contents)[0:25])
 
     def test_list_combination_w_subject(self):
-        obj = CombinationDetailFactory(contents="special stuff")
-        obj2 = CombinationDetailFactory()
-        obj.sources.add(SourceFactory())
-        obj2.sources.add(SourceFactory())
+        obj = CombinationContext(contents="special stuff").combo
+        obj2 = CombinationContext().combo
         login_as(self.user, self)
         response = self.client.get("%s?forward=%s" % (
             reverse('combination-autocomplete'),
