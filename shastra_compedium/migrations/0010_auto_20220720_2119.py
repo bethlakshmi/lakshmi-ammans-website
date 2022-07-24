@@ -16,9 +16,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Subject',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(
+                    auto_created=True,
+                    primary_key=True,
+                    serialize=False,
+                    verbose_name='ID')),
                 ('name', models.CharField(max_length=128)),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='shastra_compedium.Category')),
+                ('category', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    to='shastra_compedium.Category')),
             ],
             options={
                 'ordering': ['name', 'category'],
@@ -28,17 +34,29 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='combinationdetail',
             name='subject',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='details', to='shastra_compedium.Subject'),
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='details',
+                to='shastra_compedium.Subject'),
         ),
         migrations.AddField(
             model_name='exampleimage',
             name='subject',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='shastra_compedium.Subject'),
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to='shastra_compedium.Subject'),
         ),
         migrations.AddField(
             model_name='examplevideo',
             name='subject',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='shastra_compedium.Subject'),
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to='shastra_compedium.Subject'),
         ),
         migrations.AlterUniqueTogether(
             name='exampleimage',

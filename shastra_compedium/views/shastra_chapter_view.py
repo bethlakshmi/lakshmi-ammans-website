@@ -71,7 +71,6 @@ class ShastraChapterView(View):
             for source in combo.sources.filter(shastra=shastra):
                 combination_dict[combo.subject][source] += [combo]
 
-
         context = {
             'shastra': shastra,
             'category': category,

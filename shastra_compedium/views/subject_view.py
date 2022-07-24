@@ -1,6 +1,7 @@
 from django.views.generic.detail import DetailView
 from shastra_compedium.models import Subject
 
+
 class SubjectView(DetailView):
 
     model = Subject
