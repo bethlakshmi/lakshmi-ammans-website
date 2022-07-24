@@ -9,31 +9,7 @@
 {% block layout %}
     <div class="container-fluid py-3">{%endblock%}
 {% block content %}
-<div class="container">
-<div class="row">
-<div class="col-12 col-md-6 col-lg-4">
-<h2 class="lakshmi-title">{{object.name}}
- {% if user.is_authenticated %}
-   <a class="lakshmi-detail" href="{% url 'shastra_compedium:position-detail-update' object.id %}?next={{request.path}}" title="Edit"><i class="fas fa-edit"></i></a>         
- {% endif %}</h2>
-<h3 class="lakshmi-subtitle">{{object.category.name}} - {{object.category.summary}}</h3>
-</div>
-<div class="col-12 col-md-6 col-lg-8">
-{% for image in object.main_images %}
-  <div class="col-4 p-1 float-right">
-    <div class="image-display p-0 col-12"><a href="#">
-        <img src="{% thumbnail image.image 350x350 crop=scale%}" title="{{image.position.name}}"></a>
-      <div class="overlay"><div class="icons">
-        <a class="preview lightbox" href="{{image.image.url}}" data-toggle="tooltip" title="View"><i class="far fa-eye"></i></a>
-      </div>
-      <div class="text">
-          <a href="{% url 'shastra_compedium:dancestyle-view' image.dance_style.pk %}"><i>{{ image.dance_style.name }}</i>&nbsp;
-            <i class="fas fa-link"></i></a><br>
-          <a href="{% url 'shastra_compedium:performer-view' image.performer.pk %}"><i>{{ image.performer.name }}</i>&nbsp;
-            <i class="fas fa-link"></i></a></div>
-    </div></div></div>
-{% endfor %}
-</div></div></div>
+{% include "shastra_compedium/view_header.tmpl" with edit_url='shastra_compedium:position-detail-update' %}
 <h4>Descriptions and Meanings</h4>
 {% for source,verses in object.independant_details_by_source.items %}
   <div class="row lakshmi-source-header px-5 align-items-center">

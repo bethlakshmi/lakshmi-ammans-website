@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static sekizai_tags thumbnail %}
+{% block title %}
+   {{ object.name }}
+{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.css">
+{% endblock %}
+{% block layout %}
+    <div class="container-fluid py-3">{%endblock%}
+{% block content %}
+{% include "shastra_compedium/view_header.tmpl" with edit_url='shastra_compedium:subject-update' %}
+<h4>Descriptions and Meanings</h4>
+{% for source,verses in object.details_by_source.items %}
+  <div class="row lakshmi-source-header px-5 align-items-center">
+    <div class="col-11">
+        <a id="{{source.pk}}_{{object.pk}}"></a>
+        <b>{{source.shastra.age_range}}</b><br>
+        {{ source.title }} ({{source.shastra.initials}}) - {{source.translator}}</div>
+    <div class="col-1 text-right"><a class="btn btn-secondary" href="{% url 'shastra_compedium:shastrachapter-view' source.shastra.pk object.category.pk %}" title="Show all {{object.category.name}} in {{source.shastra}}"><i class="fas fa-link"></i></a></div>
+  </div>
+    {% for detail in verses %}
+      <div class="row px-5">
+        <div class="col-12 col-md-3 col-lg-3">
+          {% for image in detail.exampleimage_set.all %}
+          {% if forloop.first %}<b>Image:</b><br>{% endif %}
+          <div class="col-12 my-2 p-0">{% include "shastra_compedium/image_350.tmpl" %}</div>
+          {% empty %}<i>No associated images</i>{% endfor %}
+        </div>
+        <div class="col-6 col-md-7 col-lg-6">{% if detail.contents|safe|length > 0 %}<b>Description:<br>
+          {{detail.verses}}</b>  {{detail.contents|safe}}
+          {% else %}<i>No description available</i>{% endif %}</div>
+        <div class="col-6 col-sm-4 col-md-2 col-lg-2">
+        {% for position, images in detail.dependencies.items %}
+          {% if forloop.first %}<b>Based upon:</b><br>{% endif %}
+          <a href="{% url 'shastra_compedium:position-view' position.pk %}#{{source.pk}}_{{position.pk}}">
+          {% for image in images %}
+          <img src="{% thumbnail image.image 150x150 crop=scale%}"><br>{% empty %}<i>No image available</i><br>{% endfor %}
+          {{ position.name }}</a>
+          {% empty %}<i>No dependencies</i>
+        {% endfor %}</div>
+      </div> 
+    {% endfor %}
+{% endfor %}
+<hr>
+{% endblock content %}

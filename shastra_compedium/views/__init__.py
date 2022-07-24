@@ -7,6 +7,7 @@ from .positiondetail_autocomplete import (
 from .subject_autocomplete import SubjectAutocomplete
 from .position_autocomplete import PositionAutocomplete
 from .position_view import PositionView
+from .subject_view import SubjectView
 from .generic_wizard import GenericWizard
 from .generic_list import GenericList
 from .shastra_form_mixin import ShastraFormMixin
