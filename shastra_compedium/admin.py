@@ -20,6 +20,12 @@ class PositionAdmin(admin.ModelAdmin):
         return obj.examplevideo_set.count()
 
 
+class SubjectAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'category')
+    list_filter = ['category']
+    list_editable = ('name', 'category')
+
+
 class CombinationDetailAdmin(admin.ModelAdmin):
     list_display = ('id',
                     'verses',
@@ -154,3 +160,4 @@ admin.site.register(ExampleVideo)
 admin.site.register(DanceStyle)
 admin.site.register(Performer, PerformerAdmin)
 admin.site.register(UserMessage, MessageAdmin)
+admin.site.register(Subject, SubjectAdmin)

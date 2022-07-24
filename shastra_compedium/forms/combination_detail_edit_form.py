@@ -6,6 +6,8 @@ from django.forms import (
 )
 from shastra_compedium.models import CombinationDetail
 from dal import autocomplete
+from django_addanother.widgets import AddAnotherEditSelectedWidgetWrapper
+from django.urls import reverse_lazy
 
 
 class CombinationDetailEditForm(ModelForm):
@@ -24,6 +26,7 @@ class CombinationDetailEditForm(ModelForm):
             'verse_start',
             'verse_end',
             'usage',
+            'subject',
             'positions',
             'contents',
             ]
@@ -33,4 +36,10 @@ class CombinationDetailEditForm(ModelForm):
             'verse_end': NumberInput(attrs={'style': 'width: 50px'}),
             'positions': autocomplete.ModelSelect2Multiple(
                     url='position-autocomplete'),
+            'subject': AddAnotherEditSelectedWidgetWrapper(
+                autocomplete.ModelSelect2(url='subject-autocomplete'),
+                reverse_lazy('subject-add', urlconf='shastra_compedium.urls'),
+                reverse_lazy('subject-update',
+                             urlconf='shastra_compedium.urls',
+                             args=['__fk__'])),
             }

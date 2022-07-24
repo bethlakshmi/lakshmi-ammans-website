@@ -230,13 +230,58 @@ class CategoryDetail(Detail):
         ordering = ['category', 'chapter', 'verse_start', 'verse_end']
 
 
-class CombinationDetail(Detail):
-    positions = ManyToManyField('Position', blank=False)
+class Subject(Model):
+    name = CharField(max_length=128)
+    category = ForeignKey(Category,
+                          on_delete=CASCADE)
 
     def __str__(self):
-        return "%s - %s..." % (
-            self.verses(),
-            self.contents[3:28])
+        return "%s, %s" % (self.name, self.category.name)
+
+    def main_images(self):
+        return self.exampleimage_set.filter(general=True)
+
+    def details_by_source(self):
+        # returns only the details w/out description
+        # uses the format of source --> details
+        details_by_source = OrderedDict()
+
+        for detail in self.details.all().order_by(
+                "sources__shastra__min_age",
+                "sources__translator",
+                "chapter",
+                "verse_start",
+                "pk"):
+            for source in detail.sources.all():
+                if source not in details_by_source:
+                    details_by_source[source] = [detail]
+                else:
+                    details_by_source[source] += [detail]
+        return details_by_source
+
+    class Meta:
+        app_label = "shastra_compedium"
+        ordering = ['name', 'category']
+        unique_together = [('name', 'category'), ]
+
+
+class CombinationDetail(Detail):
+    positions = ManyToManyField('Position', blank=False)
+    subject = ForeignKey(Subject,
+                         on_delete=CASCADE,
+                         related_name='details',
+                         null=True)
+
+    def __str__(self):
+        if self.subject is not None:
+            return "%s - %s - %s..." % (
+                self.subject.name,
+                self.verses(),
+                self.contents[3:28])
+        else:
+            return "%s - %s..." % (
+                self.verses(),
+                self.contents[3:28])
 
     def positions_w_images(self):
         pos_dict = {}
@@ -248,6 +293,19 @@ class CombinationDetail(Detail):
                 'position').distinct():
             pos_dict[example.position] += [example]
         return pos_dict
+
+    def detail_images(self):
+        return self.exampleimage_set.filter(general=False)
+
+    def dependencies(self):
+        dependancies = {}
+        for position in self.positions.all():
+            dependancies[position] = []
+        for image in ExampleImage.objects.filter(
+                details__sources__in=self.sources.all(),
+                position__in=self.positions.all()):
+            dependancies[image.position] += [image]
+        return dependancies
 
     class Meta:
         app_label = "shastra_compedium"
@@ -303,6 +361,7 @@ class Performer(Model):
 
 class Example(Model):
     position = ForeignKey(Position, on_delete=CASCADE, blank=True, null=True)
+    subject = ForeignKey(Subject, on_delete=CASCADE, blank=True, null=True)
     details = ManyToManyField(PositionDetail, blank=True)
     combinations = ManyToManyField(CombinationDetail, blank=True, null=True)
 
@@ -320,12 +379,6 @@ class Example(Model):
         abstract = True
         app_label = "shastra_compedium"
 
-    def save(self, *args, **kwargs):
-        super(Example, self).save(*args, **kwargs)
-        # don't save positions details not connected to this position.
-        for detail in self.details.exclude(position=self.position):
-            self.details.remove(detail)
-
 
 class ExampleImage(Example):
     image = FilerImageField(
@@ -341,7 +394,7 @@ class ExampleImage(Example):
 
     class Meta:
         app_label = "shastra_compedium"
-        unique_together = [('image', 'position'), ]
+        unique_together = [('image', 'position'), ('subject', 'image')]
 
 
 class ExampleVideo(Example):

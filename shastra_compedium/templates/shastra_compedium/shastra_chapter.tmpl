@@ -49,34 +49,30 @@
     {% endfor %}
   </div>
 {% endfor %}
-<h4>Related Combinations</h4>
-{% for source, combo_list in combinations.items %}
+{% if combinations|length > 0 %}<h4>Related Combinations</h4>{% endif %}
+{% for subject, source_dict in combinations.items %}
   <div class="row lakshmi-source-header px-5 align-items-center">
     <div class="col-11">
-        <b>{{source.shastra.age_range}}</b><br>
-        {{ source.title }} ({{source.shastra.initials}}) - {{source.translator}}</div>
+        <b>{{subject.name}}</b></div>
+    <div class="col-1 text-right"><a class="btn btn-secondary p-1 m-1" href="{% url 'shastra_compedium:position-view' subject.pk %}" title="{{subject.name}} Details"><i class="fas fa-link"></i></a></div></div>
+
+  <div class="row px-5">
+    {% for source, details in source_dict.items %}
+    <div class="col-{{source_size}}">
+      <b>{{source.title}}</b>
+      {% for detail in details %}
+        <div class="row">
+        {% for image in detail.exampleimage_set.all %}
+          <div class="{{pic_size}} p-0 my-2">
+          {% include "shastra_compedium/image_350.tmpl" %}</div>
+        {% endfor %}</div>
+        <br><b>{{detail.verses}}</b>  {{detail.contents|safe}}
+      {% empty %}
+        <br><i>No detail present</i>
+      {% endfor %}
+    </div>
+    {% endfor %}
   </div>
-  {% for combo in combo_list %}
-    <div class="row px-5">
-      <div class="col-6 col-md-4 col-lg-3 col-xl-2">
-        {% for image in combo.exampleimage_set.all %}
-          {% if forloop.first %}<b>Image:</b><br>{% endif %}
-          <div class="col-12 my-2 p-0">{% include "shastra_compedium/image_350.tmpl" %}</div>
-        {% empty %}<i>No associated images</i>{% endfor %}
-      </div>
-      <div class="col-6 col-md-8 col-lg-3 col-xl-4">{% if combo.contents|safe|length > 0 %}
-        <b>Contents:<br>
-          {{combo.verses}}</b>  {{combo.contents|safe}}
-          {% else %}<i>No description available</i>{% endif %}</div>
-        <div class="col-12 col-sm-4 col-lg-6">
-          {% for pos, images in combo.positions_w_images.items %}
-          <a href="{% url 'shastra_compedium:position-view' pos.pk %}#{{source.pk}}_{{pos.pk}}"><b>{{ pos.name }}</b><br>
-            {% for image in images %}
-            <img src="{% thumbnail image.image 150x150 crop=scale%}">
-           {% empty %}<i>No associated images</i>{% endfor %}</a><br>{% endfor %}
-      </div>
-    </div> 
-  {% endfor %}
 {% endfor %}
 </div>
 {% endblock content %}

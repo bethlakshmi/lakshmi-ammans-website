@@ -25,7 +25,7 @@
           <th data-field="position" data-sortable="true">Position</th>
           <th data-field="category" data-sortable="true">Category</th>
           <th data-field="main" data-sortable="true">Main Image?</th>
-          <th data-field="combo" data-sortable="true">Combo?</th>
+          <th data-field="subject" data-sortable="true">Subject</th>
           <th data-field="performer" data-sortable="true">Performer</th>
           <th data-field="dance_style" data-sortable="true">Dance Style</th>
           <th data-field="details" data-visible="false" data-sortable="false">Linked Details</th>
@@ -41,11 +41,12 @@
         'position': '{% for example in example_set %}{% if example.position %}{{ example.position.name }}&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:position-view' example.position.pk %}" title="View"><i class="fas fa-eye"></i></a>{% else %}<i>Combo Detail Only</i>{% endif %}{% if user.is_authenticated %}&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:exampleimage-update' example.pk %}" title="Edit"><i class="fas fa-edit"></i></a>{% endif %}<br>{% endfor %}',
         'category': '{% for example in example_set %}{% if example.position.category %}{{ example.position.category }}{% if user.is_authenticated %}&nbsp;&nbsp;<a class="lakshmi-detail" href="{% url 'shastra_compedium:category-update' example.position.category.pk %}?next={{request.path}}" title="Edit"><i class="fas fa-edit"></i></a>{% endif %}{% endif %}<br>{% endfor %}',
         'main': '{% for example in example_set %}{% if example.general %}<i class="lakshmi-text-success far fa-check-square fa-2x"></i>{% else %}<i class="text-muted fas fa-times-circle fa-2x"></i>{% endif %}<br>{% endfor %}',
-        'combo': '{% for example in example_set %}{% if example.combinations.count > 0 %}<i class="lakshmi-text-success far fa-check-square fa-2x"></i>{% else %}<i class="text-muted fas fa-times-circle fa-2x"></i>{% endif %}<br>{% endfor %}',
+        'subject': '{% for example in example_set %}{% if example.subject %}{{ example.subject.name }}<br>{% endif %}{% endfor %}',
         'performer': '{% for example in example_set %}{{example.performer}}<br>{% endfor %}',
         'dance_style': '{% for example in example_set %}{{ example.dance_style}}<br>{% endfor %}',
         'details': '{% for example in example_set %}<tr><td>{{example.position.name}}</td><td>{% for detail in example.details.all %}<b>{{detail.verses}}</b> {{detail.contents|safe|escapejs}}{% empty %}<i>No attached details</i>{% endfor %}</td></tr>{% endfor %}',
         'combinations': '{% for example in example_set %}{% for combination in example.combinations.all %}<b>{{combination.sources.first.shastra}} - {{combination.verses}}</b> {{combination.contents|safe|escapejs}}{% endfor %}{% endfor %}',
+        'main_subject': '{% for example in example_set %}{% if example.general %}{{ example.subject }}<br>{% endif %}{% endfor %}',
         'action': '{% if user.is_authenticated %}<a class="lakshmi-detail" href="{% url 'shastra_compedium:exampleimage-copy' example_set.0.pk %}" title="Add another example"><i class="fas fa-copy"></i></a>{% endif %}',
       },
   {% endfor %}
@@ -68,7 +69,9 @@
     html.push('<div class="row">')
     html.push('<div class="col-12"><table class="table lakshmi-table"><thead class="thead-dark"><tr><th>Position</th><th>Details</th></tr></thead><tbody>' + row.details + '</tbody></table></div>')
     html.push('</div>')
-    if (row.combinations.length > 0) {
+    if (row.main_subject.length > 0) {
+      html.push('<div class="row"><div class="col-12"><h2>Main Image for Subjects</h2>' + row.main_subject +'</div></div>')
+    }    if (row.combinations.length > 0) {
       html.push('<div class="row"><div class="col-12"><h2>Combinations</h2>' + row.combinations +'</div></div>')
     }
     return html.join('')

@@ -35,12 +35,6 @@ class SourceList(GenericList):
         for cat_detail in CategoryDetail.objects.all().order_by(
                 'category__name'):
             for source in cat_detail.sources.all():
-                # assumption - if there are two details for a category, they
-                # both have the same chapter number.  If that's wrong, we'll
-                # be missing some # of combinations
-                combo_count = CombinationDetail.objects.filter(
-                    chapter=cat_detail.chapter,
-                    sources__in=[source]).count()
                 if source in source_dict:
                     if cat_detail.category in source_dict[source]:
                         source_dict[source][cat_detail.category][
@@ -49,12 +43,12 @@ class SourceList(GenericList):
                         source_dict[source][cat_detail.category] = {
                             'positions': [],
                             'details': [cat_detail],
-                            'combos': combo_count}
+                            'combos': 0}
                 else:
                     source_dict[source] = {
                         cat_detail.category: {'positions': [],
                                               'details': [cat_detail],
-                                              'combos': combo_count},
+                                              'combos': 0},
                     }
         for pos in PositionDetail.objects.all():
             for source in pos.sources.all():
@@ -67,15 +61,29 @@ class SourceList(GenericList):
                         source_dict[source][pos.position.category][
                             'positions'] += [pos.position]
                 else:
-                    combo_count = CombinationDetail.objects.filter(
-                        chapter=pos.chapter,
-                        sources__in=[source]).count()
                     source_dict[source][pos.position.category] = {
                         'positions': [pos.position],
                         'details': [],
-                        'combos': combo_count}
+                        'combos': 0}
+        for combo in CombinationDetail.objects.all():
+            for source in combo.sources.all():
+                if source not in source_dict:
+                    source_dict[source] = {}
+
+                category = "NONE"
+                if combo.subject is not None:
+                    category = combo.subject.category
+                if category not in source_dict[source]:
+                    source_dict[source][category] = {
+                        'positions': [],
+                        'details': [],
+                        'combos': 0}
+                source_dict[source][category]['combos'] = (
+                    source_dict[source][category]['combos'] + 1)
+
         for source in Source.objects.filter(categorydetail=None,
-                                            positiondetail=None):
+                                            positiondetail=None,
+                                            combinationdetail=None):
             source_dict[source] = {'chapters': []}
 
         return source_dict

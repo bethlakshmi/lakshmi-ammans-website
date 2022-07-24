@@ -5,6 +5,7 @@ from shastra_compedium.tests.factories import (
     CombinationDetailFactory,
     PositionFactory,
     SourceFactory,
+    SubjectFactory,
     UserFactory,
 )
 from shastra_compedium.site_text import make_combination_messages
@@ -30,11 +31,13 @@ class TestMakeCombination(TestCase):
         self.pos1 = PositionFactory()
         self.pos2 = PositionFactory()
         source = SourceFactory()
+        self.subject = SubjectFactory()
         return {'positions': [self.pos1.pk, self.pos2.pk],
                 'chapter': 2,
                 'verse_start': 3,
                 'verse_end': 4,
                 'usage': 'Deep Meaning',
+                'subject': self.subject.pk,
                 'sources': [source.pk],
                 'contents': '<p>Do stuff with other stuff</p>',
                 }
@@ -53,7 +56,7 @@ class TestMakeCombination(TestCase):
         self.assertContains(
             response,
             make_combination_messages['edit_success'] % (
-                "2:3-4 - Do stuff with other stuff..."))
+                self.subject.name + " - 2:3-4 - Do stuff with other stuff..."))
         self.assertEqual(start, CombinationDetail.objects.all().count())
 
     def test_edit_bad_data(self):

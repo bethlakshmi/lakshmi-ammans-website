@@ -3,16 +3,15 @@ from django.forms import (
     HiddenInput,
     ModelForm,
     ModelMultipleChoiceField,
+    MultipleHiddenInput,
 )
-from shastra_compedium.models import (
-    ExampleImage,
-    PositionDetail,
-)
+from shastra_compedium.models import CombinationDetail as Combo
+from shastra_compedium.models import ExampleImage
+from shastra_compedium.models import PositionDetail as PosDetail
 from django.utils.safestring import mark_safe
 from easy_thumbnails.files import get_thumbnailer
 from shastra_compedium.forms.default_form_text import item_image_help
 from django.utils.html import strip_tags
-from shastra_compedium.site_text import image_modal
 
 
 class DetailsChoiceField(ModelMultipleChoiceField):
@@ -28,24 +27,25 @@ class ImageDetailForm(ModelForm):
     required_css_class = 'required'
     error_css_class = 'error'
     details = DetailsChoiceField(
-        queryset=PositionDetail.objects.all(),
+        queryset=PosDetail.objects.all(),
+        widget=CheckboxSelectMultiple(attrs={'class': 'nobullet'}),
+        required=False)
+    combinations = DetailsChoiceField(
+        queryset=Combo.objects.all(),
         widget=CheckboxSelectMultiple(attrs={'class': 'nobullet'}),
         required=False)
 
     def is_valid(self):
-        from shastra_compedium.models import UserMessage
         valid = super(ImageDetailForm, self).is_valid()
 
         if valid:
-            if (not self.cleaned_data['general']) and (
-                    not self.cleaned_data['details']):
-                self._errors['details'] = UserMessage.objects.get_or_create(
-                    view="ImageDetailSet",
-                    code="GENERAL_OR_DETAILS_REQUIRED",
-                    defaults={
-                        'summary': "Must pick general or details or both",
-                        'description': item_image_help['general_or_details']
-                        })[0].description
+            no_details = (not self.cleaned_data['details'] or (
+                self.cleaned_data['details'].count()) == 0)
+            no_combos = (not self.cleaned_data['combinations'] or (
+                self.cleaned_data['combinations'].count()) == 0)
+
+            if (not self.cleaned_data['general']) and no_details and no_combos:
+                self._errors['general'] = item_image_help['general_or_details']
                 valid = False
         return valid
 
@@ -53,21 +53,25 @@ class ImageDetailForm(ModelForm):
         super(ImageDetailForm, self).__init__(*args, **kwargs)
         if 'instance' in kwargs:
             instance = kwargs.get('instance')
-            self.fields['details'].queryset = PositionDetail.objects.filter(
+            if instance.position:
+                self.fields['details'].queryset = PosDetail.objects.filter(
                     position=instance.position)
-            thumb_url = get_thumbnailer(instance.image).get_thumbnail(
-                self.options).url
-            self.fields['details'].label = mark_safe(
-                image_modal % (instance.image.pk,
-                               thumb_url,
-                               instance.image,
-                               instance.image.pk,
-                               instance.image.url))
+            else:
+                self.fields['details'].queryset = instance.details.all()
+                self.fields['details'].widget = MultipleHiddenInput()
+
+            if instance.subject:
+                self.fields['combinations'].queryset = Combo.objects.filter(
+                    subject=instance.subject)
+            else:
+                self.fields['combinations'].queryset = instance.details.all()
+                self.fields['combinations'].widget = MultipleHiddenInput()
 
     class Meta:
         model = ExampleImage
         fields = [
             'id',
             'general',
-            'details']
-        labels = {'general': "Main Image?"}
+            'details',
+            'combinations']
+        labels = {'general': "Main Image for both position and subject"}

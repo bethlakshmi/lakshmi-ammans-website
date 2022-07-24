@@ -33,6 +33,12 @@ make_category_detail_messages = {
     'edit_success':  "The %s chapter has been updated.",
     'edit_intro':  "Use this form to update this chapter.",
 }
+make_subject_messages = {
+    'create_success':  "A new subject has been created.  Name: %s",
+    'edit_success':  "The %s subject has been updated.",
+    'create_intro':  "Use this form to create a new subject.",
+    'edit_intro':  "Use this form to update this subject.",
+}
 make_source_messages = {
     'create_success':  "A new source has been created.  Name: %s",
     'edit_success':  "The %s source has been updated.",

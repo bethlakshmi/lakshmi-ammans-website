@@ -74,15 +74,25 @@ class TestViewPosition(TestCase):
 
     def test_combinations(self):
         self.source = SourceFactory()
+        another_detail = PositionDetailFactory(
+            position=self.object,
+            usage="Posture Description")
         another_pos = PositionFactory()
         combo1 = CombinationDetailFactory(positions=[self.object, another_pos])
         combo2 = CombinationDetailFactory(positions=[self.object])
         combo1.sources.add(self.source)
         combo2.sources.add(self.source)
+        another_detail.sources.add(self.source)
         img1 = set_image()
         self.example_image = ExampleImageFactory(
             image=img1)
         self.example_image.combinations.add(combo1)
+        img2 = set_image()
+        self.example_image2 = ExampleImageFactory(
+            image=img2,
+            position=self.object)
+        self.example_image2.details.add(another_detail)
+
         response = self.client.get(self.view_url)
         self.assertContains(response, self.object.name)
         self.assertContains(response, combo1.contents)
@@ -96,6 +106,7 @@ class TestViewPosition(TestCase):
         self.assertContains(response, "#%d_%d" % (
             self.source.pk,
             another_pos.pk))
+        self.assertContains(response, img2)
 
     def test_posture_and_meaning(self):
         self.source = SourceFactory()

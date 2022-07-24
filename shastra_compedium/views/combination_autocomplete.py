@@ -17,6 +17,10 @@ class CombinationAutocomplete(autocomplete.Select2QuerySetView):
 
         qs = CombinationDetail.objects.all()
 
+        subject_limit = self.forwarded.get('subject_only')
+        if subject_limit:
+            qs = qs.filter(subject__pk=subject_limit)
+
         if self.q:
             qs = qs.filter(contents__icontains=self.q)
         return qs

@@ -5,17 +5,13 @@ from django.test import (
 from django.contrib.auth.models import User
 from shastra_compedium.tests.factories import (
     CategoryDetailFactory,
-    CombinationDetailFactory,
-    ExampleImageFactory,
     PerformerFactory,
     PositionDetailFactory,
     SourceFactory,
     UserFactory,
 )
-from shastra_compedium.tests.functions import (
-    login_as,
-    set_image
-)
+from shastra_compedium.tests.combo_context import CombinationContext
+from shastra_compedium.tests.functions import login_as
 from datetime import (
     date,
     timedelta,
@@ -86,11 +82,9 @@ class AdminTests(TestCase):
             self.assertContains(response, style.name)
 
     def test_get_exampleimage(self):
-        self.img1 = set_image(folder_name="PositionImageUploads")
-        combo = CombinationDetailFactory()
-        obj = ExampleImageFactory(image=self.img1)
-        obj.combinations.add(combo)
+        context = CombinationContext()
+        context.set_images()
         response = self.client.get('/admin/shastra_compedium/exampleimage/',
                                    follow=True)
-        self.assertContains(response, obj.position.name)
+        self.assertContains(response, context.example_image.position.name)
         self.assertContains(response, '<td class="field-combo_count">1</td>')

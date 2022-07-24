@@ -11,6 +11,8 @@ from shastra_compedium.models import (
     Position,
 )
 from dal import autocomplete
+from django_addanother.widgets import AddAnotherEditSelectedWidgetWrapper
+from django.urls import reverse_lazy
 
 
 class CombinationDetailForm(ModelForm):
@@ -34,6 +36,7 @@ class CombinationDetailForm(ModelForm):
             'verse_start',
             'verse_end',
             'usage',
+            'subject',
             'contents',
             ]
         widgets = {
@@ -41,4 +44,10 @@ class CombinationDetailForm(ModelForm):
             'verse_start': NumberInput(attrs={'style': 'width: 50px'}),
             'verse_end': NumberInput(attrs={'style': 'width: 50px'}),
             'sources': MultipleHiddenInput(),
+            'subject': AddAnotherEditSelectedWidgetWrapper(
+                autocomplete.ModelSelect2(url='subject-autocomplete'),
+                reverse_lazy('subject-add', urlconf='shastra_compedium.urls'),
+                reverse_lazy('subject-update',
+                             urlconf='shastra_compedium.urls',
+                             args=['__fk__'])),
             }

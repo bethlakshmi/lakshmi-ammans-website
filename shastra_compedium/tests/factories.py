@@ -20,6 +20,7 @@ from shastra_compedium.models import (
     PositionDetail,
     Shastra,
     Source,
+    Subject,
 )
 
 
@@ -102,11 +103,19 @@ class CategoryDetailFactory(DjangoModelFactory):
     contents = Sequence(lambda n: 'Contents %d' % n)
 
 
+class SubjectFactory(DjangoModelFactory):
+    class Meta:
+        model = Subject
+    name = Sequence(lambda n: 'Subject %d' % n)
+    category = SubFactory(CategoryFactory)
+
+
 class CombinationDetailFactory(DjangoModelFactory):
     class Meta:
         model = CombinationDetail
     usage = Sequence(lambda n: 'Usage %d' % n)
     contents = Sequence(lambda n: 'Contents %d' % n)
+    subject = SubFactory(SubjectFactory)
 
     @factory.post_generation
     def positions(self, create, extracted, **kwargs):

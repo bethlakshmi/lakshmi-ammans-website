@@ -45,7 +45,8 @@ class PositionList(GenericList):
                 details[detail.position]["sources"][source][
                     'num_details'] = details[
                         detail.position]["sources"][source]['num_details'] + 1
-        for image in ExampleImage.objects.filter(general=True):
+        for image in ExampleImage.objects.filter(general=True,
+                                                 position__isnull=False):
             if image.position in details:
                 details[image.position]["images"] += [image]
             else:
